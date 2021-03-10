@@ -43,7 +43,7 @@ using namespace urdf;
 void printTree(my_shared_ptr<const Link> link, int level = 0) {
   level += 2;
   int count = 0;
-  for (std::vector<my_shared_ptr<Link>>::const_iterator child =
+  for (std::vector<my_shared_ptr<Link> >::const_iterator child =
            link->child_links.begin();
        child != link->child_links.end(); child++) {
     if (*child) {

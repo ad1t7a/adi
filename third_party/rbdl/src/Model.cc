@@ -381,7 +381,7 @@ unsigned int Model::AddBody(const unsigned int parent_id,
   mJointUpdateOrder.clear();
 
   // update the joint order computation
-  std::vector<std::pair<JointType, unsigned int>> joint_types;
+  std::vector<std::pair<JointType, unsigned int> > joint_types;
   for (unsigned int i = 0; i < mJoints.size(); i++) {
     joint_types.push_back(
         std::pair<JointType, unsigned int>(mJoints[i].mJointType, i));
@@ -393,7 +393,7 @@ unsigned int Model::AddBody(const unsigned int parent_id,
   while (joint_types.size() != 0) {
     current_joint_type = joint_types[0].first;
 
-    std::vector<std::pair<JointType, unsigned int>>::iterator type_iter =
+    std::vector<std::pair<JointType, unsigned int> >::iterator type_iter =
         joint_types.begin();
 
     while (type_iter != joint_types.end()) {

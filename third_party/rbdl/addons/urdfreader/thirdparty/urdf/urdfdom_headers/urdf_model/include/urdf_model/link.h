@@ -196,20 +196,20 @@ public:
   /// if more than one collision element is specified, all collision elements
   /// are placed in this array (the collision member points to the first element
   /// of the array)
-  std::vector<my_shared_ptr<Collision>> collision_array;
+  std::vector<my_shared_ptr<Collision> > collision_array;
 
   /// if more than one visual element is specified, all visual elements are
   /// placed in this array (the visual member points to the first element of the
   /// array)
-  std::vector<my_shared_ptr<Visual>> visual_array;
+  std::vector<my_shared_ptr<Visual> > visual_array;
 
   /// Parent Joint element
   ///   explicitly stating "parent" because we want directional-ness for tree
   ///   structure every link can have one parent
   my_shared_ptr<Joint> parent_joint;
 
-  std::vector<my_shared_ptr<Joint>> child_joints;
-  std::vector<my_shared_ptr<Link>> child_links;
+  std::vector<my_shared_ptr<Joint> > child_joints;
+  std::vector<my_shared_ptr<Link> > child_links;
 
   mutable int m_link_index;
 

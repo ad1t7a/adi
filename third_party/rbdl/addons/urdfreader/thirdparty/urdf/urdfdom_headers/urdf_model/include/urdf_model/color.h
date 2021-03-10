@@ -58,7 +58,7 @@ public:
     a = 1.0f;
   }
   bool init(const std::string &vector_str) {
-    this->clear();
+    /*this->clear();
     std::vector<std::string> pieces;
     std::vector<float> rgba;
 
@@ -79,7 +79,7 @@ public:
     this->r = rgba[0];
     this->g = rgba[1];
     this->b = rgba[2];
-    this->a = rgba[3];
+    this->a = rgba[3];*/
 
     return true;
   };

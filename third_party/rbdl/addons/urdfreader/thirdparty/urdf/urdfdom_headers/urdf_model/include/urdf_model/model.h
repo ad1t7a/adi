@@ -68,8 +68,8 @@ public:
   };
 
   const std::string &getName() const { return name_; };
-  void getLinks(std::vector<my_shared_ptr<Link>> &links) const {
-    for (std::map<std::string, my_shared_ptr<Link>>::const_iterator link =
+  void getLinks(std::vector<my_shared_ptr<Link> > &links) const {
+    for (std::map<std::string, my_shared_ptr<Link> >::const_iterator link =
              this->links_.begin();
          link != this->links_.end(); link++) {
       links.push_back(link->second);
@@ -109,7 +109,7 @@ public:
   void initTree(std::map<std::string, std::string> &parent_link_tree) {
     // loop through all joints, for every link, assign children links and
     // children joints
-    for (std::map<std::string, my_shared_ptr<Joint>>::iterator joint =
+    for (std::map<std::string, my_shared_ptr<Joint> >::iterator joint =
              this->joints_.begin();
          joint != this->joints_.end(); joint++) {
       std::string parent_link_name = joint->second->parent_link_name;
@@ -161,7 +161,7 @@ parent_link_tree[child_link->name] = parent_link_name;
     this->root_link_.reset(0);
 
     // find the links that have no parent in the tree
-    for (std::map<std::string, my_shared_ptr<Link>>::const_iterator l =
+    for (std::map<std::string, my_shared_ptr<Link> >::const_iterator l =
              this->links_.begin();
          l != this->links_.end(); l++) {
       std::map<std::string, std::string>::const_iterator parent =
@@ -187,11 +187,11 @@ parent_link_tree[child_link->name] = parent_link_name;
   }
 
   /// \brief complete list of Links
-  std::map<std::string, my_shared_ptr<Link>> links_;
+  std::map<std::string, my_shared_ptr<Link> > links_;
   /// \brief complete list of Joints
-  std::map<std::string, my_shared_ptr<Joint>> joints_;
+  std::map<std::string, my_shared_ptr<Joint> > joints_;
   /// \brief complete list of Materials
-  std::map<std::string, my_shared_ptr<Material>> materials_;
+  std::map<std::string, my_shared_ptr<Material> > materials_;
 
   /// \brief The name of the robot model
   std::string name_;

@@ -130,7 +130,7 @@ struct RBDL_DLLAPI Model {
     influencing the current one*/
   std::vector<unsigned int> lambda_q;
   /// \brief Contains the ids of all the children of a given body
-  std::vector<std::vector<unsigned int>> mu;
+  std::vector<std::vector<unsigned int> > mu;
 
   /** \brief number of degrees of freedoms of the model
    *
