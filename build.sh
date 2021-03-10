@@ -56,7 +56,7 @@ case "${1:-}" in
     rm -rf ompl/
     git clone https://github.com/ompl/ompl.git
     cd ompl/
-    git checkout v4.7.1
+    git checkout 1.5.2
     mkdir -p build/Release
     cd build/Release
     cmake ../..

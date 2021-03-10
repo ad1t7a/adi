@@ -1,6 +1,11 @@
 # Prerequisites
 *.d
 .DS_Store
+third_party/cppzmq/**
+third_party/crossguid/**
+third_party/json/**
+third_party/ompl/**
+third_party/rbdl/build/**
 
 # Compiled Object files
 *.slo
