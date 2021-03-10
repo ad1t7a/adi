@@ -8,12 +8,11 @@ namespace adi {
 namespace visualization {
 
 /***************************************************************************/ /**
-                                                                               * Constructor
-                                                                               *
-                                                                               * @param ipAddress IP Address of the ZMQ TCP socket
-                                                                               ******************************************************************************/
+* Constructor
+*
+* @param ipAddress IP Address of the ZMQ TCP socket
+******************************************************************************/
 URDF::URDF(std::string ipAddress) : Visualization(ipAddress) {
-  m_robotName = "";
   m_pathPrefix = "";
   m_textureData = "";
   m_textureUUID = "";
@@ -21,19 +20,19 @@ URDF::URDF(std::string ipAddress) : Visualization(ipAddress) {
 }
 
 /***************************************************************************/ /**
-                                                                               * Destructor
-                                                                               ******************************************************************************/
+* Destructor
+******************************************************************************/
 URDF::~URDF() { delete (m_model); }
 
 /***************************************************************************/ /**
-                                                                               * Load URDF file
-                                                                               *
-                                                                               * @param filename   file name
-                                                                               * @param floatingBase floating base
-                                                                               * @param texturePath path to texture file
-                                                                               * @param robotName   robot name
-                                                                               * @return true if the robot loads
-                                                                               ******************************************************************************/
+* Load URDF file
+*
+* @param filename   file name
+* @param floatingBase floating base
+* @param texturePath path to texture file
+* @param robotName   robot name
+* @return true if the robot loads
+******************************************************************************/
 bool URDF::loadURDF(std::string filename, bool floatingBase,
                     const std::string &texturePath,
                     const std::string &robotName) {
@@ -53,10 +52,10 @@ bool URDF::loadURDF(std::string filename, bool floatingBase,
 }
 
 /***************************************************************************/ /**
-                                                                               * Sync visual transform
-                                                                               *
-                                                                               * @param Q   pose update
-                                                                               ******************************************************************************/
+* Sync visual transform
+*
+* @param Q   pose update
+******************************************************************************/
 void URDF::syncVisualTransforms(RigidBodyDynamics::Math::VectorNd Q,
                                 std::vector<double> offset) {
   RigidBodyDynamics::Math::VectorNd QDot =
@@ -82,10 +81,10 @@ void URDF::syncVisualTransforms(RigidBodyDynamics::Math::VectorNd Q,
 }
 
 /***************************************************************************/ /**
-                                                                               * Convert visuals and load the robot visuals
-                                                                               * TODO (Adi): Works only for serial link URDFs. Closed links or branches has to be handled
-                                                                               * @param texturePath   texture path
-                                                                               ******************************************************************************/
+* Convert visuals and load the robot visuals
+* TODO (Adi): Works only for serial link URDFs. Closed links or branches has to be handled
+* @param texturePath   texture path
+******************************************************************************/
 void URDF::convertVisuals(const std::string &texturePath) {
   if (texturePath != "") {
     loadTexture(texturePath);
@@ -102,8 +101,8 @@ void URDF::convertVisuals(const std::string &texturePath) {
 }
 
 /***************************************************************************/ /**
-                                                                               * Delete the multibody
-                                                                               ******************************************************************************/
+* Delete the multibody
+******************************************************************************/
 void URDF::deleteMultibody() {
   std::string robotPath = kVisualizerPath + m_robotName;
   nlohmann::json delCmd = createDeleteCmd(robotPath);
@@ -111,9 +110,9 @@ void URDF::deleteMultibody() {
 }
 
 /***************************************************************************/ /**
-                                                                               * Load texture file
-                                                                               * @param texture file path
-                                                                               ******************************************************************************/
+* Load texture file
+* @param texture file path
+******************************************************************************/
 void URDF::loadTexture(const std::string &texturePath) {
   m_textureData = kTextureDataBrokenRobot;
 
@@ -135,11 +134,11 @@ void URDF::loadTexture(const std::string &texturePath) {
 }
 
 /***************************************************************************/ /**
-                                                                               * Convert link visuals
-                                                                               * @param link link path
-                                                                               * @param linkIndex link index
-                                                                               * @param useTextureUUID texture UUID
-                                                                               ******************************************************************************/
+* Convert link visuals
+* @param link link path
+* @param linkIndex link index
+* @param useTextureUUID texture UUID
+******************************************************************************/
 void URDF::convertLinkVisuals(urdf::Link &link, int linkIndex,
                               bool useTextureUUID) {
   for (int vis_index = 0; vis_index < (int)link.visual_array.size();

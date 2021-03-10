@@ -6,7 +6,7 @@ case "${1:-}" in
   ("prerequisites")
     #install package using brew
     brew install automake zmq bazel 
-    brew install boost
+    #brew install boost
     
     # install meshcat
     pip install meshcat

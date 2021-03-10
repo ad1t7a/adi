@@ -6,31 +6,31 @@ namespace adi {
 namespace visualization {
 
 /***************************************************************************/ /**
-                                                                               * Constructor
-                                                                               *
-                                                                               * @param ipAddress IP Address of the ZMQ TCP socket
-                                                                               ******************************************************************************/
+* Constructor
+*
+* @param ipAddress IP Address of the ZMQ TCP socket
+******************************************************************************/
 Visualization::Visualization(std::string ipAddress) {
   m_socket = new zmq::socket_t(m_context, ZMQ_REQ);
   m_socket->connect(ipAddress);
 }
 
 /***************************************************************************/ /**
-                                                                               * Destructor
-                                                                               ******************************************************************************/
+* Destructor
+******************************************************************************/
 Visualization::~Visualization() {}
 
 /***************************************************************************/ /**
-                                                                               * Create sphere object
-                                                                               *
-                                                                               * @param radius   radius
-                                                                               * @param worldPos world pose
-                                                                               * @param colorRGB RGB color
-                                                                               * @param path     path
-                                                                               * @param transparent transparency bool
-                                                                               * @param opacity opacity scale
-                                                                               * @return sphere json object
-                                                                               ******************************************************************************/
+* Create sphere object
+*
+* @param radius   radius
+* @param worldPos world pose
+* @param colorRGB RGB color
+* @param path     path
+* @param transparent transparency bool
+* @param opacity opacity scale
+* @return sphere json object
+******************************************************************************/
 nlohmann::json Visualization::createSphere(double radius, double worldPos[3],
                                            int colorRGB, const char *path,
                                            bool transparent, double opacity) {
@@ -71,16 +71,16 @@ nlohmann::json Visualization::createSphere(double radius, double worldPos[3],
 }
 
 /***************************************************************************/ /**
-                                                                               * Create box object
-                                                                               *
-                                                                               * @param radius   radius
-                                                                               * @param worldPos world pose
-                                                                               * @param colorRGB RGB color
-                                                                               * @param path     path
-                                                                               * @param transparent transparency bool
-                                                                               * @param opacity opacity scale
-                                                                               * @return box json object
-                                                                               ******************************************************************************/
+* Create box object
+*
+* @param radius   radius
+* @param worldPos world pose
+* @param colorRGB RGB color
+* @param path     path
+* @param transparent transparency bool
+* @param opacity opacity scale
+* @return box json object
+******************************************************************************/
 nlohmann::json Visualization::createBoxCmd(double width, double height,
                                            double length, double worldPos[3],
                                            int colorRGB, const char *path) {
@@ -122,14 +122,14 @@ nlohmann::json Visualization::createBoxCmd(double width, double height,
 }
 
 /***************************************************************************/ /**
-                                                                               * Create mesh object
-                                                                               *
-                                                                               * @param objData   object data
-                                                                               * @param worldPos world pose
-                                                                               * @param colorRGB RGB color
-                                                                               * @param path     path
-                                                                               * @return mesh json object
-                                                                               ******************************************************************************/
+* Create mesh object
+*
+* @param objData   object data
+* @param worldPos world pose
+* @param colorRGB RGB color
+* @param path     path
+* @return mesh json object
+******************************************************************************/
 nlohmann::json Visualization::createMeshCmd(const char *objData,
                                             double worldPos[3], int colorRGB,
                                             const char *path) {
@@ -172,15 +172,15 @@ nlohmann::json Visualization::createMeshCmd(const char *objData,
 }
 
 /***************************************************************************/ /**
-                                                                               * Create mesh object
-                                                                               *
-                                                                               * @param objData   object data
-                                                                               * @param textureData   texture data
-                                                                               * @param worldPos world pose
-                                                                               * @param colorRGB RGB color
-                                                                               * @param path     path
-                                                                               * @return mesh json object
-                                                                               ******************************************************************************/
+* Create mesh object
+*
+* @param objData   object data
+* @param textureData   texture data
+* @param worldPos world pose
+* @param colorRGB RGB color
+* @param path     path
+* @return mesh json object
+******************************************************************************/
 nlohmann::json Visualization::createTexturedMeshCmd(const char *objData,
                                                     const char *textureData,
                                                     double worldPos[3],
@@ -238,15 +238,15 @@ nlohmann::json Visualization::createTexturedMeshCmd(const char *objData,
 }
 
 /***************************************************************************/ /**
-                                                                               * Create mesh object
-                                                                               *
-                                                                               * @param objData   object data
-                                                                               * @param mapUUID   map UUID
-                                                                               * @param worldPos world pose
-                                                                               * @param colorRGB RGB color
-                                                                               * @param path     path
-                                                                               * @return mesh json object
-                                                                               ******************************************************************************/
+* Create mesh object
+*
+* @param objData   object data
+* @param mapUUID   map UUID
+* @param worldPos world pose
+* @param colorRGB RGB color
+* @param path     path
+* @return mesh json object
+******************************************************************************/
 nlohmann::json Visualization::createTexturedMeshCmd2(const char *objData,
                                                      std::string mapUUID,
                                                      double worldPos[3],
@@ -294,13 +294,13 @@ nlohmann::json Visualization::createTexturedMeshCmd2(const char *objData,
 }
 
 /***************************************************************************/ /**
-                                                                               * Create frame transformation object
-                                                                               *
-                                                                               * @param worldPos world pose
-                                                                               * @param worldMat world rotation matrix
-                                                                               * @param path     path
-                                                                               * @return frame transform json object
-                                                                               ******************************************************************************/
+* Create frame transformation object
+*
+* @param worldPos world pose
+* @param worldMat world rotation matrix
+* @param path     path
+* @return frame transform json object
+******************************************************************************/
 nlohmann::json Visualization::createTransformCmd(double worldPos[3],
                                                  double worldMat[9],
                                                  const char *path) {
@@ -316,22 +316,22 @@ nlohmann::json Visualization::createTransformCmd(double worldPos[3],
 }
 
 /***************************************************************************/ /**
-                                                                               * Delete object in visualizer
-                                                                               *
-                                                                               * @param path path to delete
-                                                                               * @return delete json object
-                                                                               ******************************************************************************/
+* Delete object in visualizer
+*
+* @param path path to delete
+* @return delete json object
+******************************************************************************/
 nlohmann::json Visualization::createDeleteCmd(const std::string &path) {
   nlohmann::json deleteCmd = {{"type", "delete"}, {"path", path.c_str()}};
   return deleteCmd;
 }
 
 /***************************************************************************/ /**
-                                                                               * Send ZMQ command of the JSON to the predefined IP address
-                                                                               *
-                                                                               * @param cmd JSON object to send in as a command
-                                                                               * @param verbose boolean flag to enable verbose
-                                                                               ******************************************************************************/
+* Send ZMQ command of the JSON to the predefined IP address
+*
+* @param cmd JSON object to send in as a command
+* @param verbose boolean flag to enable verbose
+******************************************************************************/
 void Visualization::sendZMQ(nlohmann::json cmd, bool verbose) {
   std::vector<uint8_t> packed = nlohmann::json::to_msgpack(cmd);
   std::string typeStr = cmd["type"];
@@ -355,10 +355,10 @@ void Visualization::sendZMQ(nlohmann::json cmd, bool verbose) {
 }
 
 /***************************************************************************/ /**
-                                                                               * Generates a Universal Unique Identifier
-                                                                               *
-                                                                               * @return a UUID string
-                                                                               ******************************************************************************/
+* Generates a Universal Unique Identifier
+*
+* @return a UUID string
+******************************************************************************/
 std::string Visualization::generateUUID() { return xg::newGuid().str(); }
 
 } // namespace visualization

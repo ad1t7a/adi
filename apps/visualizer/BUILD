@@ -4,7 +4,6 @@ cc_binary(
 
     deps = [
         "//common:common", 
-        "//mathematics:mathematics", 
         "//io/camera:camera", 
         "//visualization:visualization",
         "//systems/fastplanner:fastplanner",
