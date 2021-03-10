@@ -6,6 +6,9 @@ third_party/crossguid/**
 third_party/json/**
 third_party/ompl/**
 third_party/rbdl/build/**
+third_party/msgpack-c/**
+bazel-*
+
 
 # Compiled Object files
 *.slo

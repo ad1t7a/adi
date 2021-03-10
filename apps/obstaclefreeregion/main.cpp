@@ -1,5 +1,4 @@
 #include "common/eigen_types.hpp"
-#include "spdlog/fmt/ostr.h"
 #include "systems/regioninflation/IRIS.hpp"
 #include "systems/regioninflation/IRISOptions.hpp"
 #include "systems/regioninflation/IRISProblem.hpp"
@@ -23,7 +22,5 @@ int main() {
   adi::systems::IRISOptions options;
   adi::systems::IRIS iris;
   adi::systems::IRISRegion region = iris.inflateRegion(problem, options);
-  spdlog::info("C {}", region.mEllipsoid.C());
-  spdlog::info("d {}", region.mEllipsoid.d());
   return 0;
 }

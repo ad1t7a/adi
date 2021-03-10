@@ -5,8 +5,8 @@
 #include "common/eigen_types.hpp"
 
 // CDD libraries
-#include "cdd.h"
 #include "setoper.h"
+#include "cdd.h"
 
 namespace adi {
 namespace interfaces {
