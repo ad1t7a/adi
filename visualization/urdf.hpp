@@ -26,6 +26,9 @@ public:
   void syncVisualTransforms(RigidBodyDynamics::Math::VectorNd Q,
                             std::vector<double> offset);
 
+  //! sync visual transformation
+  void syncVisualTransforms(std::vector<RigidBodyDynamics::Math::SpatialTransform> transforms);
+
   //! get number of links
   int getDoF() { return m_model->dof_count; }
 

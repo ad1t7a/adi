@@ -4,7 +4,8 @@
 
 int main() {
 
-  /*size_t numRobots = 1;
+  /*
+  size_t numRobots = 1;
   std::vector<adi::visualization::URDF*> vectorURDF;
   for(size_t k=0; k<numRobots; k++) {
     adi::visualization::URDF* urdf = new
@@ -33,6 +34,19 @@ int main() {
     t += 0.001;
   }*/
 
+  /*
+  //! end effector visualization
+  adi::visualization::URDF endEffector(std::string("tcp://127.0.0.1:6000"));
+  endEffector.setPathPrefix("/Users/ad1t7a/Developer/adi/robots/robotiq/");
+  endEffector.loadURDF("gripper.urdf", false, "texture.jpg");
+  std::vector<RigidBodyDynamics::Math::SpatialTransform> transforms;
+  RigidBodyDynamics::Math::SpatialTransform transform;
+  transform.r ={0.5, -0.3, 0.5};
+  transform.E ={-1.0000000,  0.0000000, -0.0000000, 0.0000000,  0.7071068, -0.7071068, 0.0000000, -0.7071068, -0.7071068};
+  transforms.push_back(transform);
+  endEffector.syncVisualTransforms(transforms);
+  */
+
   /*adi::systems::SweptVolume sw("/Users/ad1t7a/Developer/adi/robots/flexiv/",
   "robot.urdf", false); std::vector<adi::Vector3d> points; points =
   sw.calculateSweptVolume(RigidBodyDynamics::Math::VectorNd::Zero(sw.getDoF()),
@@ -40,8 +54,13 @@ int main() {
   i< points.size(); i++) { std::cout << points[i].transpose() <<"\n";
   }*/
 
-  /*adi::visualization::PointCloud pc(std::string("tcp://127.0.0.1:6000"));
-  pc.loadPointCloud("/adi/test");*/
+  /*
+  adi::visualization::PointCloud pc(std::string("tcp://127.0.0.1:6000"));
+  pc.loadPointCloud("/adi/test");
+  */
+
+
+
 
   return 0;
 }

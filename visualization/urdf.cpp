@@ -81,6 +81,27 @@ void URDF::syncVisualTransforms(RigidBodyDynamics::Math::VectorNd Q,
 }
 
 /***************************************************************************/ /**
+* Sync visual transform
+*
+* @param transforms   pose update
+******************************************************************************/
+void URDF::syncVisualTransforms(std::vector<RigidBodyDynamics::Math::SpatialTransform> transforms) {
+
+  for (size_t i = 0; i < m_model->mJoints.size(); i++) {
+    double world_pos[3] = {transforms[i].r[0], transforms[i].r[1], transforms[i].r[2]};
+    double world_mat[9] = {
+        transforms[i].E(0, 0), transforms[i].E(0, 1), transforms[i].E(0, 2),
+        transforms[i].E(1, 0), transforms[i].E(1, 1), transforms[i].E(1, 2),
+        transforms[i].E(2, 0), transforms[i].E(2, 1), transforms[i].E(2, 2)};
+    std::string vis_name =
+        kVisualizerPath + m_robotName + std::string("/") + m_linkNameToIndex[i];
+    nlohmann::json tr_cmd =
+        createTransformCmd(world_pos, world_mat, vis_name.c_str());
+    sendZMQ(tr_cmd);
+  }
+}
+
+/***************************************************************************/ /**
 * Convert visuals and load the robot visuals
 * TODO (Adi): Works only for serial link URDFs. Closed links or branches has to be handled
 * @param texturePath   texture path
