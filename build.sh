@@ -68,6 +68,13 @@ case "${1:-}" in
     cd msgpack-c/
     git checkout cpp-3.3.0
     cd ../
+
+    cd FF-X/
+    make veryclean
+    make
+    make clean
+    cd ../
+
     ;;
   ("obstaclefreeregion")
     bazel build //apps/obstaclefreeregion --cxxopt='-std=c++17'

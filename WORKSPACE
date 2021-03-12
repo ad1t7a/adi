@@ -56,6 +56,13 @@ new_local_repository(
   build_file = "third_party/ompl.BUILD",
 )
 
+# Planning
+new_local_repository(
+  name = "ffx",
+  path = __workspace_dir__ + "/third_party/",
+  build_file = "third_party/ffx.BUILD",
+)
+
 # io
 new_local_repository(
   name = "librealsense",
