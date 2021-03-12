@@ -42,19 +42,7 @@ SOURCES 	= main.c \
 	relax.c \
 	search.c
 
-LIBSOURCES 	= memory.c \
-	output.c \
-	parse.c \
-	inst_pre.c \
-	inst_easy.c \
-	inst_hard.c \
-	inst_final.c \
-	orderings.c \
-	relax.c \
-	search.c
-
 OBJECTS 	= $(SOURCES:.c=.o)
-LIBOBJECTS 	= $(LIBSOURCES:.c=.o)
 
 ####### Implicit rules
 
@@ -68,8 +56,8 @@ LIBOBJECTS 	= $(LIBSOURCES:.c=.o)
 
 
 ff: $(OBJECTS) $(PDDL_PARSER_OBJ)
-	$(CC) -o ff $(OBJECTS) $(PDDL_PARSER_OBJ) $(CFLAGS) $(LIBS)
 	$(AR) -crs ff.a $(OBJECTS) $(PDDL_PARSER_OBJ)
+	# $(CC) -o ff $(OBJECTS) $(PDDL_PARSER_OBJ) $(CFLAGS) $(LIBS)
 
 # pddl syntax
 scan-fct_pddl.tab.c: scan-fct_pddl.y lex.fct_pddl.c

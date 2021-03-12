@@ -406,7 +406,7 @@ void print_NormOperator( NormOperator *o )
   int i, m;
 
   printf("\n\n----------------Operator %s, normalized form--------------\n", 
-	 o->operator->name);
+	 o->oper->name);
 
   for ( i = 0; i < o->num_vars; i++ ) {
     printf("\nx%d of type ", i);
@@ -416,8 +416,8 @@ void print_NormOperator( NormOperator *o )
 	 o->num_removed_vars);
   for ( i = 0; i < o->num_removed_vars; i++ ) {
     m = o->removed_vars[i];
-    printf("\nx%d (%s) of type %s, type constraint ", m, o->operator->var_names[m], 
-	   gtype_names[o->operator->var_types[m]]);
+    printf("\nx%d (%s) of type %s, type constraint ", m, o->oper->var_names[m], 
+	   gtype_names[o->oper->var_types[m]]);
     print_type( o->type_removed_vars[i] );
   }
 
@@ -466,11 +466,11 @@ void print_MixedOperator( MixedOperator *o )
   Literal *l;
 
   printf("\n\n----------------Operator %s, mixed form--------------\n", 
-	 o->operator->name);
+	 o->oper->name);
  
-  for ( i = 0; i < o->operator->num_vars; i++ ) {
+  for ( i = 0; i < o->oper->num_vars; i++ ) {
     printf("\nx%d = %s of type ", i, gconstants[o->inst_table[i]]);
-    print_type( o->operator->var_types[i] );
+    print_type( o->oper->var_types[i] );
   }
 
   printf("\nPreconds:\n");
@@ -486,7 +486,7 @@ void print_MixedOperator( MixedOperator *o )
 
     for ( i = 0; i < e->num_vars; i++ ) {
       printf("\nx%d of type %s",
-	     o->operator->num_vars + i, gtype_names[e->var_types[i]]);
+	     o->oper->num_vars + i, gtype_names[e->var_types[i]]);
     }
     printf("\nConditions\n");
     print_Wff( e->conditions, 0 );
@@ -513,11 +513,11 @@ void print_PseudoAction( PseudoAction *o )
   int i, m;
 
   printf("\n\n----------------Pseudo Action %s--------------\n", 
-	 o->operator->name);
+	 o->oper->name);
 
-  for ( i = 0; i < o->operator->num_vars; i++ ) {
+  for ( i = 0; i < o->oper->num_vars; i++ ) {
     printf("\nx%d = %s of type ", i, gconstants[o->inst_table[i]]);
-    print_type( o->operator->var_types[i] );
+    print_type( o->oper->var_types[i] );
   }
 
   printf("\nPreconds:\n");

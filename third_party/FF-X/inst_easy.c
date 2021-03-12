@@ -107,7 +107,7 @@ void build_easy_action_templates( void )
     for ( i = 0; i < gnum_easy_operators; i++ ) {
       o = geasy_operators[i];
 
-      printf("\n\n-----------operator %s:-----------", o->operator->name);
+      printf("\n\n-----------operator %s:-----------", o->oper->name);
       for ( t = geasy_templates; t; t = t->next ) {
 	if ( t->op != o ) {
 	  continue;

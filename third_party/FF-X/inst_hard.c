@@ -782,7 +782,7 @@ void multiply_hard_effect_parameters( void )
   for ( o = ghard_mixed_operators; o; o = o->next ) {
     tmp = new_PseudoAction( o );
 
-    for ( i = 0; i < tmp->operator->num_vars; i++ ) {
+    for ( i = 0; i < tmp->oper->num_vars; i++ ) {
       linst_table[i] = tmp->inst_table[i];
     }
 
@@ -805,7 +805,7 @@ void create_hard_pseudo_effects( PseudoAction *a, Effect *e, int curr_var )
   PseudoActionEffect *tmp2;
 
   if ( curr_var < e->num_vars ) {
-    par = a->operator->num_vars + curr_var;
+    par = a->oper->num_vars + curr_var;
 
     t = e->var_types[curr_var];
     for ( i = 0; i < gtype_size[t]; i++ ) {
@@ -831,7 +831,7 @@ void create_hard_pseudo_effects( PseudoAction *a, Effect *e, int curr_var )
   /* only debugging, REMOVE LATER
    */
   if ( is_dnf( tmp1 ) == -1 ) {
-    printf("\n\nILLEGAL DNF %s AFTER INSTANTIATION\n\n", a->operator->name);
+    printf("\n\nILLEGAL DNF %s AFTER INSTANTIATION\n\n", a->oper->name);
     print_Wff( tmp1, 0 );
     exit( 1 );
   }
