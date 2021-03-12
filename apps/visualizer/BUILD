@@ -7,6 +7,7 @@ cc_binary(
         "//io/camera:camera", 
         "//visualization:visualization",
         "//systems/fastplanner:fastplanner",
+        "//systems/taskplanner:taskplanner",
     ],
     linkopts = ["-framework OpenGL", "-framework GLUT"],
 )
