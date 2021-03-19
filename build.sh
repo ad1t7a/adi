@@ -69,12 +69,20 @@ case "${1:-}" in
     git checkout cpp-3.3.0
     cd ../
 
+    # ff-x for task planning
     cd FF-X/
     make veryclean
     make
     make clean
     cd ../
 
+    # osqp-cpp
+    rm -rf osqp-cpp/
+    git clone --recurse-submodules https://github.com/google/osqp-cpp.git
+    cd osqp-cpp/
+    mkdir build/
+    cd build/
+    cmake ../
     ;;
   ("obstaclefreeregion")
     bazel build //apps/obstaclefreeregion --cxxopt='-std=c++17'
