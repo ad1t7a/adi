@@ -71,18 +71,18 @@ nlohmann::json Visualization::createSphere(double radius, double worldPos[3],
 }
 
 /***************************************************************************/ /**
-                                                                               * Create cylinder object
-                                                                               *
-                                                                               * @param radiusTop   top radius
-                                                                               * @param radiusBottom   bottom radius
-                                                                               * @param height   height
-                                                                               * @param worldPos world pose
-                                                                               * @param colorRGB RGB color
-                                                                               * @param path     path
-                                                                               * @param transparent transparency bool
-                                                                               * @param opacity opacity scale
-                                                                               * @return cylinder json object
-                                                                               ******************************************************************************/
+* Create cylinder object
+*
+* @param radiusTop   top radius
+* @param radiusBottom   bottom radius
+* @param height   height
+* @param worldPos world pose
+* @param colorRGB RGB color
+* @param path     path
+* @param transparent transparency bool
+* @param opacity opacity scale
+* @return cylinder json object
+******************************************************************************/
 nlohmann::json Visualization::createCylinder(double radiusTop,
                                              double radiusBottom, double height,
                                              double worldPos[3], int colorRGB,
