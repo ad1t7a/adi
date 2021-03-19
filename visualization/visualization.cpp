@@ -71,6 +71,63 @@ nlohmann::json Visualization::createSphere(double radius, double worldPos[3],
 }
 
 /***************************************************************************/ /**
+                                                                               * Create cylinder object
+                                                                               *
+                                                                               * @param radiusTop   top radius
+                                                                               * @param radiusBottom   bottom radius
+                                                                               * @param height   height
+                                                                               * @param worldPos world pose
+                                                                               * @param colorRGB RGB color
+                                                                               * @param path     path
+                                                                               * @param transparent transparency bool
+                                                                               * @param opacity opacity scale
+                                                                               * @return cylinder json object
+                                                                               ******************************************************************************/
+nlohmann::json Visualization::createCylinder(double radiusTop,
+                                             double radiusBottom, double height,
+                                             double worldPos[3], int colorRGB,
+                                             const char *path, bool transparent,
+                                             double opacity) {
+  std::string geomUID = generateUUID();
+  std::string materialUID = generateUUID();
+  std::string objectUID = generateUUID();
+
+  nlohmann::json setObjectCylinderCmd = {
+      {"type", "set_object"},
+      {"path", path},
+      {"object",
+       {{"metadata", {{"type", "Object"}, {"version", 4.5}}},
+        {"geometries",
+         {{
+             {"radiusTop", radiusTop},
+             {"radiusBottom", radiusBottom},
+             {"height", height},
+             {"radialSegments", 50},
+             {"type", "CylinderGeometry"},
+             {"uuid", geomUID},
+         }}},
+        {"materials",
+         {{{"color", colorRGB},
+           {"reflectivity", 0.5},
+           {"side", 200},
+           {"transparent", transparent},
+           {"opacity", opacity},
+           {"type", "MeshPhongMaterial"},
+           {"uuid", materialUID}}}},
+        {
+            "object",
+            {{"geometry", geomUID},
+             {"material", materialUID},
+             {"matrix",
+              {1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0,
+               worldPos[0], worldPos[1], worldPos[2], 1.0}},
+             {"type", "Mesh"},
+             {"uuid", objectUID}},
+        }}}};
+  return setObjectCylinderCmd;
+}
+
+/***************************************************************************/ /**
 * Create box object
 *
 * @param radius   radius

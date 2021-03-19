@@ -20,6 +20,11 @@ public:
   nlohmann::json createSphere(double radius, double worldPos[3], int colorRGB,
                               const char *path, bool transparent = false,
                               double opacity = 1.0);
+  //! create cylinder
+  nlohmann::json createCylinder(double radiusTop, double radiusBottom,
+                                double height, double worldPos[3], int colorRGB,
+                                const char *path, bool transparent,
+                                double opacity);
 
   //! create box
   nlohmann::json createBoxCmd(double width, double height, double length,
