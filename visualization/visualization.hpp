@@ -41,6 +41,9 @@ public:
                                         std::string mapUUID, double worldPos[3],
                                         int colorRGB, const char *path);
 
+  //! create ellipsoid from sphere
+  nlohmann::json transformEllipsoidCmd(double worldPos[3], const char *path);
+
   //! frame transform
   nlohmann::json createTransformCmd(double worldPos[3], double worldMat[9],
                                     const char *path);

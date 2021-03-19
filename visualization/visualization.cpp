@@ -294,6 +294,25 @@ nlohmann::json Visualization::createTexturedMeshCmd2(const char *objData,
 }
 
 /***************************************************************************/ /**
+                                                                               * Create frame transformation object
+                                                                               *
+                                                                               * @param worldPos world pose
+                                                                               * @param path     path
+                                                                               * @return frame transform json object
+                                                                               ******************************************************************************/
+nlohmann::json Visualization::transformEllipsoidCmd(double worldPos[3],
+                                                    const char *path) {
+  nlohmann::json transformCmd = {
+      {"type", "set_transform"},
+      {"path", path},
+      {"matrix",
+       {worldPos[0], 0.0, 0.0, 0.0, 0.0, worldPos[1], 0.0, 0.0, 0.0, 0.0,
+        worldPos[2], 0.0, 0.0, 0.0, 0.0, 1.0}},
+  };
+  return transformCmd;
+}
+
+/***************************************************************************/ /**
 * Create frame transformation object
 *
 * @param worldPos world pose

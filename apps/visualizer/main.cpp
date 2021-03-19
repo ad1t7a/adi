@@ -53,13 +53,16 @@ int main() {
   i< points.size(); i++) { std::cout << points[i].transpose() <<"\n";
   }*/
 
-  
-  adi::visualization::PointCloud pc(std::string("tcp://127.0.0.1:6000"));
-  pc.loadPointCloud("/adi/test");
-  
+  adi::visualization::Visualization test(std::string("tcp://127.0.0.1:6000"));
+  double worldPos[3] = {0., 0., 0.};
+  test.sendZMQ(
+      test.createSphere(1.0, worldPos, 0xFF0000, "test/ellipsoid", true, 0.5),
+      false);
+  double trans[3] = {0.5, 0.3, 0.1};
+  test.sendZMQ(test.transformEllipsoidCmd(trans, "test/ellipsoid"), false);
 
-
-
+  /*adi::visualization::PointCloud pc(std::string("tcp://127.0.0.1:6000"));
+  pc.loadPointCloud("/adi/test");*/
 
   return 0;
 }
