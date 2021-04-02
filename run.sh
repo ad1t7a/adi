@@ -10,6 +10,10 @@ case "${1:-}" in
     cd bazel-bin/apps/visualizer/
     ./visualizer
     ;;
+  ("visualizer")
+    cd bazel-bin/apps/visualizer/
+    ./visualizer
+    ;;
   ("obstaclefreeregion")
     cd bazel-bin/apps/obstaclefreeregion/
     ./obstaclefreeregion
@@ -19,6 +23,8 @@ case "${1:-}" in
     echo "where <package> is one of the following:" 1>&2
     echo "  server" 1>&2
     echo "  visualizer" 1>&2
+    echo "  obstaclefreeregion" 1>&2
+    echo "  skinpose" 1>&2
     exit 1
     ;;
 esac

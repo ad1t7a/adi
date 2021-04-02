@@ -90,6 +90,9 @@ case "${1:-}" in
   ("visualizer")
     bazel build //apps/visualizer
     ;;
+  ("skinpose")
+    bazel build //apps/skinpose
+    ;;
   ("clear")
     bazel clean --expunge
     ;;
@@ -99,6 +102,7 @@ case "${1:-}" in
     echo "  prerequisites" 1>&2
     echo "  obstaclefreeregion" 1>&2
     echo "  visualizer" 1>&2
+    echo "  skinpose" 1>&2
     echo "  clear" 1>&2
     exit 1
     ;;
