@@ -1,4 +1,3 @@
-#include "systems/fastplanner/sweptvolume.hpp"
 #include "visualization/pointcloud.hpp"
 #include "visualization/urdf.hpp"
 
@@ -37,13 +36,6 @@ int main() {
   transform.E ={-1.0000000,  0.0000000, -0.0000000, 0.0000000,  0.7071068, -0.7071068, 0.0000000, -0.7071068, -0.7071068};
   transforms.push_back(transform);
   endEffector.syncVisualTransforms(transforms);*/
-
-  /*adi::systems::SweptVolume sw("/Users/ad1t7a/Developer/adi/robots/flexiv/",
-  "robot.urdf", false); std::vector<adi::Vector3d> points; points =
-  sw.calculateSweptVolume(RigidBodyDynamics::Math::VectorNd::Zero(sw.getDoF()),
-  0.001*RigidBodyDynamics::Math::VectorNd::Ones(sw.getDoF())); for(size_t i=0;
-  i< points.size(); i++) { std::cout << points[i].transpose() <<"\n";
-  }*/
 
   /*adi::visualization::PointCloud pc(std::string("tcp://127.0.0.1:6000"));
   pc.loadPointCloud("/adi/test");*/
