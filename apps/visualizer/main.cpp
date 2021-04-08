@@ -3,7 +3,6 @@
 #include "visualization/urdf.hpp"
 
 int main() {
-
   size_t numRobots = 1;
   std::vector<adi::visualization::URDF*> vectorURDF;
   for(size_t k=0; k<numRobots; k++) {
@@ -14,12 +13,12 @@ int main() {
     vectorURDF.push_back(urdf);
   }
 
-
   RigidBodyDynamics::Math::VectorNd Q =
       RigidBodyDynamics::Math::VectorNd::Zero(vectorURDF[0]->getDoF());
   double t = 0.0;
   while (true) {
     for(size_t k=0; k<vectorURDF.size(); k++) {
+      // translation position
       Q[0] = (double)(k / 10);
       Q[1] = (double)(k % 10);
       Q[2] = 0.0;

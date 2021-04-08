@@ -58,9 +58,9 @@ bool URDF::loadURDF(std::string filename, bool floatingBase,
 ******************************************************************************/
 void URDF::syncVisualTransforms(RigidBodyDynamics::Math::VectorNd Q) {
   RigidBodyDynamics::Math::VectorNd QDot =
-      RigidBodyDynamics::Math::VectorNd::Zero(m_model->dof_count);
+      RigidBodyDynamics::Math::VectorNd::Zero(m_model->q_size);
   RigidBodyDynamics::Math::VectorNd QDDot =
-      RigidBodyDynamics::Math::VectorNd::Zero(m_model->dof_count);
+      RigidBodyDynamics::Math::VectorNd::Zero(m_model->q_size);
   RigidBodyDynamics::UpdateKinematics(*m_model, Q, QDot, QDDot);
   for (size_t i = 0; i < m_model->mBodies.size(); i++) {
     if (m_model->IsBodyId(i)) {

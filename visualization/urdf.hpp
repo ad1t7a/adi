@@ -29,7 +29,7 @@ public:
   void syncVisualTransforms(std::vector<RigidBodyDynamics::Math::SpatialTransform> transforms);
 
   //! get number of degrees of freedom
-  int getDoF() { return m_model->dof_count; }
+  int getDoF() { return m_model->q_size; }
 
   //! set path prefix
   void setPathPrefix(std::string pathPrefix) { m_pathPrefix = pathPrefix; }
