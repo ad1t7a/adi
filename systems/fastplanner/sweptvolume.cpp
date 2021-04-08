@@ -4,10 +4,10 @@
 namespace adi {
 namespace systems {
 /***************************************************************************/ /**
-                                                                               * Constructor
-                                                                               * @param filename file name
-                                                                               * @param floatingBase floating base flag
-                                                                               ******************************************************************************/
+* Constructor
+* @param filename file name
+* @param floatingBase floating base flag
+******************************************************************************/
 SweptVolume::SweptVolume(std::string prefix, std::string filename,
                          bool floatingBase) {
   m_pathPrefix = prefix;
@@ -19,16 +19,16 @@ SweptVolume::SweptVolume(std::string prefix, std::string filename,
 }
 
 /***************************************************************************/ /**
-                                                                               * Destructor
-                                                                               ******************************************************************************/
+* Destructor
+******************************************************************************/
 SweptVolume::~SweptVolume() { delete (m_model); }
 
 /***************************************************************************/ /**
-                                                                               * Calculate swept volume
-                                                                               * @param qStart start position
-                                                                               * @param qGoal goal position
-                                                                               * @return swept points
-                                                                               ******************************************************************************/
+* Calculate swept volume
+* @param qStart start position
+* @param qGoal goal position
+* @return swept points
+******************************************************************************/
 std::vector<Vector3d>
 SweptVolume::calculateSweptVolume(RigidBodyDynamics::Math::VectorNd qStart,
                                   RigidBodyDynamics::Math::VectorNd qGoal,
@@ -58,8 +58,8 @@ SweptVolume::calculateSweptVolume(RigidBodyDynamics::Math::VectorNd qStart,
 }
 
 /***************************************************************************/ /**
-                                                                               * Load mesh points and save them into m_linksVertices
-                                                                               ******************************************************************************/
+* Load mesh points and save them into m_linksVertices
+******************************************************************************/
 void SweptVolume::getMeshDataPoints() {
   std::vector<my_shared_ptr<urdf::Link>> links;
   m_urdfModel->getLinks(links);
@@ -70,10 +70,10 @@ void SweptVolume::getMeshDataPoints() {
 }
 
 /***************************************************************************/ /**
-                                                                               * parse link visual points and covert to Vectors
-                                                                               * @param link link path
-                                                                               * @param linkIndex link index
-                                                                               ******************************************************************************/
+* parse link visual points and covert to Vectors
+* @param link link path
+* @param linkIndex link index
+******************************************************************************/
 void SweptVolume::getLinkPoints(urdf::Link &link, int linkIndex) {
   for (int vis_index = 0; vis_index < (int)link.visual_array.size();
        vis_index++) {
@@ -102,9 +102,9 @@ void SweptVolume::getLinkPoints(urdf::Link &link, int linkIndex) {
 }
 
 /***************************************************************************/ /**
-                                                                               * Get object vertices and load them to m_linksVertices
-                                                                               * @param objData parsed object data
-                                                                               ******************************************************************************/
+* Get object vertices and load them to m_linksVertices
+* @param objData parsed object data
+******************************************************************************/
 void SweptVolume::getObjectVertices(std::string &objData) {
   std::string findString = "v ";
   long int objectFileLength;

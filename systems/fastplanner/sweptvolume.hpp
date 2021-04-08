@@ -26,7 +26,7 @@ public:
                        size_t numSteps = 10);
 
   //! get number of links
-  int getDoF() { return m_model->dof_count; }
+  int getDoF() { return m_model->q_size; }
 
 private:
   void getObjectVertices(std::string &objData);
