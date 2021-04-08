@@ -23,13 +23,12 @@ public:
                 const std::string &robotName = "");
 
   //! sync visual transformation
-  void syncVisualTransforms(RigidBodyDynamics::Math::VectorNd Q,
-                            std::vector<double> offset);
+  void syncVisualTransforms(RigidBodyDynamics::Math::VectorNd Q);
 
   //! sync visual transformation
   void syncVisualTransforms(std::vector<RigidBodyDynamics::Math::SpatialTransform> transforms);
 
-  //! get number of links
+  //! get number of degrees of freedom
   int getDoF() { return m_model->dof_count; }
 
   //! set path prefix

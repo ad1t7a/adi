@@ -1,6 +1,5 @@
 #include "visualization/pointcloud.hpp"
 #include <iostream>
-#include <msgpack.hpp>
 
 namespace adi {
 namespace visualization {

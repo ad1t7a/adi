@@ -56,27 +56,26 @@ bool URDF::loadURDF(std::string filename, bool floatingBase,
 *
 * @param Q   pose update
 ******************************************************************************/
-void URDF::syncVisualTransforms(RigidBodyDynamics::Math::VectorNd Q,
-                                std::vector<double> offset) {
+void URDF::syncVisualTransforms(RigidBodyDynamics::Math::VectorNd Q) {
   RigidBodyDynamics::Math::VectorNd QDot =
       RigidBodyDynamics::Math::VectorNd::Zero(m_model->dof_count);
   RigidBodyDynamics::Math::VectorNd QDDot =
       RigidBodyDynamics::Math::VectorNd::Zero(m_model->dof_count);
   RigidBodyDynamics::UpdateKinematics(*m_model, Q, QDot, QDDot);
-  for (size_t i = 0; i < m_model->mJoints.size(); i++) {
-    RigidBodyDynamics::Math::SpatialTransform baseFrame = m_model->X_base[i];
-    double world_pos[3] = {baseFrame.r[0] + offset[0],
-                           baseFrame.r[1] + offset[1],
-                           baseFrame.r[2] + offset[2]};
-    double world_mat[9] = {
-        baseFrame.E(0, 0), baseFrame.E(0, 1), baseFrame.E(0, 2),
-        baseFrame.E(1, 0), baseFrame.E(1, 1), baseFrame.E(1, 2),
-        baseFrame.E(2, 0), baseFrame.E(2, 1), baseFrame.E(2, 2)};
-    std::string vis_name =
-        kVisualizerPath + m_robotName + std::string("/") + m_linkNameToIndex[i];
-    nlohmann::json tr_cmd =
-        createTransformCmd(world_pos, world_mat, vis_name.c_str());
-    sendZMQ(tr_cmd);
+  for (size_t i = 0; i < m_model->mBodies.size(); i++) {
+    if (m_model->IsBodyId(i)) {
+      RigidBodyDynamics::Math::SpatialTransform baseFrame = m_model->X_base[i];
+      double world_pos[3] = {baseFrame.r[0], baseFrame.r[1], baseFrame.r[2]};
+      double world_mat[9] = {
+          baseFrame.E(0, 0), baseFrame.E(0, 1), baseFrame.E(0, 2),
+          baseFrame.E(1, 0), baseFrame.E(1, 1), baseFrame.E(1, 2),
+          baseFrame.E(2, 0), baseFrame.E(2, 1), baseFrame.E(2, 2)};
+      std::string vis_name = kVisualizerPath + m_robotName + std::string("/") +
+                             m_linkNameToIndex[i];
+      nlohmann::json tr_cmd =
+          createTransformCmd(world_pos, world_mat, vis_name.c_str());
+      sendZMQ(tr_cmd);
+    }
   }
 }
 
@@ -115,7 +114,8 @@ void URDF::convertVisuals(const std::string &texturePath) {
   m_urdfModel->getLinks(links);
 
   for (size_t i = 0; i < links.size(); i++) {
-    m_linkNameToIndex[i] = links[i]->name;
+    m_linkNameToIndex[m_model->GetBodyId(links[i]->name.c_str())] =
+        links[i]->name;
     urdf::Link a = *links[i];
     convertLinkVisuals(a, i, false);
   }

@@ -78,12 +78,6 @@ new_local_repository(
 )
 
 new_local_repository(
-  name = "msgpackc",
-  path = __workspace_dir__ + "/third_party/msgpack-c/",
-  build_file = "third_party/msgpackc.BUILD",
-)
-
-new_local_repository(
   name = "cppzmq",
   path = __workspace_dir__ + "/third_party/",
   build_file = "third_party/cppzmq.BUILD",

@@ -15,7 +15,6 @@ cc_library(
             "@crossguid//:crossguid", 
             "@zmq//:zmq", 
             "@cppzmq//:cppzmq",
-            "@msgpackc//:msgpackc",
             ],
     visibility = ["//visibility:public"],
 )
