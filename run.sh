@@ -6,13 +6,17 @@ case "${1:-}" in
   ("server")
     meshcat-server
     ;;
-  ("visualizer")
-    cd bazel-bin/apps/visualizer/
-    ./visualizer
+  ("flexivarmcontrol")
+    cd bazel-bin/apps/flexivarmcontrol/
+    ./flexivarmcontrol
     ;;
   ("visualizer")
     cd bazel-bin/apps/visualizer/
     ./visualizer
+    ;;
+  ("skinpose")
+    cd bazel-bin/apps/skinpose/
+    ./skinpose
     ;;
   ("obstaclefreeregion")
     cd bazel-bin/apps/obstaclefreeregion/

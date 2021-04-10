@@ -30,7 +30,7 @@ constexpr double ksqrt3Div2 = 0.86602540378;
 constexpr double kaccGravity = -9.8;
 
 //! cartesian position degrees of freedom
-constexpr double kCartPoseDofs = 6;
+constexpr int kCartPoseDofs = 6;
 
 //! timestep [s]
 constexpr double kTimestep = 0.001;

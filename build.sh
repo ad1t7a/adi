@@ -87,6 +87,9 @@ case "${1:-}" in
   ("obstaclefreeregion")
     bazel build //apps/obstaclefreeregion --cxxopt='-std=c++17'
     ;;
+  ("flexivarmcontrol")
+    bazel build //apps/flexivarmcontrol --cxxopt='-std=c++17'
+    ;;
   ("visualizer")
     bazel build //apps/visualizer
     ;;
@@ -101,6 +104,7 @@ case "${1:-}" in
     echo "where <package> is one of the following:" 1>&2
     echo "  prerequisites" 1>&2
     echo "  obstaclefreeregion" 1>&2
+    echo "  flexivarmcontrol" 1>&2
     echo "  visualizer" 1>&2
     echo "  skinpose" 1>&2
     echo "  clear" 1>&2

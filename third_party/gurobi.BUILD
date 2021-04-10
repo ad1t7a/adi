@@ -4,6 +4,7 @@ cc_library(
   includes = ["include/",
   ],
   srcs = [
+    "lib/libgurobi_c++.a",
     "lib/libgurobi91.dylib",
   ],
   visibility = ["//visibility:public"],
