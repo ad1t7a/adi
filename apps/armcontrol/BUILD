@@ -1,6 +1,6 @@
 cc_binary(
-    name = "flexivarmcontrol",
-    srcs = ["main.cpp", "robotdb.hpp"],
+    name = "armcontrol",
+    srcs = ["main.cpp", "robotdb.hpp", "ConnectionManager.hpp"],
 
     deps = [
         "//common:common", 

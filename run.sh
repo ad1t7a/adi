@@ -6,9 +6,9 @@ case "${1:-}" in
   ("server")
     meshcat-server
     ;;
-  ("flexivarmcontrol")
-    cd bazel-bin/apps/flexivarmcontrol/
-    ./flexivarmcontrol
+  ("armcontrol")
+    cd bazel-bin/apps/armcontrol/
+    ./armcontrol
     ;;
   ("visualizer")
     cd bazel-bin/apps/visualizer/
@@ -26,6 +26,7 @@ case "${1:-}" in
     echo "Usage: $0 <package>" 1>&2
     echo "where <package> is one of the following:" 1>&2
     echo "  server" 1>&2
+    echo "  armcontrol" 1>&2
     echo "  visualizer" 1>&2
     echo "  obstaclefreeregion" 1>&2
     echo "  skinpose" 1>&2

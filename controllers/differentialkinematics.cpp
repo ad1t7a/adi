@@ -40,8 +40,17 @@ void DifferentialKinematics::step(unsigned int &bodyID, Eigen::VectorXd &jntPos,
     }
     GRBVar alpha = model.addVar(-50.0, 50.0, 0.0, GRB_CONTINUOUS, "alpha");
 
-    // objective function (min -alpha)
-    GRBQuadExpr objective = -1.0 * alpha;
+    // primary objective function (min -alpha)
+    GRBQuadExpr primaryObjective = -1.0 * alpha;
+
+
+    // objective
+    GRBQuadExpr objective;
+    objective += primaryObjective;
+    /*for(size_t i = 0; i<getDoF(); i++) {
+      objective += secondaryObjectiveTerms[i];
+    }*/
+
     model.setObjective(objective);
 
     // constraint (0<=alpha<=1)
