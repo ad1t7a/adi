@@ -33,6 +33,12 @@ new_local_repository(
 )
 
 new_local_repository(
+  name = "ruckig",
+  path = __workspace_dir__ + "/third_party/ruckig/",
+  build_file = "third_party/ruckig.BUILD",
+)
+
+new_local_repository(
   name = "libcdd",
   path = "/usr/local/",
   build_file = "third_party/libcdd.BUILD",

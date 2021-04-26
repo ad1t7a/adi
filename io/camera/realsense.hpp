@@ -24,7 +24,7 @@ private:
 
   // We want the points object to be persistent so we can display the last cloud
   // when a frame drops
-  rs2::points points;
+  rs2::points mPoints;
 
   // Declare RealSense pipeline, encapsulating the actual device and sensors
   rs2::pipeline pipe;

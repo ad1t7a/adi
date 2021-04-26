@@ -76,6 +76,26 @@ case "${1:-}" in
     make clean
     cd ../
 
+    # trajectory generation
+    rm -rf ruckig/
+    https://github.com/pantor/ruckig.git
+    cd ruckig/
+    mkdir build/
+    cd build/
+    cmake ../
+    make
+    cd ../../
+
+    # glfw
+    rm -rf glfw/
+    git clone https://github.com/glfw/glfw.git
+    cd glfw/
+    mkdir build
+    cd build/
+    cmake ../
+    make
+    cd ../../
+
     # osqp-cpp
     rm -rf osqp-cpp/
     git clone --recurse-submodules https://github.com/google/osqp-cpp.git
@@ -93,9 +113,6 @@ case "${1:-}" in
   ("visualizer")
     bazel build //apps/visualizer
     ;;
-  ("skinpose")
-    bazel build //apps/skinpose
-    ;;
   ("clear")
     bazel clean --expunge
     ;;
@@ -106,7 +123,6 @@ case "${1:-}" in
     echo "  obstaclefreeregion" 1>&2
     echo "  armcontrol" 1>&2
     echo "  visualizer" 1>&2
-    echo "  skinpose" 1>&2
     echo "  clear" 1>&2
     exit 1
     ;;

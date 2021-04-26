@@ -28,7 +28,7 @@ void Realsense::step() {
     pc.map_to(color);
     auto depth = frames.get_depth_frame();
     // Generate the pointcloud and texture mappings
-    points = pc.calculate(depth);
+    mPoints = pc.calculate(depth);
   } catch (const rs2::error &e) {
     return;
   } catch (const std::exception &e) {

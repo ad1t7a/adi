@@ -14,10 +14,6 @@ case "${1:-}" in
     cd bazel-bin/apps/visualizer/
     ./visualizer
     ;;
-  ("skinpose")
-    cd bazel-bin/apps/skinpose/
-    ./skinpose
-    ;;
   ("obstaclefreeregion")
     cd bazel-bin/apps/obstaclefreeregion/
     ./obstaclefreeregion
@@ -29,7 +25,6 @@ case "${1:-}" in
     echo "  armcontrol" 1>&2
     echo "  visualizer" 1>&2
     echo "  obstaclefreeregion" 1>&2
-    echo "  skinpose" 1>&2
     exit 1
     ;;
 esac
