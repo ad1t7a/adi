@@ -39,6 +39,12 @@ new_local_repository(
 )
 
 new_local_repository(
+  name = "glfw",
+  path = "/usr/local/Cellar/glfw/3.3.2/",
+  build_file = "third_party/glfw.BUILD",
+)
+
+new_local_repository(
   name = "libcdd",
   path = "/usr/local/",
   build_file = "third_party/libcdd.BUILD",

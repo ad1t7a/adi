@@ -1,9 +1,9 @@
 #include "common/constants.hpp"
 #include "common/converters.hpp"
 #include "controllers/differentialkinematics.hpp"
+#include "io/joystick/ps4.hpp"
 #include "robotdb.hpp"
 #include "visualization/urdf.hpp"
-
 // robot configuration
 std::string prefixPath = "/Users/ad1t7a/Developer/adi/robots/flexiv/";
 std::string robotPath = "robot.urdf";
@@ -19,7 +19,7 @@ unsigned int kControlLinkIndex = 7;
 
 int main() {
   // initialize robot start position
-  Eigen::VectorXd robotPosOri = Eigen::VectorXd::Zero(adi::kCartPoseDofs);
+  /*Eigen::VectorXd robotPosOri = Eigen::VectorXd::Zero(adi::kCartPoseDofs);
 
   // initialize controller
   adi::controllers::DifferentialKinematics diffIK(prefixPath + robotPath);
@@ -61,6 +61,12 @@ int main() {
 
     // update timestep
     t += kcanonicalTimestep;
+  }*/
+
+  adi::io::joystick::PS4 js;
+  js.init();
+  while (true) {
+    js.step();
   }
 
   return 0;

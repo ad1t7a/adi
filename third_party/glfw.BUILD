@@ -1,10 +1,10 @@
 cc_library(
   name = "glfw",
-  hdrs = glob(["include/GLFW/**", ]),
-  includes = ["include/GLFW/", 
+  hdrs = glob(["include/**", ]),
+  includes = ["include/", 
   ],
   srcs = [
-    "build/src/libglfw3.a", 
+    "lib/libglfw.dylib", 
   ],
   visibility = ["//visibility:public"],
 )

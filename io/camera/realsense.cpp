@@ -15,20 +15,20 @@ Realsense::Realsense() {}
 Realsense::~Realsense() {}
 
 // initialize
-void Realsense::init() { pipe.start(); }
+void Realsense::init() { mPipe.start(); }
 
 // step
 void Realsense::step() {
   try {
     // Wait for the next set of frames from the camera
-    auto frames = pipe.wait_for_frames();
+    auto frames = mPipe.wait_for_frames();
     auto color = frames.get_color_frame();
 
     // Tell pointcloud object to map to this color frame
-    pc.map_to(color);
+    mPc.map_to(color);
     auto depth = frames.get_depth_frame();
     // Generate the pointcloud and texture mappings
-    mPoints = pc.calculate(depth);
+    mPoints = mPc.calculate(depth);
   } catch (const rs2::error &e) {
     return;
   } catch (const std::exception &e) {

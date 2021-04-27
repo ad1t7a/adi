@@ -87,15 +87,8 @@ case "${1:-}" in
     cd ../../
 
     # glfw
-    rm -rf glfw/
-    git clone https://github.com/glfw/glfw.git
-    cd glfw/
-    mkdir build
-    cd build/
-    cmake ../
-    make
-    cd ../../
-
+    brew install glfw3
+    
     # osqp-cpp
     rm -rf osqp-cpp/
     git clone --recurse-submodules https://github.com/google/osqp-cpp.git

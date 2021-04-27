@@ -6,6 +6,7 @@ cc_binary(
         "//common:common", 
         "//visualization:visualization",
         "//controllers:controllers",
+        "//io/joystick:joystick",
     ],
     linkopts = ["-framework OpenGL", "-framework GLUT"],
 )
