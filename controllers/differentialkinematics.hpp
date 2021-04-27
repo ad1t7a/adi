@@ -39,6 +39,7 @@ public:
   //! get DoF
   size_t getDoF() { return m_model->q_size; }
 
+  // diff IK options
   DifferentialKinematicsOptions options;
 
 private:
@@ -47,6 +48,9 @@ private:
 
   //! robot urdf model
   RigidBodyDynamics::ModelPtr m_urdfModel;
+
+  // jacobian pos ori
+  MatrixXd mJacobianOriPos;
 };
 } // namespace controllers
 } // namespace adi

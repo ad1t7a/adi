@@ -29,7 +29,9 @@ void PS4::init(int joystickIndex) {
   if (axes == NULL) {
     mOnline = false;
   }
-  updateState(mSliderOffset);
+  for (size_t i = 0; i < 100; i++) {
+    updateState(mSliderOffset);
+  }
 }
 
 // step

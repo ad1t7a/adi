@@ -7,20 +7,24 @@ int main() {
   for(size_t k=0; k<numRobots; k++) {
     adi::visualization::URDF* urdf = new
   adi::visualization::URDF(std::string("tcp://127.0.0.1:6000"));
-    urdf->setPathPrefix("/Users/ad1t7a/Developer/adi/robots/flexiv/");
-    urdf->loadURDF("robot.urdf", true, "texture.jpg", std::to_string(k));
+    urdf->setPathPrefix("/Users/ad1t7a/Developer/adi/robots/quadruped/");
+    urdf->loadURDF("laikago.urdf", true, "texture.jpg", std::to_string(k));
     vectorURDF.push_back(urdf);
   }
 
   RigidBodyDynamics::Math::VectorNd Q =
       RigidBodyDynamics::Math::VectorNd::Zero(vectorURDF[0]->getDoF());
+  std::cout << "Q[3] = " << vectorURDF[0]->getDoF() << "\n";
   double t = 0.0;
   while (true) {
     for(size_t k=0; k<vectorURDF.size(); k++) {
       // translation position
-      Q[0] = (double)(k / 10);
-      Q[1] = (double)(k % 10);
-      Q[2] = 0.0;
+      Q[0] = 0;
+      Q[1] = 0;
+      Q[2] = 0.75;
+      Q[3] = 0;
+      Q[4] = 90;
+      Q[5] = 0.0;
       vectorURDF[k]->syncVisualTransforms(Q);
     }
     t += 0.001;

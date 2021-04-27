@@ -4,6 +4,8 @@
 #include "io/joystick/ps4.hpp"
 #include "robotdb.hpp"
 #include "visualization/urdf.hpp"
+#include <chrono>
+
 // robot configuration
 std::string prefixPath = "/Users/ad1t7a/Developer/adi/robots/flexiv/";
 std::string robotPath = "robot.urdf";
@@ -11,20 +13,15 @@ std::string robotPath = "robot.urdf";
 // visualizer IP address
 std::string kVisualizerIPAddress = "tcp://127.0.0.1:6000";
 
-// timestep for calculation
-const double kcanonicalTimestep = 0.001;
-
 // link index
 unsigned int kControlLinkIndex = 7;
 
 int main() {
   // initialize robot start position
-  /*Eigen::VectorXd robotPosOri = Eigen::VectorXd::Zero(adi::kCartPoseDofs);
+  Eigen::VectorXd robotPosOri = Eigen::VectorXd::Zero(adi::kCartPoseDofs);
 
   // initialize controller
   adi::controllers::DifferentialKinematics diffIK(prefixPath + robotPath);
-  // initialize time
-  double t = 0.0;
 
   // initialize visualizer
   adi::visualization::URDF urdf(kVisualizerIPAddress);
@@ -34,8 +31,8 @@ int main() {
   // initialize robot start joint angles (TODO: Replace with middleware and
   // simulator) and velocity
   Eigen::VectorXd robotJntPos(diffIK.getDoF());
-  robotJntPos << 0, adi::degToRad(0), 0, adi::degToRad(0), 0,
-      adi::degToRad(0.001), 0;
+  robotJntPos << 0, adi::degToRad(-40), 0, adi::degToRad(-90), 0,
+      adi::degToRad(40), 0;
   Eigen::VectorXd robotJntVel(diffIK.getDoF());
 
   // update visualization
@@ -44,30 +41,34 @@ int main() {
 
   // cartesian velocity (ori, pos)
   Eigen::VectorXd cmdCartVel(adi::kCartPoseDofs);
-  cmdCartVel << 0.0, 0.0, 0.0, 0.0, 0.0, -1.0;
 
   // joint velocity
   Eigen::VectorXd jntVelocity(diffIK.getDoF());
-
-  while (true) {
-
-    diffIK.step(kControlLinkIndex, robotJntPos, robotJntVel, cmdCartVel,
-                jntVelocity);
-    robotJntPos += kcanonicalTimestep * jntVelocity;
-    robotPosOriConfig << robotPosOri, robotJntPos;
-    robotJntVel = jntVelocity;
-    // update visualization
-    urdf.syncVisualTransforms(robotPosOriConfig);
-
-    // update timestep
-    t += kcanonicalTimestep;
-  }*/
 
   adi::io::joystick::PS4 js;
   js.init();
   while (true) {
     js.step();
-  }
+    cmdCartVel << 0.0, 0.0, 0.0, js.mSliderState.mSliderLeftHorizontal,
+        js.mSliderState.mSliderLeftVertical,
+        js.mSliderState.mSliderRightVertical;
+    std::chrono::steady_clock::time_point begin =
+        std::chrono::steady_clock::now();
+    diffIK.step(kControlLinkIndex, robotJntPos, robotJntVel, cmdCartVel,
+                jntVelocity);
+    std::chrono::steady_clock::time_point end =
+        std::chrono::steady_clock::now();
+    std::cout << "Time difference = "
+              << std::chrono::duration_cast<std::chrono::microseconds>(end -
+                                                                       begin)
+                     .count()
+              << "[µs]" << std::endl;
+    robotJntPos += adi::kTimestep * jntVelocity;
+    robotPosOriConfig << robotPosOri, robotJntPos;
+    robotJntVel = jntVelocity;
 
+    // update visualization
+    urdf.syncVisualTransforms(robotPosOriConfig);
+  }
   return 0;
 }
