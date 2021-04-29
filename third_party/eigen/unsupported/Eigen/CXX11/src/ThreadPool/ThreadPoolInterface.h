@@ -15,7 +15,7 @@ namespace Eigen {
 // This defines an interface that ThreadPoolDevice can take to use
 // custom thread pools underneath.
 class ThreadPoolInterface {
-public:
+ public:
   virtual void Schedule(std::function<void()> fn) = 0;
 
   // Returns the number of threads in the pool.
@@ -28,6 +28,6 @@ public:
   virtual ~ThreadPoolInterface() {}
 };
 
-} // namespace Eigen
+}  // namespace Eigen
 
-#endif // EIGEN_CXX11_THREADPOOL_THREAD_POOL_INTERFACE_H
+#endif  // EIGEN_CXX11_THREADPOOL_THREAD_POOL_INTERFACE_H

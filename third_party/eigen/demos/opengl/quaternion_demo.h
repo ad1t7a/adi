@@ -10,98 +10,105 @@
 #ifndef EIGEN_QUATERNION_DEMO_H
 #define EIGEN_QUATERNION_DEMO_H
 
-#include "camera.h"
 #include "gpuhelper.h"
+#include "camera.h"
 #include "trackball.h"
+#include <map>
 #include <QTimer>
 #include <QtGui/QApplication>
-#include <QtGui/QMainWindow>
 #include <QtOpenGL/QGLWidget>
-#include <map>
+#include <QtGui/QMainWindow>
 
-class RenderingWidget : public QGLWidget {
+class RenderingWidget : public QGLWidget
+{
   Q_OBJECT
 
-  typedef std::map<float, Frame> TimeLine;
-  TimeLine m_timeline;
-  Frame lerpFrame(float t);
+    typedef std::map<float,Frame> TimeLine;
+    TimeLine m_timeline;
+    Frame lerpFrame(float t);
 
-  Frame mInitFrame;
-  bool mAnimate;
-  float m_alpha;
+    Frame mInitFrame;
+    bool mAnimate;
+    float m_alpha;
 
-  enum TrackMode {
-    TM_NO_TRACK = 0,
-    TM_ROTATE_AROUND,
-    TM_ZOOM,
-    TM_LOCAL_ROTATE,
-    TM_FLY_Z,
-    TM_FLY_PAN
-  };
+    enum TrackMode {
+      TM_NO_TRACK=0, TM_ROTATE_AROUND, TM_ZOOM,
+      TM_LOCAL_ROTATE, TM_FLY_Z, TM_FLY_PAN
+    };
 
-  enum NavMode { NavTurnAround, NavFly };
+    enum NavMode {
+      NavTurnAround,
+      NavFly
+    };
 
-  enum LerpMode { LerpQuaternion, LerpEulerAngles };
+    enum LerpMode {
+      LerpQuaternion,
+      LerpEulerAngles
+    };
 
-  enum RotationMode { RotationStable, RotationStandard };
+    enum RotationMode {
+      RotationStable,
+      RotationStandard
+    };
 
-  Camera mCamera;
-  TrackMode mCurrentTrackingMode;
-  NavMode mNavMode;
-  LerpMode mLerpMode;
-  RotationMode mRotationMode;
-  Vector2i mMouseCoords;
-  Trackball mTrackball;
+    Camera mCamera;
+    TrackMode mCurrentTrackingMode;
+    NavMode mNavMode;
+    LerpMode mLerpMode;
+    RotationMode mRotationMode;
+    Vector2i mMouseCoords;
+    Trackball mTrackball;
 
-  QTimer m_timer;
+    QTimer m_timer;
 
-  void setupCamera();
+    void setupCamera();
 
-  std::vector<Vector3f> mVertices;
-  std::vector<Vector3f> mNormals;
-  std::vector<int> mIndices;
+    std::vector<Vector3f> mVertices;
+    std::vector<Vector3f> mNormals;
+    std::vector<int> mIndices;
 
-protected slots:
+  protected slots:
 
-  virtual void animate(void);
-  virtual void drawScene(void);
+    virtual void animate(void);
+    virtual void drawScene(void);
 
-  virtual void grabFrame(void);
-  virtual void stopAnimation();
+    virtual void grabFrame(void);
+    virtual void stopAnimation();
 
-  virtual void setNavMode(int);
-  virtual void setLerpMode(int);
-  virtual void setRotationMode(int);
-  virtual void resetCamera();
+    virtual void setNavMode(int);
+    virtual void setLerpMode(int);
+    virtual void setRotationMode(int);
+    virtual void resetCamera();
 
-protected:
-  virtual void initializeGL();
-  virtual void resizeGL(int width, int height);
-  virtual void paintGL();
+  protected:
 
-  //--------------------------------------------------------------------------------
-  virtual void mousePressEvent(QMouseEvent *e);
-  virtual void mouseReleaseEvent(QMouseEvent *e);
-  virtual void mouseMoveEvent(QMouseEvent *e);
-  virtual void keyPressEvent(QKeyEvent *e);
-  //--------------------------------------------------------------------------------
+    virtual void initializeGL();
+    virtual void resizeGL(int width, int height);
+    virtual void paintGL();
+    
+    //--------------------------------------------------------------------------------
+    virtual void mousePressEvent(QMouseEvent * e);
+    virtual void mouseReleaseEvent(QMouseEvent * e);
+    virtual void mouseMoveEvent(QMouseEvent * e);
+    virtual void keyPressEvent(QKeyEvent * e);
+    //--------------------------------------------------------------------------------
 
-public:
-  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+  public: 
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+    
+    RenderingWidget();
+    ~RenderingWidget() { }
 
-  RenderingWidget();
-  ~RenderingWidget() {}
-
-  QWidget *createNavigationControlWidget();
+    QWidget* createNavigationControlWidget();
 };
 
-class QuaternionDemo : public QMainWindow {
+class QuaternionDemo : public QMainWindow
+{
   Q_OBJECT
-public:
-  QuaternionDemo();
-
-protected:
-  RenderingWidget *mRenderingWidget;
+  public:
+    QuaternionDemo();
+  protected:
+    RenderingWidget* mRenderingWidget;
 };
 
 #endif // EIGEN_QUATERNION_DEMO_H

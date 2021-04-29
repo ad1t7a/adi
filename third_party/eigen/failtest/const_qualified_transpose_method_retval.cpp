@@ -8,6 +8,8 @@
 
 using namespace Eigen;
 
-void foo(CV_QUALIFIER Matrix3d &m) { Transpose<Matrix3d> b(m.transpose()); }
+void foo(CV_QUALIFIER Matrix3d &m){
+    Transpose<Matrix3d> b(m.transpose());
+}
 
 int main() {}

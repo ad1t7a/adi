@@ -10,6 +10,7 @@
 #ifndef EIGEN_CXX11_THREADPOOL_RUNQUEUE_H_
 #define EIGEN_CXX11_THREADPOOL_RUNQUEUE_H_
 
+
 namespace Eigen {
 
 // RunQueue is a fixed-size, partially non-blocking deque or Work items.
@@ -34,13 +35,14 @@ namespace Eigen {
 // separate state variable as null/non-null pointer value would serve as state,
 // but that would require malloc/free per operation for large, complex values
 // (and this is designed to store std::function<()>).
-template <typename Work, unsigned kSize> class RunQueue {
-public:
+template <typename Work, unsigned kSize>
+class RunQueue {
+ public:
   RunQueue() : front_(0), back_(0) {
     // require power-of-two for fast masking
     eigen_assert((kSize & (kSize - 1)) == 0);
-    eigen_assert(kSize > 2);           // why would you do this?
-    eigen_assert(kSize <= (64 << 10)); // leave enough space for counter
+    eigen_assert(kSize > 2);            // why would you do this?
+    eigen_assert(kSize <= (64 << 10));  // leave enough space for counter
     for (unsigned i = 0; i < kSize; i++)
       array_[i].state.store(kEmpty, std::memory_order_relaxed);
   }
@@ -51,7 +53,7 @@ public:
   // If queue is full returns w, otherwise returns default-constructed Work.
   Work PushFront(Work w) {
     unsigned front = front_.load(std::memory_order_relaxed);
-    Elem *e = &array_[front & kMask];
+    Elem* e = &array_[front & kMask];
     uint8_t s = e->state.load(std::memory_order_relaxed);
     if (s != kEmpty ||
         !e->state.compare_exchange_strong(s, kBusy, std::memory_order_acquire))
@@ -66,7 +68,7 @@ public:
   // If the queue was empty returns default-constructed Work.
   Work PopFront() {
     unsigned front = front_.load(std::memory_order_relaxed);
-    Elem *e = &array_[(front - 1) & kMask];
+    Elem* e = &array_[(front - 1) & kMask];
     uint8_t s = e->state.load(std::memory_order_relaxed);
     if (s != kReady ||
         !e->state.compare_exchange_strong(s, kBusy, std::memory_order_acquire))
@@ -83,7 +85,7 @@ public:
   Work PushBack(Work w) {
     std::unique_lock<std::mutex> lock(mutex_);
     unsigned back = back_.load(std::memory_order_relaxed);
-    Elem *e = &array_[(back - 1) & kMask];
+    Elem* e = &array_[(back - 1) & kMask];
     uint8_t s = e->state.load(std::memory_order_relaxed);
     if (s != kEmpty ||
         !e->state.compare_exchange_strong(s, kBusy, std::memory_order_acquire))
@@ -98,13 +100,11 @@ public:
   // PopBack removes and returns the last elements in the queue.
   // Can fail spuriously.
   Work PopBack() {
-    if (Empty())
-      return Work();
+    if (Empty()) return Work();
     std::unique_lock<std::mutex> lock(mutex_, std::try_to_lock);
-    if (!lock)
-      return Work();
+    if (!lock) return Work();
     unsigned back = back_.load(std::memory_order_relaxed);
-    Elem *e = &array_[back & kMask];
+    Elem* e = &array_[back & kMask];
     uint8_t s = e->state.load(std::memory_order_relaxed);
     if (s != kReady ||
         !e->state.compare_exchange_strong(s, kBusy, std::memory_order_acquire))
@@ -117,25 +117,23 @@ public:
 
   // PopBackHalf removes and returns half last elements in the queue.
   // Returns number of elements removed. But can also fail spuriously.
-  unsigned PopBackHalf(std::vector<Work> *result) {
-    if (Empty())
-      return 0;
+  unsigned PopBackHalf(std::vector<Work>* result) {
+    if (Empty()) return 0;
     std::unique_lock<std::mutex> lock(mutex_, std::try_to_lock);
-    if (!lock)
-      return 0;
+    if (!lock) return 0;
     unsigned back = back_.load(std::memory_order_relaxed);
     unsigned size = Size();
     unsigned mid = back;
-    if (size > 1)
-      mid = back + (size - 1) / 2;
+    if (size > 1) mid = back + (size - 1) / 2;
     unsigned n = 0;
     unsigned start = 0;
     for (; static_cast<int>(mid - back) >= 0; mid--) {
-      Elem *e = &array_[mid & kMask];
+      Elem* e = &array_[mid & kMask];
       uint8_t s = e->state.load(std::memory_order_relaxed);
       if (n == 0) {
-        if (s != kReady || !e->state.compare_exchange_strong(
-                               s, kBusy, std::memory_order_acquire))
+        if (s != kReady ||
+            !e->state.compare_exchange_strong(s, kBusy,
+                                              std::memory_order_acquire))
           continue;
         start = mid;
       } else {
@@ -162,18 +160,15 @@ public:
       unsigned front = front_.load(std::memory_order_acquire);
       unsigned back = back_.load(std::memory_order_acquire);
       unsigned front1 = front_.load(std::memory_order_relaxed);
-      if (front != front1)
-        continue;
+      if (front != front1) continue;
       int size = (front & kMask2) - (back & kMask2);
       // Fix overflow.
-      if (size < 0)
-        size += 2 * kSize;
+      if (size < 0) size += 2 * kSize;
       // Order of modification in push/pop is crafted to make the queue look
       // larger than it is during concurrent modifications. E.g. pop can
       // decrement size before the corresponding push has incremented it.
       // So the computed size can be up to kSize + 1, fix it.
-      if (size > static_cast<int>(kSize))
-        size = kSize;
+      if (size > static_cast<int>(kSize)) size = kSize;
       return size;
     }
   }
@@ -182,7 +177,7 @@ public:
   // Can be called by any thread at any time.
   bool Empty() const { return Size() == 0; }
 
-private:
+ private:
   static const unsigned kMask = kSize - 1;
   static const unsigned kMask2 = (kSize << 1) - 1;
   struct Elem {
@@ -206,10 +201,10 @@ private:
   std::atomic<unsigned> back_;
   Elem array_[kSize];
 
-  RunQueue(const RunQueue &) = delete;
-  void operator=(const RunQueue &) = delete;
+  RunQueue(const RunQueue&) = delete;
+  void operator=(const RunQueue&) = delete;
 };
 
-} // namespace Eigen
+}  // namespace Eigen
 
-#endif // EIGEN_CXX11_THREADPOOL_RUNQUEUE_H_
+#endif  // EIGEN_CXX11_THREADPOOL_RUNQUEUE_H_

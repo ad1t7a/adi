@@ -9,12 +9,14 @@
 
 #include "main.h"
 
-template <DenseIndex rows, DenseIndex cols> void resizeLikeTest() {
+template<DenseIndex rows, DenseIndex cols>
+void resizeLikeTest()
+{
   MatrixXf A(rows, cols);
   MatrixXf B;
   Matrix<double, rows, cols> C;
   B.resizeLike(A);
-  C.resizeLike(B); // Shouldn't crash.
+  C.resizeLike(B);  // Shouldn't crash.
   VERIFY(B.rows() == rows && B.cols() == cols);
 
   VectorXf x(rows);
@@ -27,12 +29,13 @@ template <DenseIndex rows, DenseIndex cols> void resizeLikeTest() {
   VERIFY(x.rows() == cols && x.cols() == 1);
 }
 
-void resizeLikeTest12() { resizeLikeTest<1, 2>(); }
-void resizeLikeTest1020() { resizeLikeTest<10, 20>(); }
-void resizeLikeTest31() { resizeLikeTest<3, 1>(); }
+void resizeLikeTest12() { resizeLikeTest<1,2>(); }
+void resizeLikeTest1020() { resizeLikeTest<10,20>(); }
+void resizeLikeTest31() { resizeLikeTest<3,1>(); }
 
-void test_resize() {
-  CALL_SUBTEST(resizeLikeTest12());
-  CALL_SUBTEST(resizeLikeTest1020());
-  CALL_SUBTEST(resizeLikeTest31());
+void test_resize()
+{
+  CALL_SUBTEST(resizeLikeTest12() );
+  CALL_SUBTEST(resizeLikeTest1020() );
+  CALL_SUBTEST(resizeLikeTest31() );
 }

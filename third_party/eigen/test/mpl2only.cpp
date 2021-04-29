@@ -9,11 +9,14 @@
 
 #define EIGEN_MPL2_ONLY
 #include <Eigen/Dense>
-#include <Eigen/Eigen>
-#include <Eigen/IterativeLinearSolvers>
-#include <Eigen/Sparse>
 #include <Eigen/SparseCore>
 #include <Eigen/SparseLU>
 #include <Eigen/SparseQR>
+#include <Eigen/Sparse>
+#include <Eigen/IterativeLinearSolvers>
+#include <Eigen/Eigen>
 
-int main() { return 0; }
+int main()
+{
+  return 0;
+}

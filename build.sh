@@ -5,7 +5,7 @@ set -euo pipefail
 case "${1:-}" in
   ("prerequisites")
     #install package using brew
-    brew install automake zmq bazel 
+    # brew install automake zmq bazel 
     #brew install boost
     
     # install meshcat

@@ -19,10 +19,9 @@ namespace Eigen {
 // task submission and execution.
 template <typename Environment>
 class SimpleThreadPoolTempl : public ThreadPoolInterface {
-public:
+ public:
   // Construct a pool that contains "num_threads" threads.
-  explicit SimpleThreadPoolTempl(int num_threads,
-                                 Environment env = Environment())
+  explicit SimpleThreadPoolTempl(int num_threads, Environment env = Environment())
       : env_(env), threads_(num_threads), waiters_(num_threads) {
     for (int i = 0; i < num_threads; i++) {
       threads_.push_back(env.CreateThread([this, i]() { WorkerLoop(i); }));
@@ -62,7 +61,7 @@ public:
     if (waiters_.empty()) {
       pending_.push_back(std::move(t));
     } else {
-      Waiter *w = waiters_.back();
+      Waiter* w = waiters_.back();
       waiters_.pop_back();
       w->ready = true;
       w->task = std::move(t);
@@ -70,10 +69,12 @@ public:
     }
   }
 
-  int NumThreads() const final { return static_cast<int>(threads_.size()); }
+  int NumThreads() const final {
+    return static_cast<int>(threads_.size());
+  }
 
   int CurrentThreadId() const final {
-    const PerThread *pt = this->GetPerThread();
+    const PerThread* pt = this->GetPerThread();
     if (pt->pool == this) {
       return pt->thread_id;
     } else {
@@ -81,10 +82,10 @@ public:
     }
   }
 
-protected:
+ protected:
   void WorkerLoop(int thread_id) {
     std::unique_lock<std::mutex> l(mu_);
-    PerThread *pt = GetPerThread();
+    PerThread* pt = GetPerThread();
     pt->pool = this;
     pt->thread_id = thread_id;
     Waiter w;
@@ -116,7 +117,7 @@ protected:
     }
   }
 
-private:
+ private:
   typedef typename Environment::Task Task;
   typedef typename Environment::EnvThread Thread;
 
@@ -127,20 +128,20 @@ private:
   };
 
   struct PerThread {
-    constexpr PerThread() : pool(NULL), thread_id(-1) {}
-    SimpleThreadPoolTempl *pool; // Parent pool, or null for normal threads.
-    int thread_id;               // Worker thread index in pool.
+    constexpr PerThread() : pool(NULL), thread_id(-1) { }
+    SimpleThreadPoolTempl* pool;  // Parent pool, or null for normal threads.
+    int thread_id;                // Worker thread index in pool.
   };
 
   Environment env_;
   std::mutex mu_;
-  MaxSizeVector<Thread *> threads_; // All threads
-  MaxSizeVector<Waiter *> waiters_; // Stack of waiting threads.
+  MaxSizeVector<Thread*> threads_;  // All threads
+  MaxSizeVector<Waiter*> waiters_;  // Stack of waiting threads.
   std::deque<Task> pending_;        // Queue of pending work
   std::condition_variable empty_;   // Signaled on pending_.empty()
   bool exiting_ = false;
 
-  PerThread *GetPerThread() const {
+  PerThread* GetPerThread() const {
     EIGEN_THREAD_LOCAL PerThread per_thread;
     return &per_thread;
   }
@@ -148,6 +149,6 @@ private:
 
 typedef SimpleThreadPoolTempl<StlThreadEnvironment> SimpleThreadPool;
 
-} // namespace Eigen
+}  // namespace Eigen
 
-#endif // EIGEN_CXX11_THREADPOOL_SIMPLE_THREAD_POOL_H
+#endif  // EIGEN_CXX11_THREADPOOL_SIMPLE_THREAD_POOL_H

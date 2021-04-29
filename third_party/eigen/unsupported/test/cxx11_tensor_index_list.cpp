@@ -13,8 +13,9 @@
 
 #ifdef EIGEN_HAS_INDEX_LIST
 
-static void test_static_index_list() {
-  Tensor<float, 4> tensor(2, 3, 5, 7);
+static void test_static_index_list()
+{
+  Tensor<float, 4> tensor(2,3,5,7);
   tensor.setRandom();
 
   constexpr auto reduction_axis = make_index_list(0, 1, 2);
@@ -25,12 +26,9 @@ static void test_static_index_list() {
   VERIFY_IS_EQUAL(static_cast<DenseIndex>(reduction_axis[1]), 1);
   VERIFY_IS_EQUAL(static_cast<DenseIndex>(reduction_axis[2]), 2);
 
-  EIGEN_STATIC_ASSERT((internal::array_get<0>(reduction_axis) == 0),
-                      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT((internal::array_get<1>(reduction_axis) == 1),
-                      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT((internal::array_get<2>(reduction_axis) == 2),
-                      YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((internal::array_get<0>(reduction_axis) == 0), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((internal::array_get<1>(reduction_axis) == 1), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((internal::array_get<2>(reduction_axis) == 2), YOU_MADE_A_PROGRAMMING_MISTAKE);
 
   Tensor<float, 1> result = tensor.sum(reduction_axis);
   for (int i = 0; i < result.size(); ++i) {
@@ -38,7 +36,7 @@ static void test_static_index_list() {
     for (int j = 0; j < 2; ++j) {
       for (int k = 0; k < 3; ++k) {
         for (int l = 0; l < 5; ++l) {
-          expected += tensor(j, k, l, i);
+          expected += tensor(j,k,l,i);
         }
       }
     }
@@ -46,23 +44,18 @@ static void test_static_index_list() {
   }
 }
 
-static void test_type2index_list() {
-  Tensor<float, 5> tensor(2, 3, 5, 7, 11);
+
+static void test_type2index_list()
+{
+  Tensor<float, 5> tensor(2,3,5,7,11);
   tensor.setRandom();
   tensor += tensor.constant(10.0f);
 
   typedef Eigen::IndexList<Eigen::type2index<0>> Dims0;
   typedef Eigen::IndexList<Eigen::type2index<0>, Eigen::type2index<1>> Dims1;
-  typedef Eigen::IndexList<Eigen::type2index<0>, Eigen::type2index<1>,
-                           Eigen::type2index<2>>
-      Dims2;
-  typedef Eigen::IndexList<Eigen::type2index<0>, Eigen::type2index<1>,
-                           Eigen::type2index<2>, Eigen::type2index<3>>
-      Dims3;
-  typedef Eigen::IndexList<Eigen::type2index<0>, Eigen::type2index<1>,
-                           Eigen::type2index<2>, Eigen::type2index<3>,
-                           Eigen::type2index<4>>
-      Dims4;
+  typedef Eigen::IndexList<Eigen::type2index<0>, Eigen::type2index<1>, Eigen::type2index<2>> Dims2;
+  typedef Eigen::IndexList<Eigen::type2index<0>, Eigen::type2index<1>, Eigen::type2index<2>, Eigen::type2index<3>> Dims3;
+  typedef Eigen::IndexList<Eigen::type2index<0>, Eigen::type2index<1>, Eigen::type2index<2>, Eigen::type2index<3>, Eigen::type2index<4>> Dims4;
 
 #if 0
   EIGEN_STATIC_ASSERT((internal::indices_statically_known_to_increase<Dims0>() == true), YOU_MADE_A_PROGRAMMING_MISTAKE);
@@ -72,37 +65,17 @@ static void test_type2index_list() {
   EIGEN_STATIC_ASSERT((internal::indices_statically_known_to_increase<Dims4>() == true), YOU_MADE_A_PROGRAMMING_MISTAKE);
 #endif
 
-  EIGEN_STATIC_ASSERT(
-      (internal::are_inner_most_dims<Dims0, 1, ColMajor>::value == true),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT(
-      (internal::are_inner_most_dims<Dims1, 2, ColMajor>::value == true),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT(
-      (internal::are_inner_most_dims<Dims2, 3, ColMajor>::value == true),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT(
-      (internal::are_inner_most_dims<Dims3, 4, ColMajor>::value == true),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT(
-      (internal::are_inner_most_dims<Dims4, 5, ColMajor>::value == true),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((internal::are_inner_most_dims<Dims0, 1, ColMajor>::value == true), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((internal::are_inner_most_dims<Dims1, 2, ColMajor>::value == true), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((internal::are_inner_most_dims<Dims2, 3, ColMajor>::value == true), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((internal::are_inner_most_dims<Dims3, 4, ColMajor>::value == true), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((internal::are_inner_most_dims<Dims4, 5, ColMajor>::value == true), YOU_MADE_A_PROGRAMMING_MISTAKE);
 
-  EIGEN_STATIC_ASSERT(
-      (internal::are_inner_most_dims<Dims0, 1, RowMajor>::value == true),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT(
-      (internal::are_inner_most_dims<Dims1, 2, RowMajor>::value == true),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT(
-      (internal::are_inner_most_dims<Dims2, 3, RowMajor>::value == true),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT(
-      (internal::are_inner_most_dims<Dims3, 4, RowMajor>::value == true),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT(
-      (internal::are_inner_most_dims<Dims4, 5, RowMajor>::value == true),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((internal::are_inner_most_dims<Dims0, 1, RowMajor>::value == true), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((internal::are_inner_most_dims<Dims1, 2, RowMajor>::value == true), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((internal::are_inner_most_dims<Dims2, 3, RowMajor>::value == true), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((internal::are_inner_most_dims<Dims3, 4, RowMajor>::value == true), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((internal::are_inner_most_dims<Dims4, 5, RowMajor>::value == true), YOU_MADE_A_PROGRAMMING_MISTAKE);
 
   const Dims0 reduction_axis0;
   Tensor<float, 4> result0 = tensor.sum(reduction_axis0);
@@ -112,9 +85,9 @@ static void test_type2index_list() {
         for (int j = 0; j < 3; ++j) {
           float expected = 0.0f;
           for (int i = 0; i < 2; ++i) {
-            expected += tensor(i, j, k, l, m);
+            expected += tensor(i,j,k,l,m);
           }
-          VERIFY_IS_APPROX(result0(j, k, l, m), expected);
+          VERIFY_IS_APPROX(result0(j,k,l,m), expected);
         }
       }
     }
@@ -128,10 +101,10 @@ static void test_type2index_list() {
         float expected = 0.0f;
         for (int j = 0; j < 3; ++j) {
           for (int i = 0; i < 2; ++i) {
-            expected += tensor(i, j, k, l, m);
+            expected += tensor(i,j,k,l,m);
           }
         }
-        VERIFY_IS_APPROX(result1(k, l, m), expected);
+        VERIFY_IS_APPROX(result1(k,l,m), expected);
       }
     }
   }
@@ -144,11 +117,11 @@ static void test_type2index_list() {
       for (int k = 0; k < 5; ++k) {
         for (int j = 0; j < 3; ++j) {
           for (int i = 0; i < 2; ++i) {
-            expected += tensor(i, j, k, l, m);
+            expected += tensor(i,j,k,l,m);
           }
         }
       }
-      VERIFY_IS_APPROX(result2(l, m), expected);
+      VERIFY_IS_APPROX(result2(l,m), expected);
     }
   }
 
@@ -160,7 +133,7 @@ static void test_type2index_list() {
       for (int k = 0; k < 5; ++k) {
         for (int j = 0; j < 3; ++j) {
           for (int i = 0; i < 2; ++i) {
-            expected += tensor(i, j, k, l, m);
+            expected += tensor(i,j,k,l,m);
           }
         }
       }
@@ -176,7 +149,7 @@ static void test_type2index_list() {
       for (int k = 0; k < 5; ++k) {
         for (int j = 0; j < 3; ++j) {
           for (int i = 0; i < 2; ++i) {
-            expected += tensor(i, j, k, l, m);
+            expected += tensor(i,j,k,l,m);
           }
         }
       }
@@ -185,37 +158,28 @@ static void test_type2index_list() {
   VERIFY_IS_APPROX(result4(), expected);
 }
 
-static void test_type2indexpair_list() {
-  Tensor<float, 5> tensor(2, 3, 5, 7, 11);
+
+static void test_type2indexpair_list()
+{
+  Tensor<float, 5> tensor(2,3,5,7,11);
   tensor.setRandom();
   tensor += tensor.constant(10.0f);
 
-  typedef Eigen::IndexPairList<Eigen::type2indexpair<0, 10>> Dims0;
-  typedef Eigen::IndexPairList<Eigen::type2indexpair<0, 10>,
-                               Eigen::type2indexpair<1, 11>,
-                               Eigen::type2indexpair<2, 12>>
-      Dims2_a;
-  typedef Eigen::IndexPairList<Eigen::type2indexpair<0, 10>,
-                               Eigen::IndexPair<DenseIndex>,
-                               Eigen::type2indexpair<2, 12>>
-      Dims2_b;
-  typedef Eigen::IndexPairList<Eigen::IndexPair<DenseIndex>,
-                               Eigen::type2indexpair<1, 11>,
-                               Eigen::IndexPair<DenseIndex>>
-      Dims2_c;
+  typedef Eigen::IndexPairList<Eigen::type2indexpair<0,10>> Dims0;
+  typedef Eigen::IndexPairList<Eigen::type2indexpair<0,10>, Eigen::type2indexpair<1,11>, Eigen::type2indexpair<2,12>> Dims2_a;
+  typedef Eigen::IndexPairList<Eigen::type2indexpair<0,10>, Eigen::IndexPair<DenseIndex>, Eigen::type2indexpair<2,12>> Dims2_b;
+  typedef Eigen::IndexPairList<Eigen::IndexPair<DenseIndex>, Eigen::type2indexpair<1,11>, Eigen::IndexPair<DenseIndex>> Dims2_c;
 
   Dims0 d0;
   Dims2_a d2_a;
 
   Dims2_b d2_b;
-  d2_b.set(1, Eigen::IndexPair<DenseIndex>(1, 11));
+  d2_b.set(1, Eigen::IndexPair<DenseIndex>(1,11));
 
   Dims2_c d2_c;
-  d2_c.set(0,
-           Eigen::IndexPair<DenseIndex>(Eigen::IndexPair<DenseIndex>(0, 10)));
-  d2_c.set(1, Eigen::IndexPair<DenseIndex>(
-                  1, 11)); // setting type2indexpair to correct value.
-  d2_c.set(2, Eigen::IndexPair<DenseIndex>(2, 12));
+  d2_c.set(0, Eigen::IndexPair<DenseIndex>(Eigen::IndexPair<DenseIndex>(0,10)));
+  d2_c.set(1, Eigen::IndexPair<DenseIndex>(1,11));  // setting type2indexpair to correct value.
+  d2_c.set(2, Eigen::IndexPair<DenseIndex>(2,12));
 
   VERIFY_IS_EQUAL(d2_a[0].first, 0);
   VERIFY_IS_EQUAL(d2_a[0].second, 10);
@@ -238,176 +202,71 @@ static void test_type2indexpair_list() {
   VERIFY_IS_EQUAL(d2_c[2].first, 2);
   VERIFY_IS_EQUAL(d2_c[2].second, 12);
 
-  EIGEN_STATIC_ASSERT((d2_a.value_known_statically(0) == true),
-                      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT((d2_a.value_known_statically(1) == true),
-                      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT((d2_a.value_known_statically(2) == true),
-                      YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((d2_a.value_known_statically(0) == true), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((d2_a.value_known_statically(1) == true), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((d2_a.value_known_statically(2) == true), YOU_MADE_A_PROGRAMMING_MISTAKE);
 
-  EIGEN_STATIC_ASSERT((d2_b.value_known_statically(0) == true),
-                      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT((d2_b.value_known_statically(1) == false),
-                      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT((d2_b.value_known_statically(2) == true),
-                      YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((d2_b.value_known_statically(0) == true), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((d2_b.value_known_statically(1) == false), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((d2_b.value_known_statically(2) == true), YOU_MADE_A_PROGRAMMING_MISTAKE);
 
-  EIGEN_STATIC_ASSERT((d2_c.value_known_statically(0) == false),
-                      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT((d2_c.value_known_statically(1) == true),
-                      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT((d2_c.value_known_statically(2) == false),
-                      YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((d2_c.value_known_statically(0) == false), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((d2_c.value_known_statically(1) == true), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((d2_c.value_known_statically(2) == false), YOU_MADE_A_PROGRAMMING_MISTAKE);
 
-  EIGEN_STATIC_ASSERT(
-      (Eigen::internal::index_pair_first_statically_eq<Dims0>(0, 0) == true),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT(
-      (Eigen::internal::index_pair_first_statically_eq<Dims0>(0, 1) == false),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((Eigen::internal::index_pair_first_statically_eq<Dims0>(0, 0) == true), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((Eigen::internal::index_pair_first_statically_eq<Dims0>(0, 1) == false), YOU_MADE_A_PROGRAMMING_MISTAKE);
 
-  EIGEN_STATIC_ASSERT(
-      (Eigen::internal::index_pair_first_statically_eq<Dims2_a>(0, 0) == true),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT(
-      (Eigen::internal::index_pair_first_statically_eq<Dims2_a>(0, 1) == false),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT(
-      (Eigen::internal::index_pair_first_statically_eq<Dims2_a>(1, 1) == true),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT(
-      (Eigen::internal::index_pair_first_statically_eq<Dims2_a>(1, 2) == false),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT(
-      (Eigen::internal::index_pair_first_statically_eq<Dims2_a>(2, 2) == true),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT(
-      (Eigen::internal::index_pair_first_statically_eq<Dims2_a>(2, 3) == false),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((Eigen::internal::index_pair_first_statically_eq<Dims2_a>(0, 0) == true), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((Eigen::internal::index_pair_first_statically_eq<Dims2_a>(0, 1) == false), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((Eigen::internal::index_pair_first_statically_eq<Dims2_a>(1, 1) == true), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((Eigen::internal::index_pair_first_statically_eq<Dims2_a>(1, 2) == false), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((Eigen::internal::index_pair_first_statically_eq<Dims2_a>(2, 2) == true), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((Eigen::internal::index_pair_first_statically_eq<Dims2_a>(2, 3) == false), YOU_MADE_A_PROGRAMMING_MISTAKE);
 
-  EIGEN_STATIC_ASSERT(
-      (Eigen::internal::index_pair_first_statically_eq<Dims2_b>(0, 0) == true),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT(
-      (Eigen::internal::index_pair_first_statically_eq<Dims2_b>(0, 1) == false),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT(
-      (Eigen::internal::index_pair_first_statically_eq<Dims2_b>(1, 1) == false),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT(
-      (Eigen::internal::index_pair_first_statically_eq<Dims2_b>(1, 2) == false),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT(
-      (Eigen::internal::index_pair_first_statically_eq<Dims2_b>(2, 2) == true),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT(
-      (Eigen::internal::index_pair_first_statically_eq<Dims2_b>(2, 3) == false),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((Eigen::internal::index_pair_first_statically_eq<Dims2_b>(0, 0) == true), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((Eigen::internal::index_pair_first_statically_eq<Dims2_b>(0, 1) == false), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((Eigen::internal::index_pair_first_statically_eq<Dims2_b>(1, 1) == false), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((Eigen::internal::index_pair_first_statically_eq<Dims2_b>(1, 2) == false), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((Eigen::internal::index_pair_first_statically_eq<Dims2_b>(2, 2) == true), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((Eigen::internal::index_pair_first_statically_eq<Dims2_b>(2, 3) == false), YOU_MADE_A_PROGRAMMING_MISTAKE);
 
-  EIGEN_STATIC_ASSERT(
-      (Eigen::internal::index_pair_first_statically_eq<Dims2_c>(0, 0) == false),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT(
-      (Eigen::internal::index_pair_first_statically_eq<Dims2_c>(0, 1) == false),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT(
-      (Eigen::internal::index_pair_first_statically_eq<Dims2_c>(1, 1) == true),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT(
-      (Eigen::internal::index_pair_first_statically_eq<Dims2_c>(1, 2) == false),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT(
-      (Eigen::internal::index_pair_first_statically_eq<Dims2_c>(2, 2) == false),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT(
-      (Eigen::internal::index_pair_first_statically_eq<Dims2_c>(2, 3) == false),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((Eigen::internal::index_pair_first_statically_eq<Dims2_c>(0, 0) == false), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((Eigen::internal::index_pair_first_statically_eq<Dims2_c>(0, 1) == false), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((Eigen::internal::index_pair_first_statically_eq<Dims2_c>(1, 1) == true), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((Eigen::internal::index_pair_first_statically_eq<Dims2_c>(1, 2) == false), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((Eigen::internal::index_pair_first_statically_eq<Dims2_c>(2, 2) == false), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((Eigen::internal::index_pair_first_statically_eq<Dims2_c>(2, 3) == false), YOU_MADE_A_PROGRAMMING_MISTAKE);
 
-  EIGEN_STATIC_ASSERT(
-      (Eigen::internal::index_pair_second_statically_eq<Dims0>(0, 10) == true),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT(
-      (Eigen::internal::index_pair_second_statically_eq<Dims0>(0, 11) == false),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((Eigen::internal::index_pair_second_statically_eq<Dims0>(0, 10) == true), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((Eigen::internal::index_pair_second_statically_eq<Dims0>(0, 11) == false), YOU_MADE_A_PROGRAMMING_MISTAKE);
 
-  EIGEN_STATIC_ASSERT(
-      (Eigen::internal::index_pair_second_statically_eq<Dims2_a>(0, 10) ==
-       true),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT(
-      (Eigen::internal::index_pair_second_statically_eq<Dims2_a>(0, 11) ==
-       false),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT(
-      (Eigen::internal::index_pair_second_statically_eq<Dims2_a>(1, 11) ==
-       true),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT(
-      (Eigen::internal::index_pair_second_statically_eq<Dims2_a>(1, 12) ==
-       false),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT(
-      (Eigen::internal::index_pair_second_statically_eq<Dims2_a>(2, 12) ==
-       true),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT(
-      (Eigen::internal::index_pair_second_statically_eq<Dims2_a>(2, 13) ==
-       false),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((Eigen::internal::index_pair_second_statically_eq<Dims2_a>(0, 10) == true), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((Eigen::internal::index_pair_second_statically_eq<Dims2_a>(0, 11) == false), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((Eigen::internal::index_pair_second_statically_eq<Dims2_a>(1, 11) == true), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((Eigen::internal::index_pair_second_statically_eq<Dims2_a>(1, 12) == false), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((Eigen::internal::index_pair_second_statically_eq<Dims2_a>(2, 12) == true), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((Eigen::internal::index_pair_second_statically_eq<Dims2_a>(2, 13) == false), YOU_MADE_A_PROGRAMMING_MISTAKE);
 
-  EIGEN_STATIC_ASSERT(
-      (Eigen::internal::index_pair_second_statically_eq<Dims2_b>(0, 10) ==
-       true),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT(
-      (Eigen::internal::index_pair_second_statically_eq<Dims2_b>(0, 11) ==
-       false),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT(
-      (Eigen::internal::index_pair_second_statically_eq<Dims2_b>(1, 11) ==
-       false),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT(
-      (Eigen::internal::index_pair_second_statically_eq<Dims2_b>(1, 12) ==
-       false),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT(
-      (Eigen::internal::index_pair_second_statically_eq<Dims2_b>(2, 12) ==
-       true),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT(
-      (Eigen::internal::index_pair_second_statically_eq<Dims2_b>(2, 13) ==
-       false),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((Eigen::internal::index_pair_second_statically_eq<Dims2_b>(0, 10) == true), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((Eigen::internal::index_pair_second_statically_eq<Dims2_b>(0, 11) == false), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((Eigen::internal::index_pair_second_statically_eq<Dims2_b>(1, 11) == false), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((Eigen::internal::index_pair_second_statically_eq<Dims2_b>(1, 12) == false), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((Eigen::internal::index_pair_second_statically_eq<Dims2_b>(2, 12) == true), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((Eigen::internal::index_pair_second_statically_eq<Dims2_b>(2, 13) == false), YOU_MADE_A_PROGRAMMING_MISTAKE);
 
-  EIGEN_STATIC_ASSERT(
-      (Eigen::internal::index_pair_second_statically_eq<Dims2_c>(0, 10) ==
-       false),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT(
-      (Eigen::internal::index_pair_second_statically_eq<Dims2_c>(0, 11) ==
-       false),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT(
-      (Eigen::internal::index_pair_second_statically_eq<Dims2_c>(1, 11) ==
-       true),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT(
-      (Eigen::internal::index_pair_second_statically_eq<Dims2_c>(1, 12) ==
-       false),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT(
-      (Eigen::internal::index_pair_second_statically_eq<Dims2_c>(2, 12) ==
-       false),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT(
-      (Eigen::internal::index_pair_second_statically_eq<Dims2_c>(2, 13) ==
-       false),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((Eigen::internal::index_pair_second_statically_eq<Dims2_c>(0, 10) == false), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((Eigen::internal::index_pair_second_statically_eq<Dims2_c>(0, 11) == false), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((Eigen::internal::index_pair_second_statically_eq<Dims2_c>(1, 11) == true), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((Eigen::internal::index_pair_second_statically_eq<Dims2_c>(1, 12) == false), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((Eigen::internal::index_pair_second_statically_eq<Dims2_c>(2, 12) == false), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((Eigen::internal::index_pair_second_statically_eq<Dims2_c>(2, 13) == false), YOU_MADE_A_PROGRAMMING_MISTAKE);
 }
 
-static void test_dynamic_index_list() {
-  Tensor<float, 4> tensor(2, 3, 5, 7);
+
+static void test_dynamic_index_list()
+{
+  Tensor<float, 4> tensor(2,3,5,7);
   tensor.setRandom();
 
   int dim1 = 2;
@@ -429,7 +288,7 @@ static void test_dynamic_index_list() {
     for (int j = 0; j < 2; ++j) {
       for (int k = 0; k < 3; ++k) {
         for (int l = 0; l < 5; ++l) {
-          expected += tensor(j, k, l, i);
+          expected += tensor(j,k,l,i);
         }
       }
     }
@@ -437,8 +296,9 @@ static void test_dynamic_index_list() {
   }
 }
 
-static void test_mixed_index_list() {
-  Tensor<float, 4> tensor(2, 3, 5, 7);
+static void test_mixed_index_list()
+{
+  Tensor<float, 4> tensor(2,3,5,7);
   tensor.setRandom();
 
   int dim2 = 1;
@@ -459,42 +319,23 @@ static void test_mixed_index_list() {
   ReductionIndices reduction_indices;
   reduction_indices.set(1, 1);
   reduction_indices.set(3, 3);
-  EIGEN_STATIC_ASSERT((internal::array_get<0>(reduction_indices) == 0),
-                      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT((internal::array_get<2>(reduction_indices) == 2),
-                      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT(
-      (internal::index_known_statically<ReductionIndices>(0) == true),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT(
-      (internal::index_known_statically<ReductionIndices>(2) == true),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT(
-      (internal::index_statically_eq<ReductionIndices>(0, 0) == true),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT(
-      (internal::index_statically_eq<ReductionIndices>(2, 2) == true),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((internal::array_get<0>(reduction_indices) == 0), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((internal::array_get<2>(reduction_indices) == 2), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((internal::index_known_statically<ReductionIndices>(0) == true), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((internal::index_known_statically<ReductionIndices>(2) == true), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((internal::index_statically_eq<ReductionIndices>(0, 0) == true), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((internal::index_statically_eq<ReductionIndices>(2, 2) == true), YOU_MADE_A_PROGRAMMING_MISTAKE);
 #if 0
   EIGEN_STATIC_ASSERT((internal::all_indices_known_statically<ReductionIndices>() == false), YOU_MADE_A_PROGRAMMING_MISTAKE);
   EIGEN_STATIC_ASSERT((internal::indices_statically_known_to_increase<ReductionIndices>() == false), YOU_MADE_A_PROGRAMMING_MISTAKE);
 #endif
 
-  typedef IndexList<type2index<0>, type2index<1>, type2index<2>, type2index<3>>
-      ReductionList;
+  typedef IndexList<type2index<0>, type2index<1>, type2index<2>, type2index<3>> ReductionList;
   ReductionList reduction_list;
-  EIGEN_STATIC_ASSERT(
-      (internal::index_statically_eq<ReductionList>(0, 0) == true),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT(
-      (internal::index_statically_eq<ReductionList>(1, 1) == true),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT(
-      (internal::index_statically_eq<ReductionList>(2, 2) == true),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
-  EIGEN_STATIC_ASSERT(
-      (internal::index_statically_eq<ReductionList>(3, 3) == true),
-      YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((internal::index_statically_eq<ReductionList>(0, 0) == true), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((internal::index_statically_eq<ReductionList>(1, 1) == true), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((internal::index_statically_eq<ReductionList>(2, 2) == true), YOU_MADE_A_PROGRAMMING_MISTAKE);
+  EIGEN_STATIC_ASSERT((internal::index_statically_eq<ReductionList>(3, 3) == true), YOU_MADE_A_PROGRAMMING_MISTAKE);
 #if 0
   EIGEN_STATIC_ASSERT((internal::all_indices_known_statically<ReductionList>() == true), YOU_MADE_A_PROGRAMMING_MISTAKE);
   EIGEN_STATIC_ASSERT((internal::indices_statically_known_to_increase<ReductionList>() == true), YOU_MADE_A_PROGRAMMING_MISTAKE);
@@ -509,7 +350,7 @@ static void test_mixed_index_list() {
     for (int j = 0; j < 3; ++j) {
       for (int k = 0; k < 5; ++k) {
         for (int l = 0; l < 7; ++l) {
-          expected += tensor(i, j, k, l);
+          expected += tensor(i,j,k,l);
         }
       }
     }
@@ -519,7 +360,9 @@ static void test_mixed_index_list() {
   VERIFY_IS_APPROX(result3(), expected);
 }
 
-static void test_dim_check() {
+
+static void test_dim_check()
+{
   Eigen::IndexList<Eigen::type2index<1>, int> dim1;
   dim1.set(1, 2);
   Eigen::IndexList<Eigen::type2index<1>, int> dim2;
@@ -527,9 +370,11 @@ static void test_dim_check() {
   VERIFY(dimensions_match(dim1, dim2));
 }
 
+
 #endif
 
-void test_cxx11_tensor_index_list() {
+void test_cxx11_tensor_index_list()
+{
 #ifdef EIGEN_HAS_INDEX_LIST
   CALL_SUBTEST(test_static_index_list());
   CALL_SUBTEST(test_type2index_list());

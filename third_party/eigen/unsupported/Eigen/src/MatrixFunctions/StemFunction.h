@@ -10,24 +10,28 @@
 #ifndef EIGEN_STEM_FUNCTION
 #define EIGEN_STEM_FUNCTION
 
-namespace Eigen {
+namespace Eigen { 
 
 namespace internal {
 
 /** \brief The exponential function (and its derivatives). */
-template <typename Scalar> Scalar stem_function_exp(Scalar x, int) {
+template <typename Scalar>
+Scalar stem_function_exp(Scalar x, int)
+{
   using std::exp;
   return exp(x);
 }
 
 /** \brief Cosine (and its derivatives). */
-template <typename Scalar> Scalar stem_function_cos(Scalar x, int n) {
+template <typename Scalar>
+Scalar stem_function_cos(Scalar x, int n)
+{
   using std::cos;
   using std::sin;
   Scalar res;
 
   switch (n % 4) {
-  case 0:
+  case 0: 
     res = std::cos(x);
     break;
   case 1:
@@ -44,7 +48,9 @@ template <typename Scalar> Scalar stem_function_cos(Scalar x, int n) {
 }
 
 /** \brief Sine (and its derivatives). */
-template <typename Scalar> Scalar stem_function_sin(Scalar x, int n) {
+template <typename Scalar>
+Scalar stem_function_sin(Scalar x, int n)
+{
   using std::cos;
   using std::sin;
   Scalar res;
@@ -67,11 +73,13 @@ template <typename Scalar> Scalar stem_function_sin(Scalar x, int n) {
 }
 
 /** \brief Hyperbolic cosine (and its derivatives). */
-template <typename Scalar> Scalar stem_function_cosh(Scalar x, int n) {
+template <typename Scalar>
+Scalar stem_function_cosh(Scalar x, int n)
+{
   using std::cosh;
   using std::sinh;
   Scalar res;
-
+  
   switch (n % 2) {
   case 0:
     res = std::cosh(x);
@@ -82,13 +90,15 @@ template <typename Scalar> Scalar stem_function_cosh(Scalar x, int n) {
   }
   return res;
 }
-
+	
 /** \brief Hyperbolic sine (and its derivatives). */
-template <typename Scalar> Scalar stem_function_sinh(Scalar x, int n) {
+template <typename Scalar>
+Scalar stem_function_sinh(Scalar x, int n)
+{
   using std::cosh;
   using std::sinh;
   Scalar res;
-
+  
   switch (n % 2) {
   case 0:
     res = std::sinh(x);

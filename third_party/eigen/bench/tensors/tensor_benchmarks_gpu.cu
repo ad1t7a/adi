@@ -35,6 +35,7 @@ BM_FuncGPU(rowReduction);
 BM_FuncGPU(colReduction);
 BM_FuncGPU(fullReduction);
 
+
 // Contractions
 #define BM_FuncWithInputDimsGPU(FUNC, D1, D2, D3)                              \
   static void BM_##FUNC##_##D1##x##D2##x##D3(int iters, int N) {               \
@@ -47,10 +48,12 @@ BM_FuncGPU(fullReduction);
   }                                                                            \
   BENCHMARK_RANGE(BM_##FUNC##_##D1##x##D2##x##D3, 10, 5000);
 
+
 BM_FuncWithInputDimsGPU(contraction, N, N, N);
 BM_FuncWithInputDimsGPU(contraction, 64, N, N);
 BM_FuncWithInputDimsGPU(contraction, N, 64, N);
 BM_FuncWithInputDimsGPU(contraction, N, N, 64);
+
 
 // Convolutions
 #define BM_FuncWithKernelDimsGPU(FUNC, DIM1, DIM2)                             \

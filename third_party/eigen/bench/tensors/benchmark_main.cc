@@ -14,22 +14,22 @@
  * limitations under the License.
  */
 #include "benchmark.h"
-#include <inttypes.h>
-#include <map>
 #include <regex.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <string>
+#include <inttypes.h>
 #include <time.h>
+#include <map>
 
 static int64_t g_flops_processed;
 static int64_t g_benchmark_total_time_ns;
 static int64_t g_benchmark_start_time_ns;
-typedef std::map<std::string, ::testing::Benchmark *> BenchmarkMap;
+typedef std::map<std::string, ::testing::Benchmark*> BenchmarkMap;
 typedef BenchmarkMap::iterator BenchmarkMapIt;
 
-BenchmarkMap &gBenchmarks() {
+BenchmarkMap& gBenchmarks() {
   static BenchmarkMap g_benchmarks;
   return g_benchmarks;
 }
@@ -38,24 +38,24 @@ static int g_name_column_width = 20;
 
 static int Round(int n) {
   int base = 1;
-  while (base * 10 < n) {
+  while (base*10 < n) {
     base *= 10;
   }
-  if (n < 2 * base) {
-    return 2 * base;
+  if (n < 2*base) {
+    return 2*base;
   }
-  if (n < 5 * base) {
-    return 5 * base;
+  if (n < 5*base) {
+    return 5*base;
   }
-  return 10 * base;
+  return 10*base;
 }
 
 #ifdef __APPLE__
-#include <mach/mach_time.h>
-static mach_timebase_info_data_t g_time_info;
-static void __attribute__((constructor)) init_info() {
-  mach_timebase_info(&g_time_info);
-}
+  #include <mach/mach_time.h>
+  static mach_timebase_info_data_t g_time_info;
+  static void __attribute__((constructor)) init_info() {
+    mach_timebase_info(&g_time_info);
+  }
 #endif
 
 static int64_t NanoTime() {
@@ -71,12 +71,12 @@ static int64_t NanoTime() {
 }
 
 namespace testing {
-Benchmark *Benchmark::Arg(int arg) {
+Benchmark* Benchmark::Arg(int arg) {
   args_.push_back(arg);
   return this;
 }
 
-Benchmark *Benchmark::Range(int lo, int hi) {
+Benchmark* Benchmark::Range(int lo, int hi) {
   const int kRangeMultiplier = 8;
   if (hi < lo) {
     int temp = hi;
@@ -92,18 +92,19 @@ Benchmark *Benchmark::Range(int lo, int hi) {
   return this;
 }
 
-const char *Benchmark::Name() { return name_; }
-bool Benchmark::ShouldRun(int argc, char *argv[]) {
+const char* Benchmark::Name() {
+  return name_;
+}
+bool Benchmark::ShouldRun(int argc, char* argv[]) {
   if (argc == 1) {
-    return true; // With no arguments, we run all benchmarks.
+    return true;  // With no arguments, we run all benchmarks.
   }
   // Otherwise, we interpret each argument as a regular expression and
   // see if any of our benchmarks match.
   for (int i = 1; i < argc; i++) {
     regex_t re;
     if (regcomp(&re, argv[i], 0) != 0) {
-      fprintf(stderr, "couldn't compile \"%s\" as a regular expression!\n",
-              argv[i]);
+      fprintf(stderr, "couldn't compile \"%s\" as a regular expression!\n", argv[i]);
       exit(EXIT_FAILURE);
     }
     int match = regexec(&re, name_, 0, NULL, 0);
@@ -114,8 +115,7 @@ bool Benchmark::ShouldRun(int argc, char *argv[]) {
   }
   return false;
 }
-void Benchmark::Register(const char *name, void (*fn)(int),
-                         void (*fn_range)(int, int)) {
+void Benchmark::Register(const char* name, void (*fn)(int), void (*fn_range)(int, int)) {
   name_ = name;
   fn_ = fn;
   fn_range_ = fn_range;
@@ -157,30 +157,28 @@ void Benchmark::RunWithArg(int arg) {
   RunRepeatedlyWithArg(iterations, arg);
   while (g_benchmark_total_time_ns < 1e9 && iterations < 1e9) {
     int last = iterations;
-    if (g_benchmark_total_time_ns / iterations == 0) {
+    if (g_benchmark_total_time_ns/iterations == 0) {
       iterations = 1e9;
     } else {
-      iterations = 1e9 / (g_benchmark_total_time_ns / iterations);
+      iterations = 1e9 / (g_benchmark_total_time_ns/iterations);
     }
-    iterations =
-        std::max(last + 1, std::min(iterations + iterations / 2, 100 * last));
+    iterations = std::max(last + 1, std::min(iterations + iterations/2, 100*last));
     iterations = Round(iterations);
     RunRepeatedlyWithArg(iterations, arg);
   }
   char throughput[100];
   throughput[0] = '\0';
   if (g_benchmark_total_time_ns > 0 && g_flops_processed > 0) {
-    double mflops_processed = static_cast<double>(g_flops_processed) / 1e6;
-    double seconds = static_cast<double>(g_benchmark_total_time_ns) / 1e9;
-    snprintf(throughput, sizeof(throughput), " %8.2f MFlops/s",
-             mflops_processed / seconds);
+    double mflops_processed = static_cast<double>(g_flops_processed)/1e6;
+    double seconds = static_cast<double>(g_benchmark_total_time_ns)/1e9;
+    snprintf(throughput, sizeof(throughput), " %8.2f MFlops/s", mflops_processed/seconds);
   }
   char full_name[100];
   if (fn_range_ != NULL) {
-    if (arg >= (1 << 20)) {
-      snprintf(full_name, sizeof(full_name), "%s/%dM", name_, arg / (1 << 20));
-    } else if (arg >= (1 << 10)) {
-      snprintf(full_name, sizeof(full_name), "%s/%dK", name_, arg / (1 << 10));
+    if (arg >= (1<<20)) {
+      snprintf(full_name, sizeof(full_name), "%s/%dM", name_, arg/(1<<20));
+    } else if (arg >= (1<<10)) {
+      snprintf(full_name, sizeof(full_name), "%s/%dK", name_, arg/(1<<10));
     } else {
       snprintf(full_name, sizeof(full_name), "%s/%d", name_, arg);
     }
@@ -188,11 +186,13 @@ void Benchmark::RunWithArg(int arg) {
     snprintf(full_name, sizeof(full_name), "%s", name_);
   }
   printf("%-*s %10d %10" PRId64 "%s\n", g_name_column_width, full_name,
-         iterations, g_benchmark_total_time_ns / iterations, throughput);
+         iterations, g_benchmark_total_time_ns/iterations, throughput);
   fflush(stdout);
 }
-} // namespace testing
-void SetBenchmarkFlopsProcessed(int64_t x) { g_flops_processed = x; }
+}  // namespace testing
+void SetBenchmarkFlopsProcessed(int64_t x) {
+  g_flops_processed = x;
+}
 void StopBenchmarkTiming() {
   if (g_benchmark_start_time_ns != 0) {
     g_benchmark_total_time_ns += NanoTime() - g_benchmark_start_time_ns;
@@ -204,24 +204,21 @@ void StartBenchmarkTiming() {
     g_benchmark_start_time_ns = NanoTime();
   }
 }
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
   if (gBenchmarks().empty()) {
     fprintf(stderr, "No benchmarks registered!\n");
     exit(EXIT_FAILURE);
   }
-  for (BenchmarkMapIt it = gBenchmarks().begin(); it != gBenchmarks().end();
-       ++it) {
+  for (BenchmarkMapIt it = gBenchmarks().begin(); it != gBenchmarks().end(); ++it) {
     int name_width = static_cast<int>(strlen(it->second->Name()));
     g_name_column_width = std::max(g_name_column_width, name_width);
   }
   bool need_header = true;
-  for (BenchmarkMapIt it = gBenchmarks().begin(); it != gBenchmarks().end();
-       ++it) {
-    ::testing::Benchmark *b = it->second;
+  for (BenchmarkMapIt it = gBenchmarks().begin(); it != gBenchmarks().end(); ++it) {
+    ::testing::Benchmark* b = it->second;
     if (b->ShouldRun(argc, argv)) {
       if (need_header) {
-        printf("%-*s %10s %10s\n", g_name_column_width, "", "iterations",
-               "ns/op");
+        printf("%-*s %10s %10s\n", g_name_column_width, "", "iterations", "ns/op");
         fflush(stdout);
         need_header = false;
       }
@@ -231,8 +228,7 @@ int main(int argc, char *argv[]) {
   if (need_header) {
     fprintf(stderr, "No matching benchmarks!\n");
     fprintf(stderr, "Available benchmarks:\n");
-    for (BenchmarkMapIt it = gBenchmarks().begin(); it != gBenchmarks().end();
-         ++it) {
+    for (BenchmarkMapIt it = gBenchmarks().begin(); it != gBenchmarks().end(); ++it) {
       fprintf(stderr, "  %s\n", it->second->Name());
     }
     exit(EXIT_FAILURE);

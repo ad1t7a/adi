@@ -4,18 +4,18 @@
 
 #include "tensor_benchmarks.h"
 
-#define CREATE_THREAD_POOL(threads)                                            \
-  Eigen::ThreadPool pool(threads);                                             \
-  Eigen::ThreadPoolDevice device(&pool, threads);
+#define CREATE_THREAD_POOL(threads)             \
+Eigen::ThreadPool pool(threads);                \
+Eigen::ThreadPoolDevice device(&pool, threads);
 
 // Simple functions
-#define BM_FuncCPU(FUNC, THREADS)                                              \
-  static void BM_##FUNC##_##THREADS##T(int iters, int N) {                     \
-    StopBenchmarkTiming();                                                     \
-    CREATE_THREAD_POOL(THREADS);                                               \
-    BenchmarkSuite<Eigen::ThreadPoolDevice, float> suite(device, N);           \
-    suite.FUNC(iters);                                                         \
-  }                                                                            \
+#define BM_FuncCPU(FUNC, THREADS)                                    \
+  static void BM_##FUNC##_##THREADS##T(int iters, int N) {           \
+    StopBenchmarkTiming();                                           \
+    CREATE_THREAD_POOL(THREADS);                                     \
+    BenchmarkSuite<Eigen::ThreadPoolDevice, float> suite(device, N); \
+    suite.FUNC(iters);                                               \
+  }                                                                  \
   BENCHMARK_RANGE(BM_##FUNC##_##THREADS##T, 10, 5000);
 
 BM_FuncCPU(memcpy, 4);
@@ -78,23 +78,23 @@ BM_FuncCPU(colReduction, 4);
 BM_FuncCPU(colReduction, 8);
 BM_FuncCPU(colReduction, 12);
 
+
 // Contractions
-#define BM_FuncWithInputDimsCPU(FUNC, D1, D2, D3, THREADS)                     \
-  static void BM_##FUNC##_##D1##x##D2##x##D3##_##THREADS##T(int iters,         \
-                                                            int N) {           \
-    StopBenchmarkTiming();                                                     \
-    if (THREADS == 1) {                                                        \
-      Eigen::DefaultDevice device;                                             \
-      BenchmarkSuite<Eigen::DefaultDevice, float> suite(device, D1, D2, D3);   \
-      suite.FUNC(iters);                                                       \
-    } else {                                                                   \
-      CREATE_THREAD_POOL(THREADS);                                             \
-      BenchmarkSuite<Eigen::ThreadPoolDevice, float> suite(device, D1, D2,     \
-                                                           D3);                \
-      suite.FUNC(iters);                                                       \
-    }                                                                          \
-  }                                                                            \
+#define BM_FuncWithInputDimsCPU(FUNC, D1, D2, D3, THREADS)                      \
+  static void BM_##FUNC##_##D1##x##D2##x##D3##_##THREADS##T(int iters, int N) { \
+    StopBenchmarkTiming();                                                      \
+    if (THREADS == 1) {                                                         \
+      Eigen::DefaultDevice device;                                              \
+      BenchmarkSuite<Eigen::DefaultDevice, float> suite(device, D1, D2, D3);    \
+      suite.FUNC(iters);                                                        \
+    } else {                                                                    \
+      CREATE_THREAD_POOL(THREADS);                                              \
+      BenchmarkSuite<Eigen::ThreadPoolDevice, float> suite(device, D1, D2, D3); \
+      suite.FUNC(iters);                                                        \
+    }                                                                           \
+  }                                                                             \
   BENCHMARK_RANGE(BM_##FUNC##_##D1##x##D2##x##D3##_##THREADS##T, 10, 5000);
+
 
 BM_FuncWithInputDimsCPU(contraction, N, N, N, 1);
 BM_FuncWithInputDimsCPU(contraction, N, N, N, 4);
@@ -132,12 +132,13 @@ BM_FuncWithInputDimsCPU(contraction, N, N, 1, 8);
 BM_FuncWithInputDimsCPU(contraction, N, N, 1, 12);
 BM_FuncWithInputDimsCPU(contraction, N, N, 1, 16);
 
+
 // Convolutions
 #define BM_FuncWithKernelDimsCPU(FUNC, DIM1, DIM2, THREADS)                    \
   static void BM_##FUNC##_##DIM1##x##DIM2##_##THREADS##T(int iters, int N) {   \
     StopBenchmarkTiming();                                                     \
     CREATE_THREAD_POOL(THREADS);                                               \
-    BenchmarkSuite<Eigen::ThreadPoolDevice, float> suite(device, N);           \
+    BenchmarkSuite<Eigen::ThreadPoolDevice, float> suite(device, N);	       \
     suite.FUNC(iters, DIM1, DIM2);                                             \
   }                                                                            \
   BENCHMARK_RANGE(BM_##FUNC##_##DIM1##x##DIM2##_##THREADS##T, 128, 5000);

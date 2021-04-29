@@ -4,8 +4,9 @@
 
 using Eigen::Tensor;
 
-static void test_single_voxel_patch() {
-  Tensor<float, 5> tensor(4, 2, 3, 5, 7);
+static void test_single_voxel_patch()
+{
+  Tensor<float, 5> tensor(4,2,3,5,7);
   tensor.setRandom();
   Tensor<float, 5, RowMajor> tensor_row_major = tensor.swap_layout();
 
@@ -19,8 +20,7 @@ static void test_single_voxel_patch() {
   VERIFY_IS_EQUAL(single_voxel_patch.dimension(5), 7);
 
   Tensor<float, 6, RowMajor> single_voxel_patch_row_major;
-  single_voxel_patch_row_major =
-      tensor_row_major.extract_volume_patches(1, 1, 1);
+  single_voxel_patch_row_major = tensor_row_major.extract_volume_patches(1, 1, 1);
   VERIFY_IS_EQUAL(single_voxel_patch_row_major.dimension(0), 7);
   VERIFY_IS_EQUAL(single_voxel_patch_row_major.dimension(1), 2 * 3 * 5);
   VERIFY_IS_EQUAL(single_voxel_patch_row_major.dimension(2), 1);
@@ -30,13 +30,14 @@ static void test_single_voxel_patch() {
 
   for (int i = 0; i < tensor.size(); ++i) {
     VERIFY_IS_EQUAL(tensor.data()[i], single_voxel_patch.data()[i]);
-    VERIFY_IS_EQUAL(tensor_row_major.data()[i],
-                    single_voxel_patch_row_major.data()[i]);
+    VERIFY_IS_EQUAL(tensor_row_major.data()[i], single_voxel_patch_row_major.data()[i]);
     VERIFY_IS_EQUAL(tensor.data()[i], tensor_row_major.data()[i]);
   }
 }
 
-static void test_entire_volume_patch() {
+
+static void test_entire_volume_patch()
+{
   const int depth = 4;
   const int patch_z = 2;
   const int patch_y = 3;
@@ -48,22 +49,18 @@ static void test_entire_volume_patch() {
   Tensor<float, 5, RowMajor> tensor_row_major = tensor.swap_layout();
 
   Tensor<float, 6> entire_volume_patch;
-  entire_volume_patch =
-      tensor.extract_volume_patches(patch_z, patch_y, patch_x);
+  entire_volume_patch = tensor.extract_volume_patches(patch_z, patch_y, patch_x);
   VERIFY_IS_EQUAL(entire_volume_patch.dimension(0), depth);
   VERIFY_IS_EQUAL(entire_volume_patch.dimension(1), patch_z);
   VERIFY_IS_EQUAL(entire_volume_patch.dimension(2), patch_y);
   VERIFY_IS_EQUAL(entire_volume_patch.dimension(3), patch_x);
-  VERIFY_IS_EQUAL(entire_volume_patch.dimension(4),
-                  patch_z * patch_y * patch_x);
+  VERIFY_IS_EQUAL(entire_volume_patch.dimension(4), patch_z * patch_y * patch_x);
   VERIFY_IS_EQUAL(entire_volume_patch.dimension(5), batch);
 
   Tensor<float, 6, RowMajor> entire_volume_patch_row_major;
-  entire_volume_patch_row_major =
-      tensor_row_major.extract_volume_patches(patch_z, patch_y, patch_x);
+  entire_volume_patch_row_major = tensor_row_major.extract_volume_patches(patch_z, patch_y, patch_x);
   VERIFY_IS_EQUAL(entire_volume_patch_row_major.dimension(0), batch);
-  VERIFY_IS_EQUAL(entire_volume_patch_row_major.dimension(1),
-                  patch_z * patch_y * patch_x);
+  VERIFY_IS_EQUAL(entire_volume_patch_row_major.dimension(1), patch_z * patch_y * patch_x);
   VERIFY_IS_EQUAL(entire_volume_patch_row_major.dimension(2), patch_x);
   VERIFY_IS_EQUAL(entire_volume_patch_row_major.dimension(3), patch_y);
   VERIFY_IS_EQUAL(entire_volume_patch_row_major.dimension(4), patch_z);
@@ -94,14 +91,10 @@ static void test_entire_volume_patch() {
                   if (eff_z >= 0 && eff_y >= 0 && eff_x >= 0 &&
                       eff_z < patch_z && eff_y < patch_y && eff_x < patch_x) {
                     expected = tensor(d, eff_z, eff_y, eff_x, b);
-                    expected_row_major =
-                        tensor_row_major(b, eff_x, eff_y, eff_z, d);
+                    expected_row_major = tensor_row_major(b, eff_x, eff_y, eff_z, d);
                   }
-                  VERIFY_IS_EQUAL(entire_volume_patch(d, z, y, x, patchId, b),
-                                  expected);
-                  VERIFY_IS_EQUAL(
-                      entire_volume_patch_row_major(b, patchId, x, y, z, d),
-                      expected_row_major);
+                  VERIFY_IS_EQUAL(entire_volume_patch(d, z, y, x, patchId, b), expected);
+                  VERIFY_IS_EQUAL(entire_volume_patch_row_major(b, patchId, x, y, z, d), expected_row_major);
                 }
               }
             }
@@ -112,7 +105,8 @@ static void test_entire_volume_patch() {
   }
 }
 
-void test_cxx11_tensor_volume_patch() {
+void test_cxx11_tensor_volume_patch()
+{
   CALL_SUBTEST(test_single_voxel_patch());
   CALL_SUBTEST(test_entire_volume_patch());
 }

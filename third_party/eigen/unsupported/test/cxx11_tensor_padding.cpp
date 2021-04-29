@@ -13,8 +13,10 @@
 
 using Eigen::Tensor;
 
-template <int DataLayout> static void test_simple_padding() {
-  Tensor<float, 4, DataLayout> tensor(2, 3, 5, 7);
+template<int DataLayout>
+static void test_simple_padding()
+{
+  Tensor<float, 4, DataLayout> tensor(2,3,5,7);
   tensor.setRandom();
 
   array<std::pair<ptrdiff_t, ptrdiff_t>, 4> paddings;
@@ -26,19 +28,19 @@ template <int DataLayout> static void test_simple_padding() {
   Tensor<float, 4, DataLayout> padded;
   padded = tensor.pad(paddings);
 
-  VERIFY_IS_EQUAL(padded.dimension(0), 2 + 0);
-  VERIFY_IS_EQUAL(padded.dimension(1), 3 + 3);
-  VERIFY_IS_EQUAL(padded.dimension(2), 5 + 7);
-  VERIFY_IS_EQUAL(padded.dimension(3), 7 + 0);
+  VERIFY_IS_EQUAL(padded.dimension(0), 2+0);
+  VERIFY_IS_EQUAL(padded.dimension(1), 3+3);
+  VERIFY_IS_EQUAL(padded.dimension(2), 5+7);
+  VERIFY_IS_EQUAL(padded.dimension(3), 7+0);
 
   for (int i = 0; i < 2; ++i) {
     for (int j = 0; j < 6; ++j) {
       for (int k = 0; k < 12; ++k) {
         for (int l = 0; l < 7; ++l) {
           if (j >= 2 && j < 5 && k >= 3 && k < 8) {
-            VERIFY_IS_EQUAL(padded(i, j, k, l), tensor(i, j - 2, k - 3, l));
+            VERIFY_IS_EQUAL(padded(i,j,k,l), tensor(i,j-2,k-3,l));
           } else {
-            VERIFY_IS_EQUAL(padded(i, j, k, l), 0.0f);
+            VERIFY_IS_EQUAL(padded(i,j,k,l), 0.0f);
           }
         }
       }
@@ -46,8 +48,10 @@ template <int DataLayout> static void test_simple_padding() {
   }
 }
 
-template <int DataLayout> static void test_padded_expr() {
-  Tensor<float, 4, DataLayout> tensor(2, 3, 5, 7);
+template<int DataLayout>
+static void test_padded_expr()
+{
+  Tensor<float, 4, DataLayout> tensor(2,3,5,7);
   tensor.setRandom();
 
   array<std::pair<ptrdiff_t, ptrdiff_t>, 4> paddings;
@@ -67,11 +71,10 @@ template <int DataLayout> static void test_padded_expr() {
     for (int j = 0; j < 6; ++j) {
       for (int k = 0; k < 12; ++k) {
         for (int l = 0; l < 7; ++l) {
-          const float result_value = DataLayout == ColMajor
-                                         ? result(i + 2 * j, k + 12 * l)
-                                         : result(j + 6 * i, l + 7 * k);
+          const float result_value = DataLayout == ColMajor ?
+              result(i+2*j,k+12*l) : result(j+6*i,l+7*k);
           if (j >= 2 && j < 5 && k >= 3 && k < 8) {
-            VERIFY_IS_EQUAL(result_value, tensor(i, j - 2, k - 3, l));
+            VERIFY_IS_EQUAL(result_value, tensor(i,j-2,k-3,l));
           } else {
             VERIFY_IS_EQUAL(result_value, 0.0f);
           }
@@ -81,7 +84,8 @@ template <int DataLayout> static void test_padded_expr() {
   }
 }
 
-void test_cxx11_tensor_padding() {
+void test_cxx11_tensor_padding()
+{
   CALL_SUBTEST(test_simple_padding<ColMajor>());
   CALL_SUBTEST(test_simple_padding<RowMajor>());
   CALL_SUBTEST(test_padded_expr<ColMajor>());

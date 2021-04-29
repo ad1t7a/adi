@@ -8,13 +8,14 @@
 // with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #include "main.h"
-#include <Eigen/CXX11/Tensor>
 #include <limits>
 #include <numeric>
+#include <Eigen/CXX11/Tensor>
 
 using Eigen::Tensor;
 
-template <int DataLayout> static void test_trivial_reductions() {
+template <int DataLayout>
+static void test_trivial_reductions() {
   {
     Tensor<float, 0, DataLayout> tensor;
     tensor.setRandom();
@@ -52,7 +53,8 @@ template <int DataLayout> static void test_trivial_reductions() {
   }
 }
 
-template <int DataLayout> static void test_simple_reductions() {
+template <int DataLayout>
+static void test_simple_reductions() {
   Tensor<float, 4, DataLayout> tensor(2, 3, 5, 7);
   tensor.setRandom();
   array<ptrdiff_t, 2> reduction_axis2;
@@ -223,13 +225,13 @@ template <int DataLayout> static void test_simple_reductions() {
     Tensor<int, 1> ints(10);
     std::iota(ints.data(), ints.data() + ints.dimension(0), 0);
 
-    TensorFixedSize<bool, Sizes<>> all;
+    TensorFixedSize<bool, Sizes<> > all;
     all = ints.all();
     VERIFY(!all());
     all = (ints >= ints.constant(0)).all();
     VERIFY(all());
 
-    TensorFixedSize<bool, Sizes<>> any;
+    TensorFixedSize<bool, Sizes<> > any;
     any = (ints > ints.constant(10)).any();
     VERIFY(!any());
     any = (ints < ints.constant(1)).any();
@@ -237,7 +239,9 @@ template <int DataLayout> static void test_simple_reductions() {
   }
 }
 
-template <int DataLayout> static void test_reductions_in_expr() {
+
+template <int DataLayout>
+static void test_reductions_in_expr() {
   Tensor<float, 4, DataLayout> tensor(2, 3, 5, 7);
   tensor.setRandom();
   array<ptrdiff_t, 2> reduction_axis2;
@@ -261,7 +265,9 @@ template <int DataLayout> static void test_reductions_in_expr() {
   }
 }
 
-template <int DataLayout> static void test_full_reductions() {
+
+template <int DataLayout>
+static void test_full_reductions() {
   Tensor<float, 2, DataLayout> tensor(2, 3);
   tensor.setRandom();
   array<ptrdiff_t, 2> reduction_axis;
@@ -294,15 +300,16 @@ template <int DataLayout> static void test_full_reductions() {
 struct UserReducer {
   static const bool PacketAccess = false;
   UserReducer(float offset) : offset_(offset) {}
-  void reduce(const float val, float *accum) { *accum += val * val; }
+  void reduce(const float val, float* accum) { *accum += val * val; }
   float initialize() const { return 0; }
   float finalize(const float accum) const { return 1.0f / (accum + offset_); }
 
-private:
+ private:
   const float offset_;
 };
 
-template <int DataLayout> static void test_user_defined_reductions() {
+template <int DataLayout>
+static void test_user_defined_reductions() {
   Tensor<float, 2, DataLayout> tensor(5, 7);
   tensor.setRandom();
   array<ptrdiff_t, 1> reduction_axis;
@@ -321,12 +328,13 @@ template <int DataLayout> static void test_user_defined_reductions() {
   }
 }
 
-template <int DataLayout> static void test_tensor_maps() {
+template <int DataLayout>
+static void test_tensor_maps() {
   int inputs[2 * 3 * 5 * 7];
-  TensorMap<Tensor<int, 4, DataLayout>> tensor_map(inputs, 2, 3, 5, 7);
-  TensorMap<Tensor<const int, 4, DataLayout>> tensor_map_const(inputs, 2, 3, 5,
-                                                               7);
-  const TensorMap<Tensor<const int, 4, DataLayout>> tensor_map_const_const(
+  TensorMap<Tensor<int, 4, DataLayout> > tensor_map(inputs, 2, 3, 5, 7);
+  TensorMap<Tensor<const int, 4, DataLayout> > tensor_map_const(inputs, 2, 3, 5,
+                                                                7);
+  const TensorMap<Tensor<const int, 4, DataLayout> > tensor_map_const_const(
       inputs, 2, 3, 5, 7);
 
   tensor_map.setRandom();
@@ -354,17 +362,18 @@ template <int DataLayout> static void test_tensor_maps() {
   }
 }
 
-template <int DataLayout> static void test_static_dims() {
+template <int DataLayout>
+static void test_static_dims() {
   Tensor<float, 4, DataLayout> in(72, 53, 97, 113);
   Tensor<float, 2, DataLayout> out(72, 97);
   in.setRandom();
 
-#if !EIGEN_HAS_CONSTEXPR
+#if !EIGEN_HAS_CONSTEXPR 
   array<int, 2> reduction_axis;
   reduction_axis[0] = 1;
   reduction_axis[1] = 3;
 #else
-  Eigen::IndexList<Eigen::type2index<1>, Eigen::type2index<3>> reduction_axis;
+  Eigen::IndexList<Eigen::type2index<1>, Eigen::type2index<3> > reduction_axis;
 #endif
 
   out = in.maximum(reduction_axis);
@@ -382,7 +391,8 @@ template <int DataLayout> static void test_static_dims() {
   }
 }
 
-template <int DataLayout> static void test_innermost_last_dims() {
+template <int DataLayout>
+static void test_innermost_last_dims() {
   Tensor<float, 4, DataLayout> in(72, 53, 97, 113);
   Tensor<float, 2, DataLayout> out(97, 113);
   in.setRandom();
@@ -394,7 +404,7 @@ template <int DataLayout> static void test_innermost_last_dims() {
   reduction_axis[1] = 1;
 #else
   // This triggers the use of packets for ColMajor.
-  Eigen::IndexList<Eigen::type2index<0>, Eigen::type2index<1>> reduction_axis;
+  Eigen::IndexList<Eigen::type2index<0>, Eigen::type2index<1> > reduction_axis;
 #endif
 
   out = in.maximum(reduction_axis);
@@ -412,7 +422,8 @@ template <int DataLayout> static void test_innermost_last_dims() {
   }
 }
 
-template <int DataLayout> static void test_innermost_first_dims() {
+template <int DataLayout>
+static void test_innermost_first_dims() {
   Tensor<float, 4, DataLayout> in(72, 53, 97, 113);
   Tensor<float, 2, DataLayout> out(72, 53);
   in.setRandom();
@@ -442,7 +453,8 @@ template <int DataLayout> static void test_innermost_first_dims() {
   }
 }
 
-template <int DataLayout> static void test_reduce_middle_dims() {
+template <int DataLayout>
+static void test_reduce_middle_dims() {
   Tensor<float, 4, DataLayout> in(72, 53, 97, 113);
   Tensor<float, 2, DataLayout> out(72, 53);
   in.setRandom();

@@ -21,12 +21,8 @@
 #include <unsupported/Eigen/CXX11/Tensor>
 
 void test_device_sycl(const Eigen::SyclDevice &sycl_device) {
-  std::cout << "Helo from ComputeCpp: the requested device exists and the "
-               "device name is : "
-            << sycl_device.m_queue.get_device()
-                   .template get_info<cl::sycl::info::device::name>()
-            << std::endl;
-  ;
+  std::cout <<"Helo from ComputeCpp: the requested device exists and the device name is : "
+    << sycl_device.m_queue.get_device(). template get_info<cl::sycl::info::device::name>() <<std::endl;;
 }
 void test_cxx11_tensor_device_sycl() {
   cl::sycl::gpu_selector s;

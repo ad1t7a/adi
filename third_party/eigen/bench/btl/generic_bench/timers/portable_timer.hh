@@ -22,12 +22,14 @@
 #ifndef _PORTABLE_TIMER_HH
 #define _PORTABLE_TIMER_HH
 
-#include <cstdlib>
 #include <ctime>
+#include <cstdlib>
 
 #include <time.h>
 
+
 #define USEC_IN_SEC 1000000
+
 
 //  timer  -------------------------------------------------------------------//
 
@@ -42,102 +44,139 @@
 #define hr_timer
 #endif*/
 
-class Portable_Timer {
-public:
-  typedef struct {
+ class Portable_Timer
+ {
+  public:
+
+   typedef struct {
     LARGE_INTEGER start;
     LARGE_INTEGER stop;
-  } stopWatch;
+   } stopWatch;
 
-  Portable_Timer() {
-    startVal.QuadPart = 0;
-    stopVal.QuadPart = 0;
-    QueryPerformanceFrequency(&frequency);
-  }
 
-  void start() { QueryPerformanceCounter(&startVal); }
+   Portable_Timer()
+   {
+	 startVal.QuadPart = 0;
+	 stopVal.QuadPart = 0;
+	 QueryPerformanceFrequency(&frequency);
+   }
 
-  void stop() { QueryPerformanceCounter(&stopVal); }
+   void start() { QueryPerformanceCounter(&startVal); }
 
-  double elapsed() {
-    LARGE_INTEGER time;
-    time.QuadPart = stopVal.QuadPart - startVal.QuadPart;
-    return LIToSecs(time);
-  }
+   void stop() { QueryPerformanceCounter(&stopVal); }
 
-  double user_time() { return elapsed(); }
+   double elapsed() {
+	 LARGE_INTEGER time;
+     time.QuadPart = stopVal.QuadPart - startVal.QuadPart;
+     return LIToSecs(time);
+   }
 
-private:
-  double LIToSecs(LARGE_INTEGER &L) {
-    return ((double)L.QuadPart / (double)frequency.QuadPart);
-  }
+   double user_time() { return elapsed(); }
 
-  LARGE_INTEGER startVal;
-  LARGE_INTEGER stopVal;
-  LARGE_INTEGER frequency;
 
-}; // Portable_Timer
+ private:
+
+   double LIToSecs(LARGE_INTEGER& L) {
+     return ((double)L.QuadPart /(double)frequency.QuadPart) ;
+   }
+
+   LARGE_INTEGER startVal;
+   LARGE_INTEGER stopVal;
+   LARGE_INTEGER frequency;
+
+
+ }; // Portable_Timer
 
 #elif defined(__APPLE__)
 #include <CoreServices/CoreServices.h>
 #include <mach/mach_time.h>
 
-class Portable_Timer {
-public:
-  Portable_Timer() {}
 
-  void start() {
-    m_start_time = double(mach_absolute_time()) * 1e-9;
-    ;
+class Portable_Timer
+{
+ public:
+
+  Portable_Timer()
+  {
   }
 
-  void stop() {
-    m_stop_time = double(mach_absolute_time()) * 1e-9;
-    ;
+  void start()
+  {
+    m_start_time = double(mach_absolute_time())*1e-9;;
+
   }
 
-  double elapsed() { return user_time(); }
+  void stop()
+  {
+    m_stop_time = double(mach_absolute_time())*1e-9;;
 
-  double user_time() { return m_stop_time - m_start_time; }
+  }
+
+  double elapsed()
+  {
+    return  user_time();
+  }
+
+  double user_time()
+  {
+    return m_stop_time - m_start_time;
+  }
+
 
 private:
+
   double m_stop_time, m_start_time;
 
 }; // Portable_Timer (Apple)
 
 #else
 
-#include <sys/resource.h>
 #include <sys/time.h>
-#include <sys/times.h>
+#include <sys/resource.h>
 #include <unistd.h>
+#include <sys/times.h>
 
-class Portable_Timer {
-public:
-  Portable_Timer() {
-    m_clkid = BtlConfig::Instance.realclock ? CLOCK_REALTIME
-                                            : CLOCK_PROCESS_CPUTIME_ID;
+class Portable_Timer
+{
+ public:
+
+  Portable_Timer()
+  {
+    m_clkid = BtlConfig::Instance.realclock ? CLOCK_REALTIME : CLOCK_PROCESS_CPUTIME_ID;
   }
 
-  Portable_Timer(int clkid) : m_clkid(clkid) {}
+  Portable_Timer(int clkid) : m_clkid(clkid)
+  {}
 
-  void start() {
+  void start()
+  {
     timespec ts;
     clock_gettime(m_clkid, &ts);
     m_start_time = double(ts.tv_sec) + 1e-9 * double(ts.tv_nsec);
+
   }
 
-  void stop() {
+  void stop()
+  {
     timespec ts;
     clock_gettime(m_clkid, &ts);
     m_stop_time = double(ts.tv_sec) + 1e-9 * double(ts.tv_nsec);
+
   }
 
-  double elapsed() { return user_time(); }
+  double elapsed()
+  {
+    return  user_time();
+  }
 
-  double user_time() { return m_stop_time - m_start_time; }
+  double user_time()
+  {
+    return m_stop_time - m_start_time;
+  }
+
 
 private:
+
   int m_clkid;
   double m_stop_time, m_start_time;
 
@@ -145,4 +184,4 @@ private:
 
 #endif
 
-#endif // PORTABLE_TIMER_HPP
+#endif  // PORTABLE_TIMER_HPP

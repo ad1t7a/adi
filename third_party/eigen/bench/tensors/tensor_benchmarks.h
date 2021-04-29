@@ -4,10 +4,11 @@
 typedef int TensorIndex;
 #define EIGEN_DEFAULT_DENSE_INDEX_TYPE int
 
-#include "benchmark.h"
 #include "unsupported/Eigen/CXX11/Tensor"
+#include "benchmark.h"
 
-#define BENCHMARK_RANGE(bench, lo, hi) BENCHMARK(bench)->Range(lo, hi)
+#define BENCHMARK_RANGE(bench, lo, hi) \
+  BENCHMARK(bench)->Range(lo, hi)
 
 using Eigen::Tensor;
 using Eigen::TensorMap;
@@ -15,13 +16,13 @@ using Eigen::TensorMap;
 // TODO(bsteiner): also templatize on the input type since we have users
 // for int8 as well as floats.
 template <typename Device, typename T> class BenchmarkSuite {
-public:
-  BenchmarkSuite(const Device &device, size_t m, size_t k, size_t n)
+ public:
+  BenchmarkSuite(const Device& device, size_t m, size_t k, size_t n)
       : m_(m), k_(k), n_(n), device_(device) {
     initialize();
   }
 
-  BenchmarkSuite(const Device &device, size_t m)
+  BenchmarkSuite(const Device& device, size_t m)
       : m_(m), k_(m), n_(m), device_(device) {
     initialize();
   }
@@ -52,8 +53,7 @@ public:
       sizes[0] = m_ * sizeof(T) / sizeof(int);
       sizes[1] = k_ * sizeof(T) / sizeof(int);
     }
-    const TensorMap<Tensor<int, 2, 0, TensorIndex>, Eigen::Aligned> A((int *)a_,
-                                                                      sizes);
+    const TensorMap<Tensor<int, 2, 0, TensorIndex>, Eigen::Aligned> A((int*)a_, sizes);
     TensorMap<Tensor<T, 2, 0, TensorIndex>, Eigen::Aligned> B(b_, sizes);
 
     StartBenchmarkTiming();
@@ -88,11 +88,11 @@ public:
     const TensorMap<Tensor<T, 2>, Eigen::Aligned> B(b_, sizes);
     TensorMap<Tensor<T, 2>, Eigen::Aligned> C(c_, sizes);
 
-    const Eigen::DSizes<TensorIndex, 2> quarter_sizes(m_ / 2, m_ / 2);
+    const Eigen::DSizes<TensorIndex, 2> quarter_sizes(m_/2, m_/2);
     const Eigen::DSizes<TensorIndex, 2> first_quadrant(0, 0);
-    const Eigen::DSizes<TensorIndex, 2> second_quadrant(0, m_ / 2);
-    const Eigen::DSizes<TensorIndex, 2> third_quadrant(m_ / 2, 0);
-    const Eigen::DSizes<TensorIndex, 2> fourth_quadrant(m_ / 2, m_ / 2);
+    const Eigen::DSizes<TensorIndex, 2> second_quadrant(0, m_/2);
+    const Eigen::DSizes<TensorIndex, 2> third_quadrant(m_/2, 0);
+    const Eigen::DSizes<TensorIndex, 2> fourth_quadrant(m_/2, m_/2);
 
     StartBenchmarkTiming();
     for (int iter = 0; iter < num_iters; ++iter) {
@@ -114,8 +114,7 @@ public:
     Eigen::array<TensorIndex, 2> input_size;
     input_size[0] = k_;
     input_size[1] = n_;
-    const TensorMap<Tensor<T, 2, 0, TensorIndex>, Eigen::Aligned> B(b_,
-                                                                    input_size);
+    const TensorMap<Tensor<T, 2, 0, TensorIndex>, Eigen::Aligned> B(b_, input_size);
     Eigen::array<TensorIndex, 1> output_size;
     output_size[0] = n_;
     TensorMap<Tensor<T, 1, 0, TensorIndex>, Eigen::Aligned> C(c_, output_size);
@@ -132,8 +131,7 @@ public:
     Eigen::array<TensorIndex, 2> input_size;
     input_size[0] = k_;
     input_size[1] = n_;
-    const TensorMap<Tensor<T, 2, 0, TensorIndex>, Eigen::Aligned> B(b_,
-                                                                    input_size);
+    const TensorMap<Tensor<T, 2, 0, TensorIndex>, Eigen::Aligned> B(b_, input_size);
     Eigen::array<TensorIndex, 1> output_size;
     output_size[0] = n_;
     TensorMap<Tensor<T, 1, 0, TensorIndex>, Eigen::Aligned> C(c_, output_size);
@@ -169,11 +167,11 @@ public:
     finalizeBenchmark(static_cast<int64_t>(m_) * k_ * num_iters);
   }
 
-  void padding(int num_iters) {
+ void padding(int num_iters) {
     eigen_assert(m_ == k_);
     Eigen::array<TensorIndex, 2> size_a;
     size_a[0] = m_;
-    size_a[1] = k_ - 3;
+    size_a[1] = k_-3;
     const TensorMap<Tensor<T, 2>, Eigen::Aligned> A(a_, size_a);
     Eigen::array<TensorIndex, 2> size_b;
     size_b[0] = k_;
@@ -182,8 +180,7 @@ public:
 
 #if defined(EIGEN_HAS_INDEX_LIST)
     Eigen::IndexPairList<Eigen::type2indexpair<0, 0>,
-                         Eigen::type2indexpair<2, 1>>
-        paddings;
+                         Eigen::type2indexpair<2, 1> > paddings;
 #else
     Eigen::array<Eigen::IndexPair<TensorIndex>, 2> paddings;
     paddings[0] = Eigen::IndexPair<TensorIndex>(0, 0);
@@ -198,7 +195,7 @@ public:
     finalizeBenchmark(static_cast<int64_t>(m_) * k_ * num_iters);
   }
 
-  void striding(int num_iters) {
+ void striding(int num_iters) {
     eigen_assert(m_ == k_);
     Eigen::array<TensorIndex, 2> size_a;
     size_a[0] = m_;
@@ -206,7 +203,7 @@ public:
     const TensorMap<Tensor<T, 2>, Eigen::Aligned> A(a_, size_a);
     Eigen::array<TensorIndex, 2> size_b;
     size_b[0] = m_;
-    size_b[1] = k_ / 2;
+    size_b[1] = k_/2;
     TensorMap<Tensor<T, 2>, Eigen::Aligned> B(b_, size_b);
 
 #ifndef EIGEN_HAS_INDEX_LIST
@@ -216,7 +213,7 @@ public:
 #else
     // Take advantage of cxx11 to give the compiler information it can use to
     // optimize the code.
-    Eigen::IndexList<Eigen::type2index<1>, Eigen::type2index<2>> strides;
+    Eigen::IndexList<Eigen::type2index<1>, Eigen::type2index<2> > strides;
 #endif
 
     StartBenchmarkTiming();
@@ -252,8 +249,7 @@ public:
     for (int iter = 0; iter < num_iters; ++iter) {
       C.device(device_) = A.broadcast(broadcast);
     }
-    // Record the number of values broadcasted from A and copied to C each
-    // second
+    // Record the number of values broadcasted from A and copied to C each second
     finalizeBenchmark(static_cast<int64_t>(m_) * n_ * num_iters);
   }
 
@@ -268,8 +264,7 @@ public:
 
     StartBenchmarkTiming();
     for (int iter = 0; iter < num_iters; ++iter) {
-      C.device(device_) = A * A.constant(static_cast<T>(3.14)) +
-                          B * B.constant(static_cast<T>(2.7));
+      C.device(device_) = A * A.constant(static_cast<T>(3.14)) + B * B.constant(static_cast<T>(2.7));
     }
     // Record the number of FLOP executed per second (2 multiplications and
     // 1 addition per value)
@@ -312,13 +307,12 @@ public:
     finalizeBenchmark(static_cast<int64_t>(m_) * m_ * num_iters);
   }
 
-  // Row reduction
+ // Row reduction
   void rowReduction(int num_iters) {
     Eigen::array<TensorIndex, 2> input_size;
     input_size[0] = k_;
     input_size[1] = n_;
-    const TensorMap<Tensor<T, 2, 0, TensorIndex>, Eigen::Aligned> B(b_,
-                                                                    input_size);
+    const TensorMap<Tensor<T, 2, 0, TensorIndex>, Eigen::Aligned> B(b_, input_size);
     Eigen::array<TensorIndex, 1> output_size;
     output_size[0] = n_;
     TensorMap<Tensor<T, 1, 0, TensorIndex>, Eigen::Aligned> C(c_, output_size);
@@ -346,11 +340,12 @@ public:
     Eigen::array<TensorIndex, 2> input_size;
     input_size[0] = k_;
     input_size[1] = n_;
-    const TensorMap<Tensor<T, 2, 0, TensorIndex>, Eigen::Aligned> B(b_,
-                                                                    input_size);
+    const TensorMap<Tensor<T, 2, 0, TensorIndex>, Eigen::Aligned> B(
+        b_, input_size);
     Eigen::array<TensorIndex, 1> output_size;
     output_size[0] = k_;
-    TensorMap<Tensor<T, 1, 0, TensorIndex>, Eigen::Aligned> C(c_, output_size);
+    TensorMap<Tensor<T, 1, 0, TensorIndex>, Eigen::Aligned> C(
+        c_, output_size);
 
 #ifndef EIGEN_HAS_INDEX_LIST
     Eigen::array<TensorIndex, 1> sum_along_dim;
@@ -375,10 +370,11 @@ public:
     Eigen::array<TensorIndex, 2> input_size;
     input_size[0] = k_;
     input_size[1] = n_;
-    const TensorMap<Tensor<T, 2, 0, TensorIndex>, Eigen::Aligned> B(b_,
-                                                                    input_size);
+    const TensorMap<Tensor<T, 2, 0, TensorIndex>, Eigen::Aligned> B(
+        b_, input_size);
     Eigen::array<TensorIndex, 0> output_size;
-    TensorMap<Tensor<T, 0, 0, TensorIndex>, Eigen::Aligned> C(c_, output_size);
+    TensorMap<Tensor<T, 0, 0, TensorIndex>, Eigen::Aligned> C(
+        c_, output_size);
 
     StartBenchmarkTiming();
     for (int iter = 0; iter < num_iters; ++iter) {
@@ -441,15 +437,15 @@ public:
     }
     // Record the number of FLOP executed per second (kernel_size
     // multiplications and additions for each value in the resulting tensor)
-    finalizeBenchmark(static_cast<int64_t>(2) * (m_ - kernel_x + 1) *
-                      (n_ - kernel_y + 1) * kernel_x * kernel_y * num_iters);
+    finalizeBenchmark(static_cast<int64_t>(2) *
+        (m_ - kernel_x + 1) * (n_ - kernel_y + 1) * kernel_x * kernel_y * num_iters);
   }
 
-private:
+ private:
   void initialize() {
-    a_ = (T *)device_.allocate(m_ * k_ * sizeof(T));
-    b_ = (T *)device_.allocate(k_ * n_ * sizeof(T));
-    c_ = (T *)device_.allocate(m_ * n_ * sizeof(T));
+    a_ = (T *) device_.allocate(m_ * k_ * sizeof(T));
+    b_ = (T *) device_.allocate(k_ * n_ * sizeof(T));
+    c_ = (T *) device_.allocate(m_ * n_ * sizeof(T));
 
     // Initialize the content of the memory pools to prevent asan from
     // complaining.
@@ -457,7 +453,7 @@ private:
     device_.memset(b_, 23, k_ * n_ * sizeof(T));
     device_.memset(c_, 31, m_ * n_ * sizeof(T));
 
-    // BenchmarkUseRealTime();
+    //BenchmarkUseRealTime();
   }
 
   inline void finalizeBenchmark(int64_t num_items) {
@@ -470,12 +466,13 @@ private:
     SetBenchmarkFlopsProcessed(num_items);
   }
 
+
   TensorIndex m_;
   TensorIndex k_;
   TensorIndex n_;
-  T *a_;
-  T *b_;
-  T *c_;
+  T* a_;
+  T* b_;
+  T* c_;
   Device device_;
 };
-#endif // THIRD_PARTY_EIGEN3_TENSOR_BENCHMARKS_H_
+#endif  // THIRD_PARTY_EIGEN3_TENSOR_BENCHMARKS_H_
