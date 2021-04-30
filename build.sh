@@ -5,11 +5,10 @@ set -euo pipefail
 case "${1:-}" in
   ("prerequisites")
     #install package using brew
-    # brew install automake zmq bazel 
-    #brew install boost
-    
+    #brew install automake zmq bazel boost glfw3
+
     # install meshcat
-    pip install meshcat
+    #pip install meshcat
 
    # build json
     cd third_party/
@@ -60,34 +59,8 @@ case "${1:-}" in
     mkdir -p build/Release
     cd build/Release
     cmake ../..
-    cd ../
-
-    # msgpack -c
-    rm -rf msgpack-c/
-    git clone https://github.com/msgpack/msgpack-c.git
-    cd msgpack-c/
-    git checkout cpp-3.3.0
-    cd ../
-
-    # ff-x for task planning
-    cd FF-X/
-    make veryclean
-    make
-    make clean
-    cd ../
-
-    # trajectory generation
-    rm -rf ruckig/
-    https://github.com/pantor/ruckig.git
-    cd ruckig/
-    mkdir build/
-    cd build/
-    cmake ../
     make
     cd ../../
-
-    # glfw
-    brew install glfw3
     
     # osqp-cpp
     rm -rf osqp-cpp/
@@ -96,6 +69,13 @@ case "${1:-}" in
     mkdir build/
     cd build/
     cmake ../
+    make 
+    cd ../../
+
+    #scratch-gui
+    rm -rf scratch-gui.git
+    git clone https://github.com/ad1t7a/scratch-gui.git
+    
     ;;
   ("obstaclefreeregion")
     bazel build //apps/obstaclefreeregion --cxxopt='-std=c++17'

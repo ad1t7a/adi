@@ -51,6 +51,7 @@ private:
 
   // jacobian pos ori
   MatrixXd mJacobianOriPos;
+
 };
 } // namespace controllers
 } // namespace adi

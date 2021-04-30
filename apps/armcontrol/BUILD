@@ -1,11 +1,11 @@
 cc_binary(
     name = "armcontrol",
-    srcs = ["main.cpp", "robotdb.hpp", "ConnectionManager.hpp"],
+    srcs = ["main.cpp", "robotdb.hpp",],
 
     deps = [
         "//common:common", 
         "//visualization:visualization",
-        "//controllers:controllers",
+        "//controllers/cartesian:cartesian",
         "//io/joystick:joystick",
     ],
     linkopts = ["-framework OpenGL", "-framework GLUT"],

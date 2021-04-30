@@ -1,4 +1,4 @@
-#include "controllers/differentialkinematics.hpp"
+#include "controllers/cartesian/differentialkinematics.hpp"
 #include "common/constants.hpp"
 
 namespace adi {
@@ -12,6 +12,7 @@ DifferentialKinematics::DifferentialKinematics(std::string path) {
     return;
   }
   mJacobianOriPos = MatrixXd::Zero(kCartPoseDofs, getDoF());
+  
 }
 
 // destructor
@@ -28,7 +29,7 @@ void DifferentialKinematics::step(unsigned int &bodyID, Eigen::VectorXd &jntPos,
                                          pointPosition, mJacobianOriPos, true);
   try {
     // set up QP
-    GRBEnv env = GRBEnv();
+    GRBEnv env = new GRBEnv();
     GRBModel model = GRBModel(env);
     model.set(GRB_IntParam_LogToConsole, options.mLogToConsole);
 

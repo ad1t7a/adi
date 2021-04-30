@@ -1,6 +1,6 @@
 #include "common/constants.hpp"
 #include "common/converters.hpp"
-#include "controllers/differentialkinematics.hpp"
+#include "controllers/cartesian/differentialkinematics.hpp"
 #include "io/joystick/ps4.hpp"
 #include "robotdb.hpp"
 #include "visualization/urdf.hpp"

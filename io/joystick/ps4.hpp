@@ -1,6 +1,5 @@
 #pragma once
 #include "io/joystick/ps4state.hpp"
-#include "spdlog/fmt/ostr.h"
 #include "spdlog/spdlog.h"
 #include <GLFW/glfw3.h>
 
