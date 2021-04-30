@@ -33,9 +33,9 @@ new_local_repository(
 )
 
 new_local_repository(
-  name = "ruckig",
-  path = __workspace_dir__ + "/third_party/ruckig/",
-  build_file = "third_party/ruckig.BUILD",
+  name = "osqpcpp",
+  path = __workspace_dir__ + "/third_party/osqp-cpp/",
+  build_file = "third_party/osqpcpp.BUILD",
 )
 
 new_local_repository(
@@ -66,13 +66,6 @@ new_local_repository(
   name = "ompl",
   path = __workspace_dir__ + "/third_party/ompl/",
   build_file = "third_party/ompl.BUILD",
-)
-
-# Planning
-new_local_repository(
-  name = "ffx",
-  path = __workspace_dir__ + "/third_party/",
-  build_file = "third_party/ffx.BUILD",
 )
 
 # io

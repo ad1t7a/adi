@@ -60,7 +60,7 @@ case "${1:-}" in
     cd build/Release
     cmake ../..
     make
-    cd ../../
+    cd ../../../
     
     # osqp-cpp
     rm -rf osqp-cpp/
@@ -75,7 +75,7 @@ case "${1:-}" in
     #scratch-gui
     rm -rf scratch-gui.git
     git clone https://github.com/ad1t7a/scratch-gui.git
-    
+
     ;;
   ("obstaclefreeregion")
     bazel build //apps/obstaclefreeregion --cxxopt='-std=c++17'
