@@ -29,7 +29,7 @@ void DifferentialKinematics::step(unsigned int &bodyID, Eigen::VectorXd &jntPos,
                                          pointPosition, mJacobianOriPos, true);
   try {
     // set up QP
-    GRBEnv env = new GRBEnv();
+    GRBEnv env = GRBEnv();
     GRBModel model = GRBModel(env);
     model.set(GRB_IntParam_LogToConsole, options.mLogToConsole);
 
