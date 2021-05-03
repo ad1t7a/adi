@@ -18,30 +18,25 @@ new_local_repository(
   build_file = "third_party/spdlog.BUILD",
 )
 
+# boost
 new_local_repository(
   name = "boost",
   path = "/usr/local/Cellar/boost/1.75.0_1/",
   build_file = "third_party/boost.BUILD",
 )
 
-# mathematics and optimization
-
+# dynamics
 new_local_repository(
   name = "rbdl",
   path = __workspace_dir__ + "/third_party/rbdl/",
   build_file = "third_party/rbdl.BUILD",
 )
 
+# solvers
 new_local_repository(
   name = "osqpcpp",
   path = __workspace_dir__ + "/third_party/osqp-cpp/",
   build_file = "third_party/osqpcpp.BUILD",
-)
-
-new_local_repository(
-  name = "glfw",
-  path = "/usr/local/Cellar/glfw/3.3.2/",
-  build_file = "third_party/glfw.BUILD",
 )
 
 new_local_repository(
@@ -62,18 +57,27 @@ new_local_repository(
   build_file = "third_party/mosek.BUILD",
 )
 
+# i/o
+new_local_repository(
+  name = "glfw",
+  path = "/usr/local/Cellar/glfw/3.3.2/",
+  build_file = "third_party/glfw.BUILD",
+)
+
+# cameras
+new_local_repository(
+  name = "librealsense",
+  path = "/usr/local/Cellar/librealsense/2.41.0/",
+  build_file = "third_party/librealsense.BUILD",
+)
+
+# motion planning
 new_local_repository(
   name = "ompl",
   path = __workspace_dir__ + "/third_party/ompl/",
   build_file = "third_party/ompl.BUILD",
 )
 
-# io
-new_local_repository(
-  name = "librealsense",
-  path = "/usr/local/Cellar/librealsense/2.41.0/",
-  build_file = "third_party/librealsense.BUILD",
-)
 
 # dds
 new_local_repository(
@@ -88,12 +92,14 @@ new_local_repository(
   build_file = "third_party/cppzmq.BUILD",
 )
 
+# json
 new_local_repository(
   name = "json",
   path = __workspace_dir__ + "/third_party/json/",
   build_file = "third_party/json.BUILD",
 )
 
+# guid
 new_local_repository(
   name = "crossguid",
   path = __workspace_dir__ + "/third_party/",
