@@ -2,7 +2,7 @@
 #include "visualization/urdf.hpp"
 
 int main() {
-  size_t numRobots = 1;
+  /*size_t numRobots = 1;
   std::vector<adi::visualization::URDF*> vectorURDF;
   for(size_t k=0; k<numRobots; k++) {
     adi::visualization::URDF* urdf = new
@@ -28,18 +28,18 @@ int main() {
       vectorURDF[k]->syncVisualTransforms(Q);
     }
     t += 0.001;
-  }
+  }*/
 
   //! end effector visualization
-  /*adi::visualization::URDF endEffector(std::string("tcp://127.0.0.1:6000"));
-  endEffector.setPathPrefix("/Users/ad1t7a/Developer/adi/robots/robotiq/");
-  endEffector.loadURDF("gripper.urdf", false, "texture.jpg");
+  adi::visualization::URDF endEffector(std::string("tcp://127.0.0.1:6000"));
+  endEffector.setPathPrefix("/Users/ad1t7a/Developer/adi/robots/objects/");
+  endEffector.loadURDF("003_cracker_box_textured.urdf", false, "meshes/003_cracker_box_textured.png");
   std::vector<RigidBodyDynamics::Math::SpatialTransform> transforms;
   RigidBodyDynamics::Math::SpatialTransform transform;
   transform.r ={0.5, -0.3, 0.5};
-  transform.E ={-1.0000000,  0.0000000, -0.0000000, 0.0000000,  0.7071068, -0.7071068, 0.0000000, -0.7071068, -0.7071068};
+  transform.E ={-1.0000000,  0.0000000, -0.0000000, 0.0000000,  1.0, -0.0, 0.0000000, -0.0, -1.0};
   transforms.push_back(transform);
-  endEffector.syncVisualTransforms(transforms);*/
+  endEffector.syncVisualTransforms(transforms);
 
   /*adi::visualization::PointCloud pc(std::string("tcp://127.0.0.1:6000"));
   pc.loadPointCloud("/adi/test");*/
