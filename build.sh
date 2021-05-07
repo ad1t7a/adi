@@ -76,6 +76,14 @@ case "${1:-}" in
     rm -rf scratch-gui.git
     git clone https://github.com/ad1t7a/scratch-gui.git
 
+    # physics engine
+    rm -rf bullet3/
+    git clone https://github.com/bulletphysics/bullet3.git
+    cd bullet3/
+    ./build_cmake_pybullet_double.sh
+    cd ../../
+
+
     ;;
   ("obstaclefreeregion")
     bazel build //apps/obstaclefreeregion --cxxopt='-std=c++17'

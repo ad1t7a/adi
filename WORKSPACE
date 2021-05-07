@@ -32,6 +32,12 @@ new_local_repository(
   build_file = "third_party/rbdl.BUILD",
 )
 
+new_local_repository(
+  name = "bullet",
+  path = __workspace_dir__ + "/third_party/bullet3/",
+  build_file = "third_party/bullet.BUILD",
+)
+
 # solvers
 new_local_repository(
   name = "osqpcpp",
