@@ -79,7 +79,13 @@ case "${1:-}" in
     ./build_cmake_pybullet_double.sh
     cd ../../
 
-
+    # ur5
+    cd urdriver/
+    mkdir -p build/
+    cd build/
+    cmake ../
+    make -j8
+    cd ../../
     ;;
   ("obstaclefreeregion")
     bazel build //apps/obstaclefreeregion --cxxopt='-std=c++17'

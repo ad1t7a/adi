@@ -111,3 +111,10 @@ new_local_repository(
   path = __workspace_dir__ + "/third_party/",
   build_file = "third_party/crossguid.BUILD",
 )
+
+# urdriver
+new_local_repository(
+  name = "urdriver",
+  path = __workspace_dir__ + "/third_party/urdriver",
+  build_file = "third_party/urdriver.BUILD",
+)

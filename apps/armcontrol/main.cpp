@@ -38,7 +38,6 @@ int main() {
 
   // initialize robot start joint angles (TODO: Replace with middleware and
   // simulator) and velocity
-  Eigen::VectorXd robotJntPos(diffIK.getDoF());
   robotDB.mState->mJntPosition << 0, adi::degToRad(-40), 0, adi::degToRad(-90),
       0, adi::degToRad(40), 0;
 
