@@ -4,7 +4,6 @@
 #include "io/arm/config.hpp"
 #include "io/joystick/ps4.hpp"
 #include "visualization/urdf.hpp"
-#include <chrono>
 
 // robot configuration
 std::string prefixPath = "/Users/ad1t7a/Developer/adi/robots/flexiv/";

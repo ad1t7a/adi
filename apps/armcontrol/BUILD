@@ -8,7 +8,7 @@ cc_binary(
         "//controllers/cartesian:cartesian",
         "//io/joystick:joystick",
         "//multibody:multibody",
-        "//io/arm:arm"
+        "//io/arm:arm",
     ],
     linkopts = ["-framework OpenGL", "-framework GLUT"],
 )
