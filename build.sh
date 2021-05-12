@@ -72,10 +72,6 @@ case "${1:-}" in
     make 
     cd ../../
 
-    #scratch-gui
-    rm -rf scratch-gui.git
-    git clone https://github.com/ad1t7a/scratch-gui.git
-
     # physics engine
     rm -rf bullet3/
     git clone https://github.com/bulletphysics/bullet3.git

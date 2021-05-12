@@ -1,8 +1,8 @@
 #include "common/constants.hpp"
 #include "common/converters.hpp"
 #include "controllers/cartesian/differentialkinematics.hpp"
+#include "io/arm/config.hpp"
 #include "io/joystick/ps4.hpp"
-#include "robotdb.hpp"
 #include "visualization/urdf.hpp"
 #include <chrono>
 
@@ -13,59 +13,57 @@ std::string robotPath = "robot.urdf";
 // visualizer IP address
 std::string kVisualizerIPAddress = "tcp://127.0.0.1:6000";
 
+// texture file name
+std::string kTextureFile = "texture.jpg";
+
 // link index
 unsigned int kControlLinkIndex = 7;
 
 int main() {
-  // initialize robot start position
-  Eigen::VectorXd robotPosOri = Eigen::VectorXd::Zero(adi::kCartPoseDofs);
-
-  // initialize controller
-  adi::controllers::DifferentialKinematics diffIK(prefixPath + robotPath);
 
   // initialize visualizer
   adi::visualization::URDF urdf(kVisualizerIPAddress);
   urdf.setPathPrefix(prefixPath);
-  urdf.loadURDF(robotPath, true, "texture.jpg", "");
+  urdf.loadURDF(robotPath, true, kTextureFile, "");
+
+  // initialize controller
+  adi::controllers::DifferentialKinematics diffIK(prefixPath + robotPath);
+
+  // create robot state database
+  adi::io::arm::RobotDatabase robotDB(diffIK.getDoF());
+
+  // initialize joystick
+  adi::io::joystick::PS4 js;
+  js.init();
 
   // initialize robot start joint angles (TODO: Replace with middleware and
   // simulator) and velocity
   Eigen::VectorXd robotJntPos(diffIK.getDoF());
-  robotJntPos << 0, adi::degToRad(-40), 0, adi::degToRad(-90), 0,
-      adi::degToRad(40), 0;
-  Eigen::VectorXd robotJntVel(diffIK.getDoF());
+  robotDB.mState->mJntPosition << 0, adi::degToRad(-40), 0, adi::degToRad(-90),
+      0, adi::degToRad(40), 0;
 
-  // update visualization
-  Eigen::VectorXd robotPosOriConfig(urdf.getDoF());
-  robotPosOriConfig << robotPosOri, robotJntPos;
-
-  // cartesian velocity (ori, pos)
-  Eigen::VectorXd cmdCartVel(adi::kCartPoseDofs);
-
-  // joint velocity
-  Eigen::VectorXd jntVelocity(diffIK.getDoF());
-
-  adi::io::joystick::PS4 js;
-  js.init();
   while (true) {
     js.step();
-    cmdCartVel << 0.0, 0.0, 0.0, js.mSliderState.mSliderLeftHorizontal,
+    robotDB.mCmd->mCartVelocity << 0.0, 0.0, 0.0,
+        js.mSliderState.mSliderLeftHorizontal,
         js.mSliderState.mSliderLeftVertical,
         js.mSliderState.mSliderRightVertical;
-    std::chrono::steady_clock::time_point begin =
-        std::chrono::steady_clock::now();
-    diffIK.step(kControlLinkIndex, robotJntPos, robotJntVel, cmdCartVel,
-                jntVelocity);
-    std::chrono::steady_clock::time_point end =
-        std::chrono::steady_clock::now();
-    std::cout << "Time difference = "
-              << std::chrono::duration_cast<std::chrono::microseconds>(end -
-                                                                       begin)
-                     .count()
-              << "[µs]" << std::endl;
-    robotJntPos += adi::kTimestep * jntVelocity;
-    robotPosOriConfig << robotPosOri, robotJntPos;
-    robotJntVel = jntVelocity;
+
+    diffIK.step(kControlLinkIndex, robotDB.mState->mJntPosition,
+                robotDB.mState->mJntVelocity, robotDB.mCmd->mCartVelocity,
+                robotDB.mCmd->mJntVelocity);
+    robotDB.mCmd->mJntPosition = robotDB.mState->mJntPosition +
+                                 (adi::kTimestep * robotDB.mCmd->mJntVelocity);
+
+    // update visualization
+    Eigen::VectorXd robotPosOriConfig(urdf.getDoF());
+    robotPosOriConfig << robotDB.mCmd->mCurrentBasePosition.m_pos,
+        robotDB.mCmd->mCurrentBasePosition.getEulerAngleZYX(),
+        robotDB.mCmd->mJntPosition;
+
+    // update sensor from cmd
+    robotDB.mState->mJntVelocity = robotDB.mCmd->mJntVelocity;
+    robotDB.mState->mJntPosition = robotDB.mCmd->mJntPosition;
 
     // update visualization
     urdf.syncVisualTransforms(robotPosOriConfig);

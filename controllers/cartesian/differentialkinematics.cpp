@@ -20,8 +20,7 @@ DifferentialKinematics::~DifferentialKinematics() {}
 
 // step controller
 void DifferentialKinematics::step(unsigned int &bodyID, Eigen::VectorXd &jntPos,
-                                  Eigen::VectorXd &jntVel,
-                                  Eigen::VectorXd &cartVel,
+                                  Eigen::VectorXd &jntVel, Vector6d &cartVel,
                                   Eigen::VectorXd &cmdJntVel) {
   RigidBodyDynamics::Math::Vector3d pointPosition =
       RigidBodyDynamics::Math::Vector3d::Zero();

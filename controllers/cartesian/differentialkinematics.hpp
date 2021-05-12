@@ -33,7 +33,7 @@ public:
 
   //! solve
   void step(unsigned int &bodyID, Eigen::VectorXd &jntPos,
-            Eigen::VectorXd &jntVel, Eigen::VectorXd &cartVel,
+            Eigen::VectorXd &jntVel, Vector6d &cartVel,
             Eigen::VectorXd &cmdJntVel);
 
   //! get DoF
