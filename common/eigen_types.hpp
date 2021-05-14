@@ -4,6 +4,8 @@
 #include <Eigen/Dense>
 #include <memory>
 #include <unsupported/Eigen/Polynomials>
+#include <vector>
+
 namespace adi {
 template <typename Scalar> using Vector1 = Eigen::Matrix<Scalar, 1, 1>;
 
@@ -101,4 +103,16 @@ typedef Eigen::JacobiSVD<Eigen::MatrixXd> SVDXd;
 
 // hyperplane
 typedef std::pair<Eigen::VectorXd, double> Hyperplane;
+
+// std vector to eigen vector
+template <class T>
+Eigen::Matrix<T, 1, Eigen::Dynamic> StdVecToEigenVec(std::vector<double> vec) {
+  Eigen::Matrix<T, 1, Eigen::Dynamic> eigenVector =
+      Eigen::Matrix<T, 1, Eigen::Dynamic>::Zero(vec.size());
+  for (size_t i = 0; i < vec.size(); i++) {
+    eigenVector[i] = vec[i];
+  }
+  return eigenVector;
+}
+
 } // namespace adi

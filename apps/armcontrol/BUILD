@@ -1,6 +1,6 @@
 cc_binary(
     name = "armcontrol",
-    srcs = ["main.cpp", ],
+    srcs = ["main.cpp", "armcontrol.hpp"],
 
     deps = [
         "//common:common", 

@@ -25,6 +25,9 @@ public:
   // start robot
   virtual void startRobot() override;
 
+  // update state
+  virtual void updateState(RobotState &state) override;
+
 private:
   // ur driver
   UrDriver *mURRobot;

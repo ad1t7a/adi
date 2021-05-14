@@ -1,4 +1,5 @@
 #include "io/arm/urinterface.hpp"
+#include "common/eigen_types.hpp"
 
 namespace adi {
 namespace io {
@@ -45,8 +46,20 @@ void URInterface::startRobot() {
   if (0 == query_count) {
     spdlog::error("rt_interface_ connect failed");
   }
+  // mURRobot->uploadProg(false);
   return;
 }
+
+void URInterface::updateState(RobotState &state) {
+  // get joint sensor info from UR5
+  state.mJntPosition = adi::StdVecToEigenVec<double>(
+      mURRobot->rt_interface_->robot_state_->getQActual());
+  state.mJntVelocity = adi::StdVecToEigenVec<double>(
+      mURRobot->rt_interface_->robot_state_->getQdActual());
+  state.mJntTorque = adi::StdVecToEigenVec<double>(
+      mURRobot->rt_interface_->robot_state_->getMTarget());
+}
+
 } // namespace arm
 } // namespace io
 } // namespace adi

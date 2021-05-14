@@ -48,7 +48,6 @@ public:
   RobotCommand(int dof) {
     mJntPosition = VectorXd::Zero(dof);
     mJntVelocity = VectorXd::Zero(dof);
-    mJntAcceleration = VectorXd::Zero(dof);
     mJntTorque = VectorXd::Zero(dof);
     mCartVelocity = VectorXd::Zero(6);
   }
@@ -62,9 +61,6 @@ public:
   // jnt vel
   VectorXd mJntVelocity;
 
-  // jnt acc
-  VectorXd mJntAcceleration;
-
   // jnt trq
   VectorXd mJntTorque;
 
@@ -73,9 +69,6 @@ public:
 
   // cartesian velocity
   Vector6d mCartVelocity;
-
-  // robot base position
-  Frame mCurrentBasePosition;
 };
 
 class RobotDatabase {
