@@ -1,10 +1,16 @@
-#include "armcontrol.hpp"
 
-#include "common/factorial.hpp"
+#include "common/constants.hpp"
+#include "common/converters.hpp"
+
+#include "visualization/urdf.hpp"
+
 #include "controllers/cartesian/differentialkinematics.hpp"
+
 #include "io/arm/config.hpp"
 #include "io/arm/urinterface.hpp"
+#include "io/joystick/ps4.hpp"
 
+#include "armcontrol.hpp"
 // controller connection
 const ControllerConnection kControllerConnection = ControllerConnection::PS4;
 //! system

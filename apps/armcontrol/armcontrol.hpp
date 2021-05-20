@@ -1,7 +1,3 @@
-#include "common/constants.hpp"
-#include "common/converters.hpp"
-#include "io/joystick/ps4.hpp"
-#include "visualization/urdf.hpp"
 
 // Robot connection
 enum class RobotConnection {
