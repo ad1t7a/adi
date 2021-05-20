@@ -32,7 +32,7 @@ public:
   ~DifferentialKinematics();
 
   //! solve
-  void step(unsigned int &bodyID, Eigen::VectorXd &jntPos,
+  void step(unsigned int bodyID, Eigen::VectorXd &jntPos,
             Eigen::VectorXd &jntVel, Vector6d &cartVel,
             Eigen::VectorXd &cmdJntVel);
 

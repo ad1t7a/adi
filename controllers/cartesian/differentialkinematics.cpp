@@ -19,18 +19,23 @@ DifferentialKinematics::DifferentialKinematics(std::string path) {
 DifferentialKinematics::~DifferentialKinematics() {}
 
 // step controller
-void DifferentialKinematics::step(unsigned int &bodyID, Eigen::VectorXd &jntPos,
+void DifferentialKinematics::step(unsigned int bodyID, Eigen::VectorXd &jntPos,
                                   Eigen::VectorXd &jntVel, Vector6d &cartVel,
                                   Eigen::VectorXd &cmdJntVel) {
   RigidBodyDynamics::Math::Vector3d pointPosition =
       RigidBodyDynamics::Math::Vector3d::Zero();
   RigidBodyDynamics::CalcPointJacobian6D(*m_model, jntPos, bodyID,
                                          pointPosition, mJacobianOriPos, true);
+  // Inertia matrix
+  MatrixXd inertiaMatrix(7, 7);
+  RigidBodyDynamics::CompositeRigidBodyAlgorithm(*m_model, jntPos,
+                                                 inertiaMatrix, true);
+
   try {
     // set up QP
     GRBEnv env = GRBEnv();
     GRBModel model = GRBModel(env);
-    model.set(GRB_IntParam_LogToConsole, options.mLogToConsole);
+    // model.set(GRB_IntParam_LogToConsole, options.mLogToConsole);
 
     // initialize optimization variables
     Eigen::Matrix<GRBVar, Eigen::Dynamic, 1> qdot(getDoF());
@@ -99,6 +104,15 @@ void DifferentialKinematics::step(unsigned int &bodyID, Eigen::VectorXd &jntPos,
                       std::string("minAcc") + std::to_string(jntIndex));
       model.addConstr(((qdot[jntIndex] - jntVel[jntIndex])) <= 5.5,
                       std::string("maxAcc") + std::to_string(jntIndex));
+
+      // torque constraints
+      GRBQuadExpr trqConstr;
+      for (int i = 0; i < inertiaMatrix.cols(); i++) {
+        trqConstr +=
+            inertiaMatrix(jntIndex, i) * ((qdot[i] - jntVel[i]) / kTimestep);
+      }
+      model.addConstr(trqConstr <= it->second->limits->effort,
+                      std::string("maxTrq") + std::to_string(jntIndex));
       jntIndex++;
     }
     model.optimize();

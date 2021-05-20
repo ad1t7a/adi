@@ -20,12 +20,9 @@ std::string kTextureFile = "texture.jpg";
 // robot IP Address
 std::string kRobotIPAddress = "192.168.2.50";
 
-// link index
-unsigned int kControlLinkIndex = 7;
-
 int main() {
   // initialize visualizer
-  /*adi::visualization::URDF urdf(kVisualizerIPAddress);
+  adi::visualization::URDF urdf(kVisualizerIPAddress);
   urdf.setPathPrefix(prefixPath);
   urdf.loadURDF(robotPath, true, kTextureFile, "");
 
@@ -57,6 +54,8 @@ int main() {
   // update cmd
   switch (kRobotConnection) {
     case RobotConnection::NONE : {
+      robotDB.mCmd->mJntPosition << 0, adi::degToRad(-40), 0,
+          adi::degToRad(-90), 0, adi::degToRad(45), 0;
       robotDB.mState->mJntVelocity = robotDB.mCmd->mJntVelocity;
       robotDB.mState->mJntPosition = robotDB.mCmd->mJntPosition;
       break;
@@ -95,15 +94,15 @@ int main() {
       case ControllerConnection::PS4 : {
         js.step();
         robotDB.mCmd->mCartVelocity << 0.0, 0.0, 0.0,
-                                    js.mSliderState.mSliderLeftHorizontal,
-                                    js.mSliderState.mSliderLeftVertical,
-                                    js.mSliderState.mSliderRightVertical;
+            js.mSliderState.mSliderLeftHorizontal,
+            js.mSliderState.mSliderLeftVertical,
+            js.mSliderState.mSliderRightVertical;
         break;
       }
       default: break;
     }
 
-    diffIK.step(kControlLinkIndex, robotDB.mState->mJntPosition,
+    diffIK.step(diffIK.getDoF(), robotDB.mState->mJntPosition,
                 robotDB.mState->mJntVelocity, robotDB.mCmd->mCartVelocity,
                 robotDB.mCmd->mJntVelocity);
 
@@ -134,6 +133,6 @@ int main() {
 
     // update visualization
     urdf.syncVisualTransforms(robotPosOriConfig);
-  }*/
+  }
   return 0;
 }
