@@ -12,7 +12,6 @@ DifferentialKinematics::DifferentialKinematics(std::string path) {
     return;
   }
   mJacobianOriPos = MatrixXd::Zero(kCartPoseDofs, getDoF());
-  
 }
 
 // destructor
@@ -27,10 +26,13 @@ void DifferentialKinematics::step(unsigned int bodyID, Eigen::VectorXd &jntPos,
   RigidBodyDynamics::CalcPointJacobian6D(*m_model, jntPos, bodyID,
                                          pointPosition, mJacobianOriPos, true);
   // Inertia matrix
-  MatrixXd inertiaMatrix(7, 7);
+  MatrixXd inertiaMatrix;
+  inertiaMatrix = MatrixXd::Zero(m_model->q_size, m_model->q_size);
+  VectorXd currentTau;
+  currentTau = VectorXd::Zero(m_model->q_size);
   RigidBodyDynamics::CompositeRigidBodyAlgorithm(*m_model, jntPos,
                                                  inertiaMatrix, true);
-
+  RigidBodyDynamics::NonlinearEffects(*m_model, jntPos, jntVel, currentTau);
   try {
     // set up QP
     GRBEnv env = GRBEnv();
@@ -51,6 +53,7 @@ void DifferentialKinematics::step(unsigned int bodyID, Eigen::VectorXd &jntPos,
     // primary objective function (min -alpha)
     GRBQuadExpr primaryObjective = -1.0 * alpha;
     objective += primaryObjective;
+
     // secondary objective
     if (mJacobianOriPos.rows() < mJacobianOriPos.cols()) {
       for (size_t jntIndex = 0; jntIndex < getDoF(); jntIndex++) {
@@ -113,6 +116,8 @@ void DifferentialKinematics::step(unsigned int bodyID, Eigen::VectorXd &jntPos,
       }
       model.addConstr(trqConstr <= it->second->limits->effort,
                       std::string("maxTrq") + std::to_string(jntIndex));
+      model.addConstr(trqConstr >= -1.0 * it->second->limits->effort,
+                      std::string("minTrq") + std::to_string(jntIndex));
       jntIndex++;
     }
     model.optimize();

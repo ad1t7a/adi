@@ -17,7 +17,7 @@ const ControllerConnection kControllerConnection = ControllerConnection::PS4;
 const RobotConnection kRobotConnection = RobotConnection::NONE;
 
 // robot configuration
-std::string prefixPath = "/Users/ad1t7a/Developer/adi/robots/flexiv/";
+std::string prefixPath = "/Users/ad1t7a/Developer/adi/robots/ur5/";
 std::string robotPath = "robot.urdf";
 // visualizer IP address
 std::string kVisualizerIPAddress = "tcp://127.0.0.1:6000";
@@ -60,8 +60,10 @@ int main() {
   // update cmd
   switch (kRobotConnection) {
     case RobotConnection::NONE : {
-      robotDB.mCmd->mJntPosition << 0, adi::degToRad(-40), 0,
-          adi::degToRad(-90), 0, adi::degToRad(45), 0;
+      /*robotDB.mCmd->mJntPosition << 0, adi::degToRad(-40), 0,
+          adi::degToRad(-90), 0, adi::degToRad(45), 0;*/
+      robotDB.mCmd->mJntPosition << 0, adi::degToRad(-90), adi::degToRad(-90),
+          adi::degToRad(-90), adi::degToRad(90), adi::degToRad(0);
       robotDB.mState->mJntVelocity = robotDB.mCmd->mJntVelocity;
       robotDB.mState->mJntPosition = robotDB.mCmd->mJntPosition;
       break;
