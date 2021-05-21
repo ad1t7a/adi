@@ -22,6 +22,10 @@ public:
   virtual void updateState(RobotState &state) {
     spdlog::error("Cannot update state: Robot not described.");
   }
+
+  virtual void setCommand(RobotCommand &cmd) {
+    spdlog::error("Cannot set command: Robot not described.");
+  }
 };
 } // namespace arm
 } // namespace io

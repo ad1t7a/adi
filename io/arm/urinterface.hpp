@@ -28,6 +28,9 @@ public:
   // update state
   virtual void updateState(RobotState &state) override;
 
+  // set robot command
+  virtual void setCommand(RobotCommand &cmd) override;
+
 private:
   // ur driver
   UrDriver *mURRobot;

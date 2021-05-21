@@ -13,7 +13,7 @@
 #include "armcontrol.hpp"
 // controller connection
 const ControllerConnection kControllerConnection = ControllerConnection::PS4;
-//! system
+//! robot system
 const RobotConnection kRobotConnection = RobotConnection::NONE;
 
 // robot configuration
@@ -24,7 +24,7 @@ std::string kVisualizerIPAddress = "tcp://127.0.0.1:6000";
 // texture file name
 std::string kTextureFile = "texture.jpg";
 // robot IP Address
-std::string kRobotIPAddress = "192.168.2.50";
+std::string kRobotIPAddress = "192.168.1.138";
 
 int main() {
   // initialize visualizer
@@ -134,6 +134,7 @@ int main() {
         break;
       }
       case RobotConnection::UR5 : {
+        robotInterface->setCommand(*robotDB.mCmd);
         break;
       }
       default: break;

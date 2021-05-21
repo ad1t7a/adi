@@ -46,7 +46,7 @@ void URInterface::startRobot() {
   if (0 == query_count) {
     spdlog::error("rt_interface_ connect failed");
   }
-  // mURRobot->uploadProg(false);
+  mURRobot->uploadProg(false);
   return;
 }
 
@@ -58,6 +58,13 @@ void URInterface::updateState(RobotState &state) {
       mURRobot->rt_interface_->robot_state_->getQdActual());
   state.mJntTorque = adi::StdVecToEigenVec<double>(
       mURRobot->rt_interface_->robot_state_->getMTarget());
+}
+
+void URInterface::setCommand(RobotCommand &cmd) {
+  std::vector<double> cmdPosition(cmd.mJntPosition.data(),
+                                  cmd.mJntPosition.data() +
+                                      cmd.mJntPosition.size());
+  mURRobot->servoj(cmdPosition, 1);
 }
 
 } // namespace arm

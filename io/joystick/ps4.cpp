@@ -32,6 +32,7 @@ void PS4::init(int joystickIndex) {
   for (size_t i = 0; i < 100; i++) {
     updateState(mSliderOffset);
   }
+  spdlog::info("Initialized joystick");
 }
 
 // step
