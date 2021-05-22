@@ -7,11 +7,7 @@ third_party/json/**
 third_party/ompl/**
 third_party/rbdl/build/**
 third_party/bullet3/**
-third_party/cppzmq/**
-third_party/crossguid/**
-third_party/json/**
 third_party/librealsense/**
-third_party/ompl/**
 third_party/osqp-cpp/**
 third_party/urdriver/build/**
 bazel-*
