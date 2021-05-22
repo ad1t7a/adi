@@ -5,7 +5,7 @@ set -euo pipefail
 case "${1:-}" in
   ("prerequisites")
     #install package using brew
-    #brew install automake zmq bazel boost glfw3
+    #brew install automake zmq bazel boost glfw3 openssl@1.1
 
     # install meshcat
     #pip install meshcat
@@ -86,6 +86,16 @@ case "${1:-}" in
     cmake ../
     make -j8
     cd ../../
+
+    #realsense camera
+    rm -rf rm -rf librealsense/
+    git clone https://github.com/IntelRealSense/librealsense
+    cd librealsense/
+    mkdir build
+    cd build/
+    cmake ../ -DBUILD_PYTHON_BINDINGS=bool:true -DOPENSSL_ROOT_DIR='/usr/local/Cellar/openssl@1.1/1.1.1k/'
+    make -j4
+
     ;;
   ("obstaclefreeregion")
     bazel build //apps/obstaclefreeregion --cxxopt='-std=c++17'
