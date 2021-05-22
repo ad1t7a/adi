@@ -1,4 +1,3 @@
-#include "visualization/pointcloud.hpp"
 #include "visualization/urdf.hpp"
 
 int main() {
@@ -40,9 +39,6 @@ int main() {
   transform.E ={-1.0000000,  0.0000000, -0.0000000, 0.0000000,  1.0, -0.0, 0.0000000, -0.0, -1.0};
   transforms.push_back(transform);
   endEffector.syncVisualTransforms(transforms);
-
-  /*adi::visualization::PointCloud pc(std::string("tcp://127.0.0.1:6000"));
-  pc.loadPointCloud("/adi/test");*/
 
   return 0;
 }

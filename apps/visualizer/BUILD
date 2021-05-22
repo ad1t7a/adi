@@ -4,7 +4,6 @@ cc_binary(
 
     deps = [
         "//common:common", 
-        "//io/camera:camera", 
         "//visualization:visualization",
     ],
     linkopts = ["-framework OpenGL", "-framework GLUT"],

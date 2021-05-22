@@ -95,6 +95,8 @@ case "${1:-}" in
     cd build/
     cmake ../ -DBUILD_PYTHON_BINDINGS=bool:true -DOPENSSL_ROOT_DIR='/usr/local/Cellar/openssl@1.1/1.1.1k/'
     make -j4
+    SCRIPTPATH=$(dirname "$SCRIPT")
+    echo 'export PYTHONPATH=$PYTHONPATH:$SCRIPTPATH/wrappers/python' >> ~/.zshrc
 
     ;;
   ("obstaclefreeregion")
