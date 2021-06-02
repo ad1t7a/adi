@@ -21,6 +21,9 @@ public:
 
   // log to console
   bool mLogToConsole{true};
+
+  // obstacle avoidance
+  bool mObstacleAvoidance{true};
 };
 
 class DifferentialKinematics {

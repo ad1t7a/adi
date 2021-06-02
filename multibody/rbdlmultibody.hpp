@@ -6,7 +6,7 @@
 #include <urdf/urdfdom_headers/urdf_model/include/urdf_model/model.h>
 #include <urdfreader/urdfreader.h>
 namespace adi {
-namespace physics {
+namespace multibody {
 class RBDLMultiBody : public MultiBodyPlant {
 public:
   //! constructor
@@ -23,14 +23,17 @@ public:
                                        Frame &T) const override;
 
   //! get jacobian
-  virtual void getJacobian(const int linkId, const Vector3d &argPosGlobal,
-                           MatrixXd &argJ) const override;
+  virtual void getJacobian(const int linkId, const Vector3d &argPos,
+                           const bool global, MatrixXd &argJ) const override;
 
   //! get body name
   std::string getBodyName(const int bodyId);
 
   //! get number of degrees of freedom
   const size_t getDoFs() const { return m_model->dof_count; }
+
+  //! get rigid body dynamics model
+  RigidBodyDynamics::ModelPtr getURDFModel() { return m_urdfModel; }
 
 private:
   //! robot model
@@ -39,5 +42,5 @@ private:
   //! robot urdf model
   RigidBodyDynamics::ModelPtr m_urdfModel;
 };
-} // namespace physics
+} // namespace multibody
 } // namespace adi

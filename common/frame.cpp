@@ -95,6 +95,11 @@ void Frame::setAxisAngleRotation(const Vector3d &rotV) {
   m_rot = rot.matrix();
 }
 
+AngleAxisd Frame::getAxisAngleRotation() {
+  AngleAxisd axisAngle(m_rot);
+  return axisAngle;
+}
+
 void Frame::orthonormalizeRotationMatrix() {
   Matrix3d Q = m_rot.householderQr().householderQ();
   Matrix3d R = Q.transpose() * m_rot;

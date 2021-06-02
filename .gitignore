@@ -11,7 +11,7 @@ third_party/librealsense/**
 third_party/osqp-cpp/**
 third_party/urdriver/build/**
 bazel-*
-
+docs/**
 
 # Compiled Object files
 *.slo

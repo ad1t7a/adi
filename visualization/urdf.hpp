@@ -28,6 +28,11 @@ public:
   //! sync visual transformation
   void syncVisualTransforms(std::vector<RigidBodyDynamics::Math::SpatialTransform> transforms);
 
+  //! sync visual transformation
+  void
+  syncVisualTransforms(size_t linkIndex,
+                       RigidBodyDynamics::Math::SpatialTransform transforms);
+
   //! get number of degrees of freedom
   int getDoF() { return m_model->dof_count; }
 

@@ -1,7 +1,7 @@
 #include "multibody/rbdlmultibody.hpp"
 
 namespace adi {
-namespace physics {
+namespace multibody {
 //! constructor
 RBDLMultiBody::RBDLMultiBody(std::string urdfPath, bool floatingBase)
     : MultiBodyPlant(urdfPath, floatingBase) {
@@ -32,13 +32,18 @@ void RBDLMultiBody::getTransformationMatrix(const int bodyId, Frame &T) const {
 }
 
 //! get jacobian
-void RBDLMultiBody::getJacobian(const int linkId, const Vector3d &argPosGlobal,
-                                MatrixXd &argJ) const {
+void RBDLMultiBody::getJacobian(const int linkId, const Vector3d &argPos,
+                                const bool global, MatrixXd &argJ) const {
   size_t dofs = getDoFs();
   // convert to local coordinate
   Frame frame;
   getTransformationMatrix(linkId, frame);
-  Vector3d localPos = frame.m_rot.transpose() * (argPosGlobal - frame.m_pos);
+  Vector3d localPos;
+  if (global) {
+    localPos = frame.m_rot.transpose() * (argPos - frame.m_pos);
+  } else {
+    localPos = argPos;
+  }
   MatrixXd tempJ = MatrixXd::Zero(adi::kCartPoseDofs, dofs);
   RigidBodyDynamics::CalcPointJacobian6D(*m_model, mJntAngle, linkId, localPos,
                                          tempJ, false);
@@ -53,5 +58,5 @@ void RBDLMultiBody::getJacobian(const int linkId, const Vector3d &argPosGlobal,
 std::string RBDLMultiBody::getBodyName(const int bodyId) {
   return m_model->GetBodyName(bodyId);
 }
-} // namespace physics
+} // namespace multibody
 } // namespace adi

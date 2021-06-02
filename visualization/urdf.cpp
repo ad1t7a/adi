@@ -87,17 +87,27 @@ void URDF::syncVisualTransforms(RigidBodyDynamics::Math::VectorNd Q) {
 void URDF::syncVisualTransforms(std::vector<RigidBodyDynamics::Math::SpatialTransform> transforms) {
 
   for (size_t i = 0; i < m_model->mJoints.size(); i++) {
-    double world_pos[3] = {transforms[i].r[0], transforms[i].r[1], transforms[i].r[2]};
-    double world_mat[9] = {
-        transforms[i].E(0, 0), transforms[i].E(0, 1), transforms[i].E(0, 2),
-        transforms[i].E(1, 0), transforms[i].E(1, 1), transforms[i].E(1, 2),
-        transforms[i].E(2, 0), transforms[i].E(2, 1), transforms[i].E(2, 2)};
-    std::string vis_name =
-        kVisualizerPath + m_robotName + std::string("/") + m_linkNameToIndex[i];
-    nlohmann::json tr_cmd =
-        createTransformCmd(world_pos, world_mat, vis_name.c_str());
-    sendZMQ(tr_cmd);
+    syncVisualTransforms(i, transforms[i]);
   }
+}
+
+/***************************************************************************/ /**
+                                                                               * Sync visual transform
+                                                                               *
+                                                                               * @param transforms   pose update
+                                                                               ******************************************************************************/
+void URDF::syncVisualTransforms(
+    size_t linkIndex, RigidBodyDynamics::Math::SpatialTransform transforms) {
+  double world_pos[3] = {transforms.r[0], transforms.r[1], transforms.r[2]};
+  double world_mat[9] = {
+      transforms.E(0, 0), transforms.E(0, 1), transforms.E(0, 2),
+      transforms.E(1, 0), transforms.E(1, 1), transforms.E(1, 2),
+      transforms.E(2, 0), transforms.E(2, 1), transforms.E(2, 2)};
+  std::string vis_name = kVisualizerPath + m_robotName + std::string("/") +
+                         m_linkNameToIndex[linkIndex];
+  nlohmann::json tr_cmd =
+      createTransformCmd(world_pos, world_mat, vis_name.c_str());
+  sendZMQ(tr_cmd);
 }
 
 /***************************************************************************/ /**

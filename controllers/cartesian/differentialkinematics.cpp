@@ -37,7 +37,7 @@ void DifferentialKinematics::step(unsigned int bodyID, Eigen::VectorXd &jntPos,
     // set up QP
     GRBEnv env = GRBEnv();
     GRBModel model = GRBModel(env);
-    // model.set(GRB_IntParam_LogToConsole, options.mLogToConsole);
+    model.set(GRB_IntParam_LogToConsole, options.mLogToConsole);
 
     // initialize optimization variables
     Eigen::Matrix<GRBVar, Eigen::Dynamic, 1> qdot(getDoF());
@@ -47,38 +47,59 @@ void DifferentialKinematics::step(unsigned int bodyID, Eigen::VectorXd &jntPos,
     }
     GRBVar alpha = model.addVar(-50.0, 50.0, 0.0, GRB_CONTINUOUS, "alpha");
 
-    // objective function
     GRBQuadExpr objective;
 
-    // primary objective function (min -alpha)
-    GRBQuadExpr primaryObjective = -1.0 * alpha;
+    /*********************************************************
+     *                   primary objective function           *
+     *********************************************************/
+    GRBQuadExpr primaryObjective;
+    if (!options.mObstacleAvoidance) {
+      // primary objective function (min -alpha)
+      primaryObjective = -1.0 * alpha;
+    } else {
+      // constraint (Jqdot - v)^2
+      for (size_t row = 0; row < mJacobianOriPos.rows(); row++) {
+        GRBLinExpr constraintEqn;
+        for (size_t col = 0; col < mJacobianOriPos.cols(); col++) {
+          constraintEqn += mJacobianOriPos(row, col) * qdot[col];
+        }
+        constraintEqn -= cartVel[row];
+        primaryObjective += constraintEqn * constraintEqn;
+      }
+    }
     objective += primaryObjective;
 
-    // secondary objective
-    if (mJacobianOriPos.rows() < mJacobianOriPos.cols()) {
-      for (size_t jntIndex = 0; jntIndex < getDoF(); jntIndex++) {
-        GRBLinExpr termA = (jntPos[jntIndex] + (kTimestep * qdot[jntIndex]));
-        GRBQuadExpr secondaryObjectiveTerms =
-            (termA - jntPos[jntIndex]) * (termA - jntPos[jntIndex]);
-        objective += secondaryObjectiveTerms;
+    /*********************************************************
+     *                   secondary objective function         *
+     *********************************************************/
+    // if (mJacobianOriPos.rows() < mJacobianOriPos.cols()) {
+    for (size_t jntIndex = 0; jntIndex < getDoF(); jntIndex++) {
+      GRBLinExpr termA = (jntPos[jntIndex] + (kTimestep * qdot[jntIndex]));
+      GRBQuadExpr secondaryObjectiveTerms =
+          (termA - jntPos[jntIndex]) * (termA - jntPos[jntIndex]);
+      objective += secondaryObjectiveTerms;
       }
-    }
+      //}
+      model.setObjective(objective);
 
-    model.setObjective(objective);
+      /*********************************************************
+       *                   constraint equations                 *
+       *********************************************************/
+      if (!options.mObstacleAvoidance) {
+        // constraint (0<=alpha<=1)
+        model.addConstr(alpha >= 0, "c0");
+        model.addConstr(alpha <= 1, "c1");
 
-    // constraint (0<=alpha<=1)
-    model.addConstr(alpha >= 0, "c0");
-    model.addConstr(alpha <= 1, "c1");
-
-    // constraint (Jqdot = alpha*v)
-    for (size_t row = 0; row < mJacobianOriPos.rows(); row++) {
-      GRBLinExpr constraintEqn;
-      for (size_t col = 0; col < mJacobianOriPos.cols(); col++) {
-        constraintEqn += mJacobianOriPos(row, col) * qdot[col];
+        // constraint (Jqdot = alpha*v)
+        for (size_t row = 0; row < mJacobianOriPos.rows(); row++) {
+          GRBLinExpr constraintEqn;
+          for (size_t col = 0; col < mJacobianOriPos.cols(); col++) {
+            constraintEqn += mJacobianOriPos(row, col) * qdot[col];
+          }
+          model.addConstr(constraintEqn == alpha * cartVel[row],
+                          std::string("cJqdotalphav") + std::to_string(row));
+        }
       }
-      model.addConstr(constraintEqn == alpha * cartVel[row],
-                      std::string("cJqdotalphav") + std::to_string(row));
-    }
 
     // joint position velocity and acceleration limits
     int jntIndex = 0;
@@ -109,6 +130,7 @@ void DifferentialKinematics::step(unsigned int bodyID, Eigen::VectorXd &jntPos,
                       std::string("maxAcc") + std::to_string(jntIndex));
 
       // torque constraints
+      // TODO: Add non-linear constraints
       GRBQuadExpr trqConstr;
       for (int i = 0; i < inertiaMatrix.cols(); i++) {
         trqConstr +=
@@ -120,6 +142,7 @@ void DifferentialKinematics::step(unsigned int bodyID, Eigen::VectorXd &jntPos,
                       std::string("minTrq") + std::to_string(jntIndex));
       jntIndex++;
     }
+
     model.optimize();
     for (size_t i = 0; i < jntPos.size(); i++) {
       cmdJntVel[i] = qdot[i].get(GRB_DoubleAttr_X);

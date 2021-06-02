@@ -70,6 +70,9 @@ public:
   // ! a rotation vector represents a rotation axis and rotation angle.
   void setAxisAngleRotation(const Vector3d &rotV);
 
+  //! get axis angle for the rotation matrix
+  AngleAxisd getAxisAngleRotation();
+
   //! orthonormalize rotation matrix
   void orthonormalizeRotationMatrix();
 

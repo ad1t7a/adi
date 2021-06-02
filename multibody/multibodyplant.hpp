@@ -5,7 +5,7 @@
 #include "spdlog/spdlog.h"
 
 namespace adi {
-namespace physics {
+namespace multibody {
 class MultiBodyPlant {
 public:
   //! constructor
@@ -25,8 +25,8 @@ public:
   }
 
   //! get jacobian
-  virtual void getJacobian(const int linkId, const Vector3d &argPosGlobal,
-                           MatrixXd &argJ) const {
+  virtual void getJacobian(const int linkId, const Vector3d &argPos,
+                           const bool global, MatrixXd &argJ) const {
     spdlog::error("NotImplementedException: getJacobian");
   }
 
@@ -49,5 +49,5 @@ protected:
   //! current jnt angle
   VectorXd mJntAngle;
 };
-} // namespace physics
+} // namespace multibody
 } // namespace adi

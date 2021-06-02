@@ -1,7 +1,7 @@
 #include "multibody/multibodyplant.hpp"
 
 namespace adi {
-namespace physics {
+namespace multibody {
 //! constructor
 MultiBodyPlant::MultiBodyPlant(std::string urdfPath, bool floatingBase) {
   m_urdfPath = urdfPath;
@@ -11,5 +11,5 @@ MultiBodyPlant::MultiBodyPlant(std::string urdfPath, bool floatingBase) {
 //! destructor
 MultiBodyPlant::~MultiBodyPlant() {}
 
-} // namespace physics
+} // namespace multibody
 } // namespace adi
