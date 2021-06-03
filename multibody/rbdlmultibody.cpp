@@ -5,6 +5,7 @@ namespace multibody {
 //! constructor
 RBDLMultiBody::RBDLMultiBody(std::string urdfPath, bool floatingBase)
     : MultiBodyPlant(urdfPath, floatingBase) {
+  m_model = new RigidBodyDynamics::Model();
   if (!RigidBodyDynamics::Addons::URDFReadFromFile(urdfPath.c_str(), m_model,
                                                    m_urdfModel, floatingBase)) {
     return;

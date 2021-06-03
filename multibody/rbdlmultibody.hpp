@@ -13,7 +13,7 @@ public:
   RBDLMultiBody(std::string urdfPath, bool floatingBase);
 
   //! destructor
-  ~RBDLMultiBody();
+  virtual ~RBDLMultiBody();
 
   //! update kinematics
   virtual void updateKinematics(const VectorXd pos) override;
