@@ -38,13 +38,7 @@ new_local_repository(
   build_file = "third_party/bullet.BUILD",
 )
 
-# solvers
-new_local_repository(
-  name = "osqpcpp",
-  path = __workspace_dir__ + "/third_party/osqp-cpp/",
-  build_file = "third_party/osqpcpp.BUILD",
-)
-
+# optimization
 new_local_repository(
   name = "libcdd",
   path = "/usr/local/",

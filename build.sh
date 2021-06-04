@@ -51,27 +51,6 @@ case "${1:-}" in
     git checkout v4.7.1
     cd ../
 
-    # ompl
-    rm -rf ompl/
-    git clone https://github.com/ompl/ompl.git
-    cd ompl/
-    git checkout 1.5.2
-    mkdir -p build/Release
-    cd build/Release
-    cmake ../..
-    make
-    cd ../../../
-    
-    # osqp-cpp
-    rm -rf osqp-cpp/
-    git clone --recurse-submodules https://github.com/google/osqp-cpp.git
-    cd osqp-cpp/
-    mkdir build/
-    cd build/
-    cmake ../
-    make 
-    cd ../../
-
     # physics engine
     rm -rf bullet3/
     git clone https://github.com/bulletphysics/bullet3.git
