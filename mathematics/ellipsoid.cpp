@@ -43,11 +43,10 @@ double Ellipsoid::nSphereVolume(int dim, double radius) const {
   double v;
   int k = std::floor(dim / 2);
   if (dim % 2 == 0) {
-    v = std::pow(M_PI, k) /
-        static_cast<double>(adi::math::factorial<double>(k));
+    v = std::pow(M_PI, k) / static_cast<double>(adi::factorial(k));
   } else {
-    v = (2.0 * adi::math::factorial<double>(k) * std::pow(4 * M_PI, k)) /
-        static_cast<double>(adi::math::factorial<double>(2 * k + 1));
+    v = (2.0 * adi::factorial(k) * std::pow(4 * M_PI, k)) /
+        static_cast<double>(adi::factorial(2 * k + 1));
   }
   return v * std::pow(radius, dim);
 }

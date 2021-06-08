@@ -4,6 +4,7 @@ enum class RobotConnection {
   NONE,
   SIM,
   UR5,
+  FLEXIV,
 };
 
 //! Controller Connection

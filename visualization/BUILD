@@ -1,7 +1,7 @@
 cc_library(
     name = "visualization",
     srcs = ["visualization.cpp", 
-            "urdf.cpp", 
+            "urdf.cpp",
             "base64.cpp",],
     hdrs = ["visualization.hpp", 
             "urdf.hpp", 
@@ -13,6 +13,7 @@ cc_library(
             "@crossguid//:crossguid", 
             "@zmq//:zmq", 
             "@cppzmq//:cppzmq",
+            "@glfw//:glfw",
             ],
     visibility = ["//visibility:public"],
 )

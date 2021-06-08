@@ -1,10 +1,10 @@
 cc_library(
   name = "librealsense",
-  hdrs = glob(["include/**"]),
-  includes = ["include/",
+  hdrs = glob(["include/**", "examples/**", "**",]),
+  includes = ["include/", "examples/",
   ],
   srcs = [
-    "lib/librealsense2.2.41.0.dylib",
+    "build/librealsense2.2.45.dylib",
   ],
   visibility = ["//visibility:public"],
 )

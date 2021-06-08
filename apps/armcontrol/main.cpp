@@ -8,11 +8,12 @@
 
 #include "io/arm/config.hpp"
 #include "io/arm/urinterface.hpp"
+
 #include "io/joystick/ps4.hpp"
 
 #include "armcontrol.hpp"
 // controller connection
-const ControllerConnection kControllerConnection = ControllerConnection::PS4;
+const ControllerConnection kControllerConnection = ControllerConnection::NONE;
 //! robot system
 const RobotConnection kRobotConnection = RobotConnection::NONE;
 
@@ -76,6 +77,10 @@ int main() {
       robotInterface->startRobot();
       break;
     }
+    case RobotConnection::FLEXIV: {
+      // TODO
+      break;
+    }
     default: break;
   }
 
@@ -92,6 +97,10 @@ int main() {
       }
       case RobotConnection::UR5 : {
         robotInterface->updateState(*robotDB.mState);
+        break;
+      }
+      case RobotConnection::FLEXIV: {
+        // TODO
         break;
       }
       default: break;
@@ -135,6 +144,10 @@ int main() {
       }
       case RobotConnection::UR5 : {
         robotInterface->setCommand(*robotDB.mCmd);
+        break;
+      }
+      case RobotConnection::FLEXIV: {
+        // TODO
         break;
       }
       default: break;

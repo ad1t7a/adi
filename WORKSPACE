@@ -67,7 +67,7 @@ new_local_repository(
 # cameras
 new_local_repository(
   name = "librealsense",
-  path = "/usr/local/Cellar/librealsense/2.41.0/",
+  path = __workspace_dir__ + "/third_party/librealsense/",
   build_file = "third_party/librealsense.BUILD",
 )
 
@@ -77,7 +77,6 @@ new_local_repository(
   path = __workspace_dir__ + "/third_party/ompl/",
   build_file = "third_party/ompl.BUILD",
 )
-
 
 # dds
 new_local_repository(
@@ -111,4 +110,25 @@ new_local_repository(
   name = "urdriver",
   path = __workspace_dir__ + "/third_party/urdriver",
   build_file = "third_party/urdriver.BUILD",
+)
+
+# urdriver
+new_local_repository(
+  name = "fvrethernetclient",
+  path = __workspace_dir__ + "/third_party/fvrethernetclient",
+  build_file = "third_party/fvrethernetclient.BUILD",
+)
+
+# pcl
+new_local_repository(
+  name = "pcl",
+  path = "/usr/local/Cellar/pcl/1.11.1_8/",
+  build_file = "third_party/pcl.BUILD",
+)
+
+# flann
+new_local_repository(
+  name = "flann",
+  path = "/usr/local/Cellar/flann/1.9.1_10/",
+  build_file = "third_party/flann.BUILD",
 )

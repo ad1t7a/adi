@@ -56,7 +56,7 @@ case "${1:-}" in
     git clone https://github.com/bulletphysics/bullet3.git
     cd bullet3/
     ./build_cmake_pybullet_double.sh
-    cd ../../
+    cd ../
 
     # ur5
     cd urdriver/
@@ -73,7 +73,7 @@ case "${1:-}" in
     mkdir build
     cd build/
     cmake ../ -DBUILD_PYTHON_BINDINGS=bool:true -DOPENSSL_ROOT_DIR='/usr/local/Cellar/openssl@1.1/1.1.1k/'
-    make -j4
+    make -j8
     SCRIPTPATH=$(dirname "$SCRIPT")
     echo 'export PYTHONPATH=$PYTHONPATH:$SCRIPTPATH/wrappers/python' >> ~/.zshrc
 
@@ -85,7 +85,7 @@ case "${1:-}" in
     bazel build //apps/armcontrol --cxxopt='-std=c++17'
     ;;
   ("visualizer")
-    bazel build //apps/visualizer
+    bazel build //apps/visualizer --cxxopt='-std=c++17'
     ;;
   ("clear")
     bazel clean --expunge

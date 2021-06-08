@@ -16,13 +16,18 @@ URDF::URDF(std::string ipAddress) : Visualization(ipAddress) {
   m_pathPrefix = "";
   m_textureData = "";
   m_textureUUID = "";
+  m_model = nullptr;
   m_linkNameToIndex.clear();
 }
 
 /***************************************************************************/ /**
 * Destructor
 ******************************************************************************/
-URDF::~URDF() { delete (m_model); }
+URDF::~URDF() {
+  if (m_model != nullptr) {
+    delete (m_model);
+  }
+}
 
 /***************************************************************************/ /**
 * Load URDF file

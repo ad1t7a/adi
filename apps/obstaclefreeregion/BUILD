@@ -6,6 +6,7 @@ cc_binary(
         "//common:common", 
         "//mathematics:mathematics", 
         "//systems/regioninflation:regioninflation",
+        "//visualization:visualization",
     ],
     linkopts = ["-framework OpenGL", "-framework GLUT"],
 )

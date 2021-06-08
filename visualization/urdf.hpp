@@ -42,7 +42,7 @@ public:
   //! delete
   void deleteMultibody();
 
-private:
+protected:
   //! convert visuals
   void convertVisuals(const std::string &texturePath = "");
 

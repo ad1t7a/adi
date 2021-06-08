@@ -6,6 +6,7 @@ cc_binary(
         "//common:common", 
         "//visualization:visualization",
         "//multibody:multibody",
+        "//io/camera:camera",
     ],
     linkopts = ["-framework OpenGL", "-framework GLUT"],
 )
