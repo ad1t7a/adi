@@ -1,17 +1,14 @@
 #include "controllers/cartesian/differentialkinematics.hpp"
 #include "common/constants.hpp"
+#include "common/frame.hpp"
 
 namespace adi {
 namespace controllers {
 // constructor
 DifferentialKinematics::DifferentialKinematics(std::string path) {
   options.mLogToConsole = false;
-  m_model = new RigidBodyDynamics::Model();
-  if (!RigidBodyDynamics::Addons::URDFReadFromFile(path.c_str(), m_model,
-                                                   m_urdfModel, false)) {
-    return;
-  }
-  mJacobianOriPos = MatrixXd::Zero(kCartPoseDofs, getDoF());
+  m_dynamics = new multibody::RBDLMultiBody(path.c_str(), false);
+  mJacobianOriPos = MatrixXd::Zero(kCartPoseDofs, m_dynamics->getDoFs());
 }
 
 // destructor
@@ -23,16 +20,18 @@ void DifferentialKinematics::step(unsigned int bodyID, Eigen::VectorXd &jntPos,
                                   Eigen::VectorXd &cmdJntVel) {
   RigidBodyDynamics::Math::Vector3d pointPosition =
       RigidBodyDynamics::Math::Vector3d::Zero();
-  RigidBodyDynamics::CalcPointJacobian6D(*m_model, jntPos, bodyID,
-                                         pointPosition, mJacobianOriPos, true);
+
+  m_dynamics->updateKinematics(jntPos);
+  m_dynamics->getJacobian(bodyID, pointPosition, true, mJacobianOriPos);
+
   // Inertia matrix
   MatrixXd inertiaMatrix;
-  inertiaMatrix = MatrixXd::Zero(m_model->q_size, m_model->q_size);
+  inertiaMatrix = MatrixXd::Zero(m_dynamics->getDoFs(), m_dynamics->getDoFs());
   VectorXd currentTau;
-  currentTau = VectorXd::Zero(m_model->q_size);
-  RigidBodyDynamics::CompositeRigidBodyAlgorithm(*m_model, jntPos,
-                                                 inertiaMatrix, true);
-  RigidBodyDynamics::NonlinearEffects(*m_model, jntPos, jntVel, currentTau);
+  currentTau = VectorXd::Zero(m_dynamics->getDoFs());
+  m_dynamics->getInertiaMatrix(jntPos, inertiaMatrix);
+  m_dynamics->getNonLinearTerms(jntPos, jntVel, currentTau);
+
   try {
     // set up QP
     GRBEnv env = GRBEnv();
@@ -40,7 +39,7 @@ void DifferentialKinematics::step(unsigned int bodyID, Eigen::VectorXd &jntPos,
     model.set(GRB_IntParam_LogToConsole, options.mLogToConsole);
 
     // initialize optimization variables
-    Eigen::Matrix<GRBVar, Eigen::Dynamic, 1> qdot(getDoF());
+    Eigen::Matrix<GRBVar, Eigen::Dynamic, 1> qdot(m_dynamics->getDoFs());
     for (size_t i = 0; i < mJacobianOriPos.cols(); i++) {
       qdot[i] = model.addVar(-50.0, 50.0, 0.0, GRB_CONTINUOUS,
                              std::string("qdot") + std::to_string(i));
@@ -72,14 +71,12 @@ void DifferentialKinematics::step(unsigned int bodyID, Eigen::VectorXd &jntPos,
     /*********************************************************
      *                   secondary objective function         *
      *********************************************************/
-    // if (mJacobianOriPos.rows() < mJacobianOriPos.cols()) {
-    for (size_t jntIndex = 0; jntIndex < getDoF(); jntIndex++) {
+    for (size_t jntIndex = 0; jntIndex < m_dynamics->getDoFs(); jntIndex++) {
       GRBLinExpr termA = (jntPos[jntIndex] + (kTimestep * qdot[jntIndex]));
       GRBQuadExpr secondaryObjectiveTerms =
           (termA - jntPos[jntIndex]) * (termA - jntPos[jntIndex]);
       objective += secondaryObjectiveTerms;
-      }
-      //}
+    }
       model.setObjective(objective);
 
       /*********************************************************
@@ -104,8 +101,8 @@ void DifferentialKinematics::step(unsigned int bodyID, Eigen::VectorXd &jntPos,
     // joint position velocity and acceleration limits
     int jntIndex = 0;
     for (std::map<std::string, my_shared_ptr<urdf::Joint>>::iterator it =
-             m_urdfModel->joints_.begin();
-         it != m_urdfModel->joints_.end(); ++it) {
+             m_dynamics->getURDFModel()->joints_.begin();
+         it != m_dynamics->getURDFModel()->joints_.end(); ++it) {
       if (it->second->type == urdf::Joint::FIXED) {
         continue;
       }
@@ -141,6 +138,19 @@ void DifferentialKinematics::step(unsigned int bodyID, Eigen::VectorXd &jntPos,
       model.addConstr(trqConstr >= -1.0 * it->second->limits->effort,
                       std::string("minTrq") + std::to_string(jntIndex));
       jntIndex++;
+    }
+    if (options.mObstacleAvoidance) {
+      // add obstacle constraints
+      /*int bodyId = 6;
+      Frame curFrame;
+      const RigidBodyDynamics::Math::SpatialTransform &st =
+      m_model->X_base[bodyId]; Affine3d affine = Translation(st.r) *
+      st.E.transpose(); curFrame.m_pos = affine.translation(); curFrame.m_rot =
+      affine.rotation(); GRBLinExpr val = curFrame.m_pos[2] + (cartVel[5] *
+      kTimestep); model.addConstr(val >= 0.3, std::string("posframe"));
+      //model.addConstr(curFrame.m_pos[2] + (cartVel[5] * kTimestep) <= 0.6,
+      std::string("posframe2")); std::cout << curFrame.m_pos.transpose()
+      <<"\n";*/
     }
 
     model.optimize();

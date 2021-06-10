@@ -3,9 +3,8 @@
 #include "common/copyable.hpp"
 #include "common/eigen_types.hpp"
 #include "gurobi_c++.h"
-#include <rbdl/rbdl.h>
-#include <urdf/urdfdom_headers/urdf_model/include/urdf_model/model.h>
-#include <urdfreader/urdfreader.h>
+
+#include "multibody/rbdlmultibody.hpp"
 
 namespace adi {
 namespace controllers {
@@ -40,17 +39,14 @@ public:
             Eigen::VectorXd &cmdJntVel);
 
   //! get DoF
-  size_t getDoF() { return m_model->q_size; }
+  size_t getDoF() { return m_dynamics->getDoFs(); }
 
   // diff IK options
   DifferentialKinematicsOptions options;
 
 private:
-  //! robot model
-  RigidBodyDynamics::Model *m_model;
-
-  //! robot urdf model
-  RigidBodyDynamics::ModelPtr m_urdfModel;
+  //!
+  multibody::RBDLMultiBody *m_dynamics;
 
   // jacobian pos ori
   MatrixXd mJacobianOriPos;

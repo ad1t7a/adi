@@ -13,7 +13,7 @@
 
 #include "armcontrol.hpp"
 // controller connection
-const ControllerConnection kControllerConnection = ControllerConnection::NONE;
+const ControllerConnection kControllerConnection = ControllerConnection::PS4;
 //! robot system
 const RobotConnection kRobotConnection = RobotConnection::NONE;
 
@@ -110,10 +110,9 @@ int main() {
     switch (kControllerConnection) {
       case ControllerConnection::PS4 : {
         js.step();
-        robotDB.mCmd->mCartVelocity << 0.0, 0.0, 0.0,
-            js.mSliderState.mSliderLeftHorizontal,
+        robotDB.mCmd->mCartVelocity << js.mSliderState.mSliderLeftHorizontal,
             js.mSliderState.mSliderLeftVertical,
-            js.mSliderState.mSliderRightVertical;
+            js.mSliderState.mSliderRightVertical, 0.0, 0.0, 0.0;
         break;
       }
       default: break;

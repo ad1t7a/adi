@@ -35,6 +35,18 @@ public:
   //! get rigid body dynamics model
   RigidBodyDynamics::ModelPtr getURDFModel() { return m_urdfModel; }
 
+  //! get inertia matrix
+  void getInertiaMatrix(VectorXd jntPos, MatrixXd &inertiaMatrix) {
+    RigidBodyDynamics::CompositeRigidBodyAlgorithm(*m_model, jntPos,
+                                                   inertiaMatrix, true);
+  }
+
+  //! get non-linear vector
+  void getNonLinearTerms(VectorXd &jntPos, VectorXd &jntVel,
+                         VectorXd &currentTau) {
+    RigidBodyDynamics::NonlinearEffects(*m_model, jntPos, jntVel, currentTau);
+  }
+
 private:
   //! robot model
   RigidBodyDynamics::Model *m_model;

@@ -3,22 +3,22 @@ namespace adi {
 namespace io {
 namespace camera {
 /***************************************************************************/ /**
-                                                                               * Constructor
-                                                                               *
-                                                                               * @param ipAddress IP Address of the ZMQ TCP socket
-                                                                               ******************************************************************************/
+* Constructor
+*
+* @param ipAddress IP Address of the ZMQ TCP socket
+******************************************************************************/
 Realsense::Realsense() { mPipe.start(); }
 
 /***************************************************************************/ /**
-                                                                               * Destructor
-                                                                               ******************************************************************************/
+* Destructor
+******************************************************************************/
 Realsense::~Realsense() {}
 
 /***************************************************************************/ /**
-                                                                               * Load point cloud file
-                                                                               *
-                                                                               * @param filename   file name
-                                                                               ******************************************************************************/
+* Load point cloud file
+*
+* @param filename   file name
+******************************************************************************/
 rs2::video_frame Realsense::loadPointCloud() {
   // Wait for the next set of frames from the camera
   auto frames = mPipe.wait_for_frames();
@@ -42,10 +42,10 @@ rs2::video_frame Realsense::loadPointCloud() {
 }
 
 /***************************************************************************/ /**
-                                                                               * Point cloud library
-                                                                               *
-                                                                               * @param filename   file name
-                                                                               ******************************************************************************/
+* Point cloud library
+*
+* @param filename   file name
+******************************************************************************/
 pcl_ptr Realsense::pointsToPcl(const rs2::points &points) {
   pcl_ptr cloud(new pcl::PointCloud<pcl::PointXYZ>);
 

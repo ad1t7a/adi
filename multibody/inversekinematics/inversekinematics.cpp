@@ -96,7 +96,7 @@ void InverseKinematics::solve(unsigned int &bodyID, Eigen::VectorXd &jntPos,
       for (size_t jntIndex = 0; jntIndex < dof; jntIndex++) {
         GRBLinExpr termA = (jntPos[jntIndex] + (kTimestep * qdot[jntIndex]));
         GRBQuadExpr secondaryObjectiveTerms =
-            (termA - jntPos[jntIndex]) * (termA - jntPos[jntIndex]);
+            (termA - jntPos[jntIndex]) * 100.0 * (termA - jntPos[jntIndex]);
         secondaryObjective += 100.0 * secondaryObjectiveTerms;
       }
       objective += secondaryObjective;
@@ -130,12 +130,12 @@ void InverseKinematics::solve(unsigned int &bodyID, Eigen::VectorXd &jntPos,
           continue;
         }
         // position constraints
-        /*model.addConstr(jntPos[jntIndex] + (kTimestep * qdot[jntIndex]) >=
+        model.addConstr(jntPos[jntIndex] + (kTimestep * qdot[jntIndex]) >=
                             it->second->limits->lower,
                         std::string("minPos") + std::to_string(jntIndex));
         model.addConstr(jntPos[jntIndex] + (kTimestep * qdot[jntIndex]) <=
                             it->second->limits->upper,
-                        std::string("maxPos") + std::to_string(jntIndex));*/
+                        std::string("maxPos") + std::to_string(jntIndex));
         jntIndex++;
       }
 
