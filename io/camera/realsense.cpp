@@ -15,20 +15,25 @@ Realsense::Realsense() { mPipe.start(); }
 Realsense::~Realsense() {}
 
 /***************************************************************************/ /**
-* Load point cloud file
-*
-* @param filename   file name
-******************************************************************************/
-rs2::video_frame Realsense::loadPointCloud() {
-  // Wait for the next set of frames from the camera
-  auto frames = mPipe.wait_for_frames();
-
-  auto color = frames.get_color_frame();
-
+                                                                               * Load color image
+                                                                               ******************************************************************************/
+rs2::video_frame Realsense::waitFramesetLoadRGB(rs2::frameset &frames) {
+  frames = mPipe.wait_for_frames();
+  rs2::video_frame color = frames.get_color_frame();
   // For cameras that don't have RGB sensor, we'll map the pointcloud to
   // infrared instead of color
   if (!color)
     color = frames.get_infrared_frame();
+  return color;
+}
+
+/***************************************************************************/ /**
+                                                                               * Load point cloud file
+                                                                               ******************************************************************************/
+rs2::video_frame Realsense::loadPointCloud() {
+  // Wait for the next set of frames from the camera and load rgb
+  rs2::frameset frames;
+  auto color = waitFramesetLoadRGB(frames);
 
   // Tell pointcloud object to map to this color frame
   mPc.map_to(color);
@@ -46,8 +51,8 @@ rs2::video_frame Realsense::loadPointCloud() {
 *
 * @param filename   file name
 ******************************************************************************/
-pcl_ptr Realsense::pointsToPcl(const rs2::points &points) {
-  pcl_ptr cloud(new pcl::PointCloud<pcl::PointXYZ>);
+pclPtr Realsense::pointsToPcl(const rs2::points &points) {
+  pclPtr cloud(new pcl::PointCloud<pcl::PointXYZ>);
 
   auto sp = points.get_profile().as<rs2::video_stream_profile>();
   cloud->width = sp.width();

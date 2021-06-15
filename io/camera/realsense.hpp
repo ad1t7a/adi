@@ -12,7 +12,7 @@
 namespace adi {
 namespace io {
 namespace camera {
-using pcl_ptr = pcl::PointCloud<pcl::PointXYZ>::Ptr;
+using pclPtr = pcl::PointCloud<pcl::PointXYZ>::Ptr;
 
 class Realsense {
 public:
@@ -28,9 +28,13 @@ public:
   // get pointcloud
   rs2::points getPoints() { return mPoints; }
 
-  pcl_ptr pointsToPcl(const rs2::points &points);
+  // get rgb image
+  rs2::video_frame waitFramesetLoadRGB(rs2::frameset &frames);
 
 private:
+  // realsense point cloud to pcl
+  pclPtr pointsToPcl(const rs2::points &points);
+
   // Declare pointcloud object, for calculating pointclouds and texture mappings
   rs2::pointcloud mPc;
 

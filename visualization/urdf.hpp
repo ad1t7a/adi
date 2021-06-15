@@ -42,6 +42,9 @@ public:
   //! delete
   void deleteMultibody();
 
+  //! texture data
+  std::string m_textureData;
+
 protected:
   //! convert visuals
   void convertVisuals(const std::string &texturePath = "");
@@ -64,9 +67,6 @@ protected:
 
   //! path prefix
   std::string m_pathPrefix;
-
-  //! texture data
-  std::string m_textureData;
 
   //! texture uuid
   std::string m_textureUUID;
