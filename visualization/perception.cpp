@@ -31,14 +31,14 @@ void Perception::loadTexture(const std::string &texturePath) {
 }
 
 /***************************************************************************/ /**
-                                                                               * Create mesh object
-                                                                               *
-                                                                               * @param textureData   texture data
-                                                                               * @param worldPos world pose
-                                                                               * @param colorRGB RGB color
-                                                                               * @param path     path
-                                                                               * @return mesh json object
-                                                                               ******************************************************************************/
+* Create mesh object
+*
+* @param textureData   texture data
+* @param worldPos world pose
+* @param colorRGB RGB color
+* @param path     path
+* @return mesh json object
+******************************************************************************/
 nlohmann::json Perception::createTextureCmd(const char *textureData,
                                             double worldPos[3], int colorRGB,
                                             const char *path) {
