@@ -76,6 +76,15 @@ case "${1:-}" in
     make -j8
     SCRIPTPATH=$(dirname "$SCRIPT")
     echo 'export PYTHONPATH=$PYTHONPATH:$SCRIPTPATH/wrappers/python' >> ~/.zshrc
+  
+    #realsense camera
+    rm -rf rm -rf octomap/
+    git clone https://github.com/OctoMap/octomap.git
+    cd octomap/
+    mkdir build/
+    cd build/
+    cmake ../
+    make
 
     ;;
   ("obstaclefreeregion")

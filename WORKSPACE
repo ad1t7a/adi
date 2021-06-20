@@ -132,3 +132,10 @@ new_local_repository(
   path = "/usr/local/Cellar/flann/1.9.1_10/",
   build_file = "third_party/flann.BUILD",
 )
+
+# octomap
+new_local_repository(
+  name = "octomap",
+  path = __workspace_dir__ + "/third_party/octomap",
+  build_file = "third_party/octomap.BUILD",
+)
