@@ -45,24 +45,6 @@ new_local_repository(
   build_file = "third_party/libcdd.BUILD",
 )
 
-new_local_repository(
-  name = "gurobi",
-  path = "/Library/gurobi911/mac64/",
-  build_file = "third_party/gurobi.BUILD",
-)
-
-new_local_repository(
-  name = "mosek",
-  path = "/Users/ad1t7a/mosek/9.2/tools/platform/osx64x86/",
-  build_file = "third_party/mosek.BUILD",
-)
-
-new_local_repository(
-  name = "osqp",
-  path = __workspace_dir__ + "/third_party/osqp-cpp/",
-  build_file = "third_party/osqp.BUILD",
-)
-
 # i/o
 new_local_repository(
   name = "glfw",
@@ -116,18 +98,4 @@ new_local_repository(
   name = "urdriver",
   path = __workspace_dir__ + "/third_party/urdriver",
   build_file = "third_party/urdriver.BUILD",
-)
-
-# flann
-new_local_repository(
-  name = "flann",
-  path = "/usr/local/Cellar/flann/1.9.1_10/",
-  build_file = "third_party/flann.BUILD",
-)
-
-# octomap
-new_local_repository(
-  name = "octomap",
-  path = __workspace_dir__ + "/third_party/octomap",
-  build_file = "third_party/octomap.BUILD",
 )
