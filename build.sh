@@ -4,11 +4,11 @@ set -euo pipefail
 
 case "${1:-}" in
   ("prerequisites")
-    #install package using brew
-    #brew install automake zmq bazel boost glfw3 openssl@1.1
+    install package using brew
+    brew install automake zmq bazel boost glfw3 openssl@1.1
 
     # install meshcat
-    #pip install meshcat
+    pip install meshcat
 
    # build json
     cd third_party/
@@ -77,10 +77,19 @@ case "${1:-}" in
     SCRIPTPATH=$(dirname "$SCRIPT")
     echo 'export PYTHONPATH=$PYTHONPATH:$SCRIPTPATH/wrappers/python' >> ~/.zshrc
   
-    #realsense camera
+    #octomap
     rm -rf rm -rf octomap/
     git clone https://github.com/OctoMap/octomap.git
     cd octomap/
+    mkdir build/
+    cd build/
+    cmake ../
+    make
+
+    # osqp
+    rm -rf osqp-cpp/
+    git clone https://github.com/google/osqp-cpp.git
+    cd osqp-cpp/
     mkdir build/
     cd build/
     cmake ../
@@ -95,6 +104,9 @@ case "${1:-}" in
     ;;
   ("visualizer")
     bazel build //apps/visualizer --cxxopt='-std=c++17'
+    ;;
+  ("planner")
+    bazel build //apps/planner --cxxopt='-std=c++17'
     ;;
   ("clear")
     bazel clean --expunge

@@ -57,6 +57,12 @@ new_local_repository(
   build_file = "third_party/mosek.BUILD",
 )
 
+new_local_repository(
+  name = "osqp",
+  path = __workspace_dir__ + "/third_party/osqp-cpp/",
+  build_file = "third_party/osqp.BUILD",
+)
+
 # i/o
 new_local_repository(
   name = "glfw",
@@ -110,20 +116,6 @@ new_local_repository(
   name = "urdriver",
   path = __workspace_dir__ + "/third_party/urdriver",
   build_file = "third_party/urdriver.BUILD",
-)
-
-# urdriver
-new_local_repository(
-  name = "fvrethernetclient",
-  path = __workspace_dir__ + "/third_party/fvrethernetclient",
-  build_file = "third_party/fvrethernetclient.BUILD",
-)
-
-# pcl
-new_local_repository(
-  name = "pcl",
-  path = "/usr/local/Cellar/pcl/1.11.1_8/",
-  build_file = "third_party/pcl.BUILD",
 )
 
 # flann

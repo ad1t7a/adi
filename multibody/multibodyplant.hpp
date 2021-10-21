@@ -15,7 +15,7 @@ public:
   ~MultiBodyPlant();
 
   //! update kinematics
-  virtual void updateKinematics(const VectorXd pos) {
+  virtual void updateKinematics(const VectorXd pos, const VectorXd vel) {
     spdlog::error("NotImplementedException: updateKinematics");
   }
 
@@ -48,6 +48,9 @@ protected:
 
   //! current jnt angle
   VectorXd mJntAngle;
+
+  //! current jnt velocity
+  VectorXd mJntVelocity;
 };
 } // namespace multibody
 } // namespace adi

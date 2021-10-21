@@ -21,7 +21,7 @@ void DifferentialKinematics::step(unsigned int bodyID, Eigen::VectorXd &jntPos,
   RigidBodyDynamics::Math::Vector3d pointPosition =
       RigidBodyDynamics::Math::Vector3d::Zero();
 
-  m_dynamics->updateKinematics(jntPos);
+  m_dynamics->updateKinematics(jntPos, jntVel);
   m_dynamics->getJacobian(bodyID, pointPosition, true, mJacobianOriPos);
 
   // Inertia matrix

@@ -17,10 +17,12 @@ RBDLMultiBody::RBDLMultiBody(std::string urdfPath, bool floatingBase)
 RBDLMultiBody::~RBDLMultiBody() { delete (m_model); }
 
 //! update kinematics
-void RBDLMultiBody::updateKinematics(const VectorXd pos) {
+void RBDLMultiBody::updateKinematics(const VectorXd pos, const VectorXd vel) {
   ADI_ASSERT(m_model->dof_count == pos.size());
   mJntAngle = pos;
-  RigidBodyDynamics::UpdateKinematicsCustom(*m_model, &pos, nullptr, nullptr);
+  mJntVelocity = vel;
+  RigidBodyDynamics::UpdateKinematicsCustom(*m_model, &pos, &mJntVelocity,
+                                            nullptr);
 }
 
 //! get transformation matrix

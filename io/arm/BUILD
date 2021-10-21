@@ -1,10 +1,9 @@
 cc_library(
     name = "arm",
-    hdrs = ["config.hpp", "robotinterface.hpp", "urinterface.hpp", "flexivinterface.hpp", ],
-    srcs = ["urinterface.cpp", "flexivinterface.cpp"],
+    hdrs = ["config.hpp", "robotinterface.hpp", "urinterface.hpp",],
+    srcs = ["urinterface.cpp", ],
     deps = ["@eigen//:eigen", 
             "//common:common", 
-            "@urdriver//:urdriver",
-            "@fvrethernetclient//:fvrethernetclient"],
+            "@urdriver//:urdriver",],
     visibility = ["//visibility:public"],
 )

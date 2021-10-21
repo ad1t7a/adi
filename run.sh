@@ -18,6 +18,10 @@ case "${1:-}" in
     cd bazel-bin/apps/obstaclefreeregion/
     ./obstaclefreeregion
     ;;
+  ("planner")
+    cd bazel-bin/apps/planner/
+    ./planner
+    ;;
   (*)
     echo "Usage: $0 <package>" 1>&2
     echo "where <package> is one of the following:" 1>&2
@@ -25,6 +29,7 @@ case "${1:-}" in
     echo "  armcontrol" 1>&2
     echo "  visualizer" 1>&2
     echo "  obstaclefreeregion" 1>&2
+    echo "  planner" 1>&2
     exit 1
     ;;
 esac

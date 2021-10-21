@@ -39,6 +39,25 @@ public:
   //! set path prefix
   void setPathPrefix(std::string pathPrefix) { m_pathPrefix = pathPrefix; }
 
+  //! initialize link surface points
+  void initializeLinkSurfacePoints();
+
+  //! visualize link surface points
+  void visualizeLinkSurfacePoints();
+
+  //! get surface points at link index
+  std::map<int, std::vector<RigidBodyDynamics::Math::Vector3d>>
+  getSurfacePointsAtLinks() {
+    return m_indexSurfacePoints;
+  }
+
+  //! sync surface transforms
+  void syncSurfacePointsTransforms(RigidBodyDynamics::Math::VectorNd Q);
+
+  //! get surface points
+  std::map<int, std::vector<RigidBodyDynamics::Math::Vector3d>>
+  getSurfacePoints(RigidBodyDynamics::Math::VectorNd Q);
+
   //! delete
   void deleteMultibody();
 
@@ -54,6 +73,9 @@ protected:
 
   //! convert link visuals
   void convertLinkVisuals(urdf::Link &link, int linkIndex, bool useTextureUUID);
+
+  //! update surface points
+  void getSurfacePoints(urdf::Link &link, int linkIndex, int numSurfacePoints);
 
   /***************************************************************************/ /**/
   //! robot model
@@ -73,6 +95,10 @@ protected:
 
   //! link name index map
   std::map<int, std::string> m_linkNameToIndex;
+
+  //! link index and vector of surface points
+  std::map<int, std::vector<RigidBodyDynamics::Math::Vector3d>>
+      m_indexSurfacePoints;
 };
 } // namespace visualization
 } // namespace adi

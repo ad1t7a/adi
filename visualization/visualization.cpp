@@ -420,14 +420,7 @@ void Visualization::sendZMQ(nlohmann::json cmd, bool verbose) {
   multipart.send(*m_socket);
 
   zmq::message_t reply(1024);
-  char buf[1024];
-  bool recv_result = m_socket->recv(&reply);
-  if (recv_result) {
-    memcpy(buf, reply.data(), reply.size());
-    buf[reply.size()] = 0;
-    std::string d(buf);
-    nlohmann::json result = nlohmann::json::from_msgpack(d, false);
-  }
+  (void)m_socket->recv(reply, zmq::recv_flags::none);
 }
 
 /***************************************************************************/ /**

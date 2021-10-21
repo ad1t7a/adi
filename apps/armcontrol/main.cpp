@@ -13,7 +13,7 @@
 
 #include "armcontrol.hpp"
 // controller connection
-const ControllerConnection kControllerConnection = ControllerConnection::NONE;
+const ControllerConnection kControllerConnection = ControllerConnection::PS4;
 //! robot system
 const RobotConnection kRobotConnection = RobotConnection::NONE;
 

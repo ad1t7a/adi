@@ -228,5 +228,141 @@ void URDF::convertLinkVisuals(urdf::Link &link, int linkIndex,
     }
   }
 }
+
+/***************************************************************************/ /**
+                                                                               * Initialize the link surface points
+                                                                               * @param link index
+                                                                               ******************************************************************************/
+void URDF::initializeLinkSurfacePoints() {
+  std::vector<my_shared_ptr<urdf::Link>> links;
+  m_urdfModel->getLinks(links);
+
+  for (size_t i = 0; i < links.size(); i++) {
+    m_linkNameToIndex[m_model->GetBodyId(links[i]->name.c_str())] =
+        links[i]->name;
+    urdf::Link a = *links[i];
+    getSurfacePoints(a, i, 10);
+  }
+}
+
+/***************************************************************************/ /**
+                                                                               * Update surface points
+                                                                               * @param link link path
+                                                                               * @param linkIndex link index
+                                                                               * @param useTextureUUID texture UUID
+                                                                               ******************************************************************************/
+void URDF::getSurfacePoints(urdf::Link &link, int linkIndex,
+                            int numSurfacePoints) {
+  // variables for point
+  char c;
+  double x, y, z;
+  // variables to save the points
+  std::vector<RigidBodyDynamics::Math::Vector3d> points;
+  for (int vis_index = 0; vis_index < (int)link.visual_array.size();
+       vis_index++) {
+    my_shared_ptr<urdf::Visual> &v = link.visual_array[vis_index];
+    if (v->geometry->type == urdf::Geometry::MESH) {
+      std::ifstream input((m_pathPrefix + v->geometry->filename).c_str());
+      std::string line;
+      while (std::getline(input, line)) {
+        if (line[0] == 'v' && line[1] == ' ') {
+          RigidBodyDynamics::Math::Vector3d point;
+          std::stringstream ss(line);
+          ss >> c >> x >> y >> z;
+          point[0] = x;
+          point[1] = y;
+          point[2] = z;
+          points.push_back(point);
+        }
+      }
+    }
+  }
+  while (points.size() > numSurfacePoints) {
+    int randomIdx = rand() % points.size();
+    points.erase(points.begin() + randomIdx);
+  }
+  m_indexSurfacePoints[linkIndex] = points;
+}
+
+void URDF::visualizeLinkSurfacePoints() {
+  for (size_t index = 0; index < m_model->mBodies.size(); index++) {
+    if (m_model->IsBodyId(index)) {
+      double worldPos[3] = {0.0, 0.0, 0.0};
+      std::vector<RigidBodyDynamics::Math::Vector3d> points =
+          m_indexSurfacePoints[index];
+      for (size_t i = 0; i < points.size(); i++) {
+        std::string surfacePt = kVisualizerPath + m_robotName +
+                                std::string("/") + "surfacePoint/" +
+                                std::to_string(index) + "/" + std::to_string(i);
+        worldPos[0] = points[i][0];
+        worldPos[1] = points[i][1];
+        worldPos[2] = points[i][2];
+        sendZMQ(createSphere(0.01, worldPos, 0, surfacePt.c_str()));
+      }
+    }
+  }
+}
+
+/***************************************************************************/ /**
+                                                                               * Sync visual transform
+                                                                               *
+                                                                               * @param Q   pose update
+                                                                               ******************************************************************************/
+void URDF::syncSurfacePointsTransforms(RigidBodyDynamics::Math::VectorNd Q) {
+  RigidBodyDynamics::Math::VectorNd QDot =
+      RigidBodyDynamics::Math::VectorNd::Zero(m_model->q_size);
+  RigidBodyDynamics::Math::VectorNd QDDot =
+      RigidBodyDynamics::Math::VectorNd::Zero(m_model->q_size);
+  RigidBodyDynamics::UpdateKinematics(*m_model, Q, QDot, QDDot);
+  for (size_t index = 0; index < m_model->mBodies.size(); index++) {
+    if (m_model->IsBodyId(index)) {
+      RigidBodyDynamics::Math::SpatialTransform baseFrame =
+          m_model->X_base[index];
+      double world_mat[9] = {
+          baseFrame.E(0, 0), baseFrame.E(0, 1), baseFrame.E(0, 2),
+          baseFrame.E(1, 0), baseFrame.E(1, 1), baseFrame.E(1, 2),
+          baseFrame.E(2, 0), baseFrame.E(2, 1), baseFrame.E(2, 2)};
+      std::vector<RigidBodyDynamics::Math::Vector3d> points =
+          m_indexSurfacePoints[index];
+      for (size_t j = 0; j < points.size(); j++) {
+        double world_pos[3] = {baseFrame.r[0], baseFrame.r[1], baseFrame.r[2]};
+        std::string surfacePt = kVisualizerPath + m_robotName +
+                                std::string("/") + "surfacePoint/" +
+                                std::to_string(index) + "/" + std::to_string(j);
+        nlohmann::json tr_cmd =
+            createTransformCmd(world_pos, world_mat, surfacePt.c_str());
+        sendZMQ(tr_cmd);
+      }
+    }
+  }
+}
+
+/***************************************************************************/ /**
+                                                                               * Sync visual transform
+                                                                               *
+                                                                               * @param Q   pose update
+                                                                               ******************************************************************************/
+std::map<int, std::vector<RigidBodyDynamics::Math::Vector3d>>
+URDF::getSurfacePoints(RigidBodyDynamics::Math::VectorNd Q) {
+  /*RigidBodyDynamics::Math::VectorNd QDot =
+      RigidBodyDynamics::Math::VectorNd::Zero(m_model->q_size);
+  RigidBodyDynamics::Math::VectorNd QDDot =
+      RigidBodyDynamics::Math::VectorNd::Zero(m_model->q_size);
+  RigidBodyDynamics::UpdateKinematics(*m_model, Q, QDot, QDDot);
+  std::map<int, std::vector<RigidBodyDynamics::Math::Vector3d>> linksPoints;
+  for(size_t index=0; index<m_model->mBodies.size(); index++) {
+    std::vector<RigidBodyDynamics::Math::Vector3d> linkPoints;
+    if (m_model->IsBodyId(index)) {
+      RigidBodyDynamics::Math::SpatialTransform baseFrame =
+  m_model->X_base[index]; std::vector<RigidBodyDynamics::Math::Vector3d> points
+  = m_indexSurfacePoints[index]; for(size_t j=0; j<points.size(); j++) {
+        linkPoints.push_back(baseFrame.r + (baseFrame.E * points[j]));
+      }
+    }
+    linksPoints[index] = linkPoints;
+  }*/
+  return m_indexSurfacePoints;
+}
+
 } // namespace visualization
 } // namespace adi

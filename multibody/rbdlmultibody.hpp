@@ -16,7 +16,8 @@ public:
   virtual ~RBDLMultiBody();
 
   //! update kinematics
-  virtual void updateKinematics(const VectorXd pos) override;
+  virtual void updateKinematics(const VectorXd pos,
+                                const VectorXd vel) override;
 
   //! get transformation matrix
   virtual void getTransformationMatrix(const int linkId,
